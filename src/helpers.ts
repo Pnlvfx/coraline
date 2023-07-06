@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import coraline from './coraline';
 
 const _path = process.cwd();
-export const coraline_path = path.resolve(_path, '../coraline');
+export const coraline_path = path.resolve(_path, '../.coraline');
 export const projectName = _path.split('/')[_path.split('/').length - 1].replace('api-', '').replace('api_', '');
 
 export const coralinemkDir = (folder: string) => {
