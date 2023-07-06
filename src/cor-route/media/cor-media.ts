@@ -79,19 +79,27 @@ const coralineMedia = {
       });
     });
   },
-  download: (media_url: string, type: 'videos' | 'images', output: string) => {
+  download: (
+    media_url: string,
+    type: 'videos' | 'images',
+    outputPath: string,
+    options?: {
+      filename: string;
+    },
+  ) => {
     return new Promise<string>((resolve, reject) => {
       const fetcher = new URL(media_url).protocol === 'https:' ? https : http;
       fetcher.get(media_url, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
           media_url = res.headers.location;
-          coraline.media.download(media_url, type, output);
+          coraline.media.download(media_url, type, outputPath, options);
           return;
         }
         const format = res.headers['content-type']?.split('/')[1];
         if (!format) return reject('This URL does not contain any media!');
-        output = output.replace(path.extname(output), format);
+        const filename = options?.filename ? `${options.filename}.${format}` : media_url.slice(media_url.lastIndexOf('/') + 1);
+        const output = path.join(outputPath, filename);
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
         fileStream.on('error', (err) => {
