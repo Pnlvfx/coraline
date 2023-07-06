@@ -62,7 +62,7 @@ const coraline = {
     const max = options?.max || new Date().getFullYear();
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
-  getUniqueArray: <T extends [key: string]>(arr: T[], key: keyof T): T[] => {
+  getUniqueArray: <T extends Record<K, string>, K extends keyof T>(arr: T[], key: K): T[] => {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
   },
   createPermalink: (text: string) => {
