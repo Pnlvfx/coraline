@@ -1,5 +1,5 @@
 import coraline from '../../coraline';
-import coralineVideos from './cor-videos';
+import coralineVideos from './videos';
 import fs from 'node:fs';
 import https from 'node:https';
 import http from 'node:http';
@@ -21,8 +21,8 @@ const coralineMedia = {
     const base_path = coraline.useStatic(pathArr.join('/'));
     return `${base_path}/${filename}`;
   },
-  saveAudio: async (audio: string, output: string) => {
-    const buffer = Buffer.from(audio, 'base64');
+  saveAudio: async (audio: string | Uint8Array, output: string) => {
+    const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
     const writeFile1 = promisify(fs.writeFile);
     await writeFile1(output, buffer, 'binary');
     return coraline.media.getUrlFromPath(output);
