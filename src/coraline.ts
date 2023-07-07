@@ -105,9 +105,9 @@ const coraline = {
       }
     }
   },
-  readJSON: async (file: string) => {
+  readJSON: async <T>(file: string) => {
     const _find = await fsPromises.readFile(file);
-    return JSON.parse(_find.toString());
+    return JSON.parse(_find.toString()) as T;
   },
   isUrl: (text: string) => {
     try {
