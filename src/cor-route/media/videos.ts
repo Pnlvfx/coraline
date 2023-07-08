@@ -1,4 +1,4 @@
-import coraline from '../../coraline';
+import coraline from '../..';
 import https from 'node:https';
 import fs from 'node:fs';
 import { VideoProps } from '../../types/video';

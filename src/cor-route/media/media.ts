@@ -1,4 +1,4 @@
-import coraline from '../../coraline';
+import coraline from '../..';
 import coralineVideos from './videos';
 import fs from 'node:fs';
 import https from 'node:https';
