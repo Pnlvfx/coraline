@@ -7,7 +7,6 @@ import coralineDate from './cor-route/date';
 import crypto from 'node:crypto';
 import coralineMedia from './cor-route/media/media';
 import coralineColors from './cor-route/colors';
-import os from 'node:os';
 import { inspect } from 'node:util';
 import readline from 'node:readline';
 import { URL } from 'node:url';
@@ -185,32 +184,6 @@ const coraline = {
     const total = process.memoryUsage().heapTotal;
     const percentage = Math.round((used / total) * 10_000) / 100;
     console.log(`Heap usage: ${percentage}%`);
-  },
-  getUserAgent: () => {
-    const system = os.platform();
-    let userAgent = '';
-    switch (system) {
-      case 'darwin': {
-        const macVersion = os.release().split('.')[0];
-        const macArch = os.arch();
-        userAgent = `Mozilla/5.0 (Macintosh; ${macArch} Mac OS X ${macVersion}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36`;
-        break;
-      }
-      case 'linux': {
-        userAgent = `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0`;
-
-        break;
-      }
-      case 'win32': {
-        const winVersion = os.release().split('.')[0];
-        userAgent = `Mozilla/5.0 (Windows NT ${winVersion}; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36`;
-        break;
-      }
-      default: {
-        userAgent = `Mozilla/5.0 (compatible; Node.js/${process.version}; ${process.platform} ${process.arch})`;
-      }
-    }
-    return userAgent;
   },
   getContentType: (url: string) => {
     return new Promise<string>((resolve, reject) => {
