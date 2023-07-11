@@ -20,6 +20,10 @@ const formatDate = (date: string | Date) => {
 const coralineDate = {
   toYYMMDD: (date: string | Date) => {
     const time = formatDate(date);
+    return `${time.year}-${time.month}-${time.day}`;
+  },
+  toYYMMDDHHMM: (date: string | Date) => {
+    const time = formatDate(date);
     return `${time.year}-${time.month}-${time.day} ${time.hours}:${time.minutes}`;
   },
   startOfDay: (date = new Date()) => {
