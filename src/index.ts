@@ -141,6 +141,7 @@ const coraline = {
     const date = new Date();
     date.setHours(hour);
     date.setMinutes(minute);
+    date.setSeconds(0);
 
     // If the scheduled time has already passed for today, schedule it for tomorrow or stop it
 
