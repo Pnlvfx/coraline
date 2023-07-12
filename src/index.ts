@@ -154,7 +154,7 @@ const coraline = {
     }
 
     const timeUntilFunction = date.getTime() - Date.now();
-    console.log(`new Timeout added at ${coraline.date.toYYMMDD(date)}`);
+    console.log(`new Timeout added at ${coraline.date.toYYMMDDHHMM(date)}`);
     setTimeout(async () => {
       await fn();
       if (repeat) {
