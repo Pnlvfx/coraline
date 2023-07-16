@@ -69,9 +69,7 @@ const coraline = {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
   },
   createPermalink: (text: string) => {
-    let permalink = text.trim().replaceAll(' ', '_');
-    permalink = permalink.replaceAll(/\W/g, '').toLowerCase().slice(0, 50).trimEnd();
-    return permalink;
+    return text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
   },
   use: (document: string) => {
     const isStatic = document.match('images') || document.match('videos') ? true : false;
