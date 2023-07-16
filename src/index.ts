@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-ternary */
 export { consoleColor } from './cor-route/console-color';
 export { errToString } from './cor-route/catch-error';
 export const TG_GROUP_LOG = Number('-914836534');
@@ -135,7 +136,11 @@ const coraline = {
     for (const content of contents) {
       const curPath = path.join(folder, content);
       const { isDirectory } = await fsPromises.stat(curPath);
-      await (isDirectory() ? coraline.clearFolder(curPath) : coraline.deleteFile(curPath));
+      if (isDirectory()) {
+        await coraline.clearFolder(curPath);
+      } else {
+        await coraline.deleteFile(curPath);
+      }
     }
   },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
