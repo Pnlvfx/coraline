@@ -131,6 +131,13 @@ const coraline = {
       throw err;
     }
   },
+  clearFolder: async (folder: string) => {
+    const contents = await fsPromises.readdir(folder);
+    for (const content of contents) {
+      const curPath = path.join(folder, content);
+      await coraline.delete(curPath);
+    }
+  },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
     const date = new Date();
     date.setHours(hour);
