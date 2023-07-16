@@ -121,26 +121,14 @@ const coraline = {
       return false;
     }
   },
-  deleteFile: async (filename: string) => {
+  delete: async (filename: string) => {
     try {
-      await fsPromises.rm(filename);
+      await fsPromises.rm(filename, { recursive: true });
       return true;
     } catch (err) {
       const error = err as NodeJS.ErrnoException;
       if (error.code === 'ENOENT') return true;
       throw err;
-    }
-  },
-  clearFolder: async (folder: string) => {
-    const contents = await fsPromises.readdir(folder);
-    for (const content of contents) {
-      const curPath = path.join(folder, content);
-      const { isDirectory } = await fsPromises.stat(curPath);
-      if (isDirectory()) {
-        await coraline.clearFolder(curPath);
-      } else {
-        await coraline.deleteFile(curPath);
-      }
     }
   },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
