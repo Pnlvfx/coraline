@@ -68,6 +68,14 @@ const coraline = {
   getUniqueArray: <T extends Record<K, string>, K extends keyof T>(arr: T[], key: K): T[] => {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
   },
+  shuffleArray: (array: unknown[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  },
   createPermalink: (text: string) => {
     return text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
   },
