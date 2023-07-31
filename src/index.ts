@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-ternary */
 export { consoleColor } from './cor-route/console-color';
 export { errToString } from './cor-route/catch-error';
 export const TG_GROUP_LOG = Number('-914836534');
