@@ -5,6 +5,7 @@ export const errToString = (err: unknown, ...args: string[]) => {
     });
   }
   if (err instanceof Error) return err.message;
-  else if (typeof err === 'string') return err;
-  else return 'API error';
+  if (typeof err === 'string') return err;
+  if (typeof err === 'object' && err !== null && 'description' in err) return err['description']; // TELEGRAM ERROR LIKE
+  return 'API error';
 };
