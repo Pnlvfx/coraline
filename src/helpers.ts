@@ -28,8 +28,6 @@ export const buildMediaUrl = (public_id: string, type: 'images' | 'videos', form
 };
 
 export const stringify = (data: unknown) => {
-  if (typeof data === 'string') {
-    return data;
-  }
+  if (typeof data === 'string') return data;
   return JSON.stringify(data);
 };

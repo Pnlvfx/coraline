@@ -92,15 +92,18 @@ const coraline = {
     const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
     return coralinemkDir(folder);
   },
-  saveFile: async (filename: string, file: unknown) => {
+  /**
+   * @deprecated This method is deprecated, use download instead.
+   */
+  saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: unknown) => {
     try {
       const string = stringify(file);
       await fsPromises.writeFile(filename, string);
-      await fsPromises.chmod(filename, '777');
+      await fsPromises.chmod(filename.toString(), '777');
     } catch (err) {
       const error = err as NodeJS.ErrnoException;
       if (error.code === 'ENOENT') {
-        const folder = path.normalize(path.join(filename, '..'));
+        const folder = path.normalize(path.join(filename.toString(), '..'));
         const subfolder = folder
           .split(projectName + '/')[1]
           .split('/')
