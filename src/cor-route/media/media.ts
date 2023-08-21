@@ -81,14 +81,15 @@ const coralineMedia = {
   },
   download: (
     media_url: string,
-    type: 'videos' | 'images',
+    type: 'video' | 'image',
     outputPath: string,
     options?: {
       filename: string;
     },
   ) => {
     return new Promise<string>((resolve, reject) => {
-      const fetcher = new URL(media_url).protocol === 'https:' ? https : http;
+      const _url = new URL(media_url);
+      const fetcher = _url.protocol === 'https:' ? https : http;
       fetcher.get(media_url, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
@@ -98,10 +99,10 @@ const coralineMedia = {
         }
         const format = res.headers['content-type']?.split('/')[1];
         if (!format) return reject('This URL does not contain any media!');
-        let filename = options?.filename ? `${options.filename}.${format}` : media_url.slice(media_url.lastIndexOf('/') + 1);
+        let filename = options?.filename ? `${options.filename}.${format}` : _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
 
         if (filename.length > 20) {
-          filename = filename.slice(0, 20 - format.length - 1);
+          filename = filename.slice(-20);
         }
         const output = path.join(outputPath, filename);
         const fileStream = fs.createWriteStream(output);
