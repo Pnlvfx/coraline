@@ -98,7 +98,11 @@ const coralineMedia = {
         }
         const format = res.headers['content-type']?.split('/')[1];
         if (!format) return reject('This URL does not contain any media!');
-        const filename = options?.filename ? `${options.filename}.${format}` : media_url.slice(media_url.lastIndexOf('/') + 1);
+        let filename = options?.filename ? `${options.filename}.${format}` : media_url.slice(media_url.lastIndexOf('/') + 1);
+
+        if (filename.length > 20) {
+          filename = filename.slice(0, 20 - format.length - 1);
+        }
         const output = path.join(outputPath, filename);
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
