@@ -32,7 +32,7 @@ const coralineMedia = {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
   },
   urlIsVideo: (url: string) => {
-    return /\.(mp4)$/.test(url);
+    return /\.(mp4|mov)$/.test(url);
   },
   urlIsMedia: (url: string) => {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4)$/.test(url);
@@ -50,7 +50,7 @@ const coralineMedia = {
   getMediaFromUrl: (media_url: string, public_id: string, type: 'videos' | 'images') => {
     return new Promise<CoralineMedia>((resolve, reject) => {
       const fetcher = new URL(media_url).protocol === 'https:' ? https : http;
-      fetcher.get(media_url, (res) => {
+      fetcher.get(media_url, { headers: { 'User-Agent': coraline.getUserAgent() } }, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
           media_url = res.headers.location;
@@ -93,12 +93,16 @@ const coralineMedia = {
       fetcher.get(media_url, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
-          media_url = res.headers.location;
-          coraline.media.download(media_url, type, outputPath, options);
+          coraline.media.download(res.headers.location, type, outputPath, options);
           return;
         }
-        const format = res.headers['content-type']?.split('/')[1];
+        const format = res.headers['content-type']?.split('/').at(1);
         if (!format) return reject('This URL does not contain any media!');
+        const imgRgx = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i;
+        const videoRgx = /\.(mov|mp4)$/i;
+        if (!imgRgx.test(format) || !videoRgx.test(format)) {
+          return reject(`Invalid format, note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
+        }
         let filename = options?.filename ? `${options.filename}.${format}` : _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
 
         if (filename.length > 20) {
@@ -106,6 +110,9 @@ const coralineMedia = {
         }
         const output = path.join(outputPath, filename);
         const fileStream = fs.createWriteStream(output);
+        // res.on('data', (chunk) => {
+        //   console.log(chunk.toString());
+        // });
         res.pipe(fileStream);
         fileStream.on('error', (err) => {
           reject(err);
