@@ -96,12 +96,12 @@ const coralineMedia = {
           coraline.media.download(res.headers.location, type, outputPath, options);
           return;
         }
-        const format = res.headers['content-type']?.split('/').at(1);
+        const format = res.headers['content-type']?.split('/').at(1)?.trim();
         if (!format) return reject('This URL does not contain any media!');
-        const imgRgx = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i;
-        const videoRgx = /\.(mov|mp4)$/i;
-        if (!imgRgx.test(format) || !videoRgx.test(format)) {
-          return reject(`Invalid format, note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
+        const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
+        const videoRgx = /(mov|mp4)$/i;
+        if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
+          return reject(`Invalid format ${format}, note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
         }
         let filename = options?.filename ? `${options.filename}.${format}` : _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
 
