@@ -89,15 +89,23 @@ const coralineMedia = {
   ) => {
     return new Promise<string>((resolve, reject) => {
       const _url = new URL(media_url);
+      console.log(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       fetcher.get(media_url, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
-          coraline.media.download(res.headers.location, type, outputPath, options);
+          console.log('Redirection');
+          coraline.media
+            .download(res.headers.location, type, outputPath, options)
+            .then((_) => resolve(_))
+            .catch((err) => reject(err));
           return;
         }
         const format = res.headers['content-type']?.split('/').at(1)?.trim();
-        if (!format) return reject('This URL does not contain any media!');
+        if (!format) {
+          reject('This URL does not contain any media!');
+          return;
+        }
         const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
         const videoRgx = /(mov|mp4)$/i;
         if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
