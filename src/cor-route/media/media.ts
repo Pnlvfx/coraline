@@ -101,7 +101,8 @@ const coralineMedia = {
         const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
         const videoRgx = /(mov|mp4)$/i;
         if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
-          return reject(`Invalid format ${format}, note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
+          reject(`Invalid format ${format}, note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
+          return;
         }
         let filename = options?.filename ? `${options.filename}.${format}` : _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
 
