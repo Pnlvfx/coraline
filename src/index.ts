@@ -4,7 +4,7 @@ export const TG_GROUP_LOG = Number('-914836534');
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
-import { coraline_path, coralinemkDir, projectName, stringify } from './helpers';
+import { coraline_path, coralinemkDir, projectName } from './helpers';
 import regex from './cor-route/regex';
 import coralineDate from './cor-route/date';
 import crypto from 'node:crypto';
@@ -15,6 +15,14 @@ import readline from 'node:readline';
 import { URL } from 'node:url';
 import { RetryOptions } from './types';
 import os from 'node:os';
+import internal from 'node:stream';
+
+type File =
+  | string
+  | NodeJS.ArrayBufferView
+  | Iterable<string | NodeJS.ArrayBufferView>
+  | AsyncIterable<string | NodeJS.ArrayBufferView>
+  | internal.Stream;
 
 const fsPromises = fs.promises;
 
@@ -90,13 +98,9 @@ const coraline = {
     const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
     return coralinemkDir(folder);
   },
-  /**
-   * @deprecated This method is deprecated, use download instead.
-   */
-  saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: unknown) => {
+  saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: File) => {
     try {
-      const string = stringify(file);
-      await fsPromises.writeFile(filename, string);
+      await fsPromises.writeFile(filename, file);
       await fsPromises.chmod(filename.toString(), '777');
     } catch (err) {
       const error = err as NodeJS.ErrnoException;

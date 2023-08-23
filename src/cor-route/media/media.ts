@@ -28,14 +28,14 @@ const coralineMedia = {
     return coraline.media.getUrlFromPath(output);
     // the output is already in the input so doesn't make sense to return the output
   },
-  urlIsImage: (url: string) => {
-    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+  isImage: (string: string) => {
+    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(string);
   },
-  urlIsVideo: (url: string) => {
-    return /\.(mp4|mov)$/.test(url);
+  isVideo: (string: string) => {
+    return /\.(mp4|mov)$/.test(string);
   },
-  urlIsMedia: (url: string) => {
-    return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4)$/.test(url);
+  isMedia: (string: string) => {
+    return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4|mov)$/.test(string);
   },
   useTempPath: (format: string) => {
     const regex = /\./;
@@ -89,7 +89,6 @@ const coralineMedia = {
   ) => {
     return new Promise<string>((resolve, reject) => {
       const _url = new URL(media_url);
-      console.log(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       fetcher.get(media_url, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
@@ -102,10 +101,8 @@ const coralineMedia = {
           return;
         }
         const format = res.headers['content-type']?.split('/').at(1)?.trim();
-        if (!format) {
-          reject('This URL does not contain any media!');
-          return;
-        }
+        if (!format) return reject('This URL does not contain any media!');
+
         const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
         const videoRgx = /(mov|mp4)$/i;
         if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {

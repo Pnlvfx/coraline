@@ -26,8 +26,3 @@ export const buildMediaUrl = (public_id: string, type: 'images' | 'videos', form
   const query = `?w=${w}&h=${h}`;
   return w && h ? `${url}${query}` : url;
 };
-
-export const stringify = (data: unknown) => {
-  if (typeof data === 'string') return data;
-  return JSON.stringify(data);
-};
