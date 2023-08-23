@@ -90,7 +90,7 @@ const coralineMedia = {
     return new Promise<string>((resolve, reject) => {
       const _url = new URL(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
-      fetcher.get(media_url, (res) => {
+      fetcher.get(media_url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
           console.log('Redirection');
