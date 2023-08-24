@@ -87,22 +87,32 @@ const coralineMedia = {
       filename: string;
     },
   ) => {
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     return new Promise<string>((resolve, reject) => {
       const _url = new URL(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       fetcher.get(media_url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
-        if (res.statusCode === 302 && res.headers.location) {
-          //redirect
-          console.log('Redirection');
-          coraline.media
-            .download(res.headers.location, type, outputPath, options)
-            .then((_) => resolve(_))
-            .catch((err) => reject(err));
+        if (res.statusCode === 302) {
+          if (res.headers.location) {
+            coraline.media
+              .download(res.headers.location, type, outputPath, options)
+              .then((_) => resolve(_))
+              .catch((err) => {
+                res.resume();
+                reject(err);
+              });
+          } else {
+            res.resume();
+            reject('This media in no more available!');
+          }
+          return;
+        } else if (res.statusCode !== 200) {
+          res.resume();
+          reject(`Downalod error: ${res.statusCode} ${res.statusMessage}`);
           return;
         }
         const format = res.headers['content-type']?.split('/').at(1)?.trim();
         if (!format) return reject('This URL does not contain any media!');
-
         const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
         const videoRgx = /(mov|mp4)$/i;
         if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
@@ -114,15 +124,15 @@ const coralineMedia = {
         if (filename.length > 20) {
           filename = filename.slice(-20);
         }
+
         const output = path.join(outputPath, filename);
         const fileStream = fs.createWriteStream(output);
-        // res.on('data', (chunk) => {
-        //   console.log(chunk.toString());
-        // });
         res.pipe(fileStream);
+
         fileStream.on('error', (err) => {
           reject(err);
         });
+
         fileStream.on('finish', () => {
           fileStream.close();
           resolve(output);
