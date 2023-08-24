@@ -87,12 +87,14 @@ const coralineMedia = {
       filename: string;
     },
   ) => {
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     return new Promise<string>((resolve, reject) => {
       const _url = new URL(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       const request = fetcher
         .get(media_url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
           res.on('error', (err) => {
+            res.resume();
             reject(err);
           });
           if (res.statusCode === 302 && res.headers.location) {
@@ -103,13 +105,22 @@ const coralineMedia = {
               .then((_) => resolve(_))
               .catch((err) => reject(err));
             return;
+          } else if (res.statusCode !== 200) {
+            res.resume();
+            reject(`Download error: ${res.statusCode} ${res.statusMessage}`);
+            return;
           }
           const format = res.headers['content-type']?.split('/').at(1)?.trim();
-          if (!format) return reject('This URL does not contain any media!');
+          if (!format) {
+            res.resume();
+            reject('This URL does not contain any media!');
+            return;
+          }
 
           const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
           const videoRgx = /(mov|mp4)$/i;
           if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
+            res.resume();
             reject(`Invalid format "${format}", note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
             return;
           }
