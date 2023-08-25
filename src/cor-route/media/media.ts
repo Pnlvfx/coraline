@@ -124,11 +124,16 @@ const coralineMedia = {
             reject(`Invalid format "${format}", note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
             return;
           }
-          let filename = options?.filename ? `${options.filename}.${format}` : _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
+          let filename = options?.filename || _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
 
           if (filename.length > 20) {
-            filename = filename.slice(-20);
+            filename = filename.slice(0, 20);
           }
+
+          const filenameFormat = path.extname(filename);
+          filename = filename.replace(filenameFormat, '');
+          filename += `.${format}`;
+
           const output = path.join(outputPath, filename);
           const fileStream = fs.createWriteStream(output);
           // res.on('data', (chunk) => {
