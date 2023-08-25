@@ -29,10 +29,10 @@ const coralineMedia = {
     // the output is already in the input so doesn't make sense to return the output
   },
   isImage: (string: string) => {
-    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(string);
+    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i.test(string);
   },
   isVideo: (string: string) => {
-    return /\.(mp4|mov)$/.test(string);
+    return /\.(mp4|mov)$/i.test(string);
   },
   isMedia: (string: string) => {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4|mov)$/.test(string);
@@ -92,7 +92,7 @@ const coralineMedia = {
       const _url = new URL(media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       const request = fetcher
-        .get(media_url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
+        .get(_url.href, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
           res.on('error', (err) => {
             res.resume();
             reject(err);
