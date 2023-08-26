@@ -81,7 +81,6 @@ const coralineMedia = {
   },
   download: (
     media_url: string,
-    type: 'video' | 'image',
     outputPath: string,
     options?: {
       filename: string;
@@ -101,7 +100,7 @@ const coralineMedia = {
             //redirect
             console.log('Redirection');
             coraline.media
-              .download(res.headers.location, type, outputPath, options)
+              .download(res.headers.location, outputPath, options)
               .then((_) => resolve(_))
               .catch((err) => reject(err));
             return;
@@ -117,14 +116,13 @@ const coralineMedia = {
             return;
           }
 
-          const imgRgx = /(jpg|jpeg|png|webp|avif|gif|svg)$/i;
-          const videoRgx = /(mov|mp4)$/i;
-          if ((type === 'image' && !imgRgx.test(format)) || (type === 'video' && !videoRgx.test(format))) {
+          const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
+          if (!allowedFormats.test(format)) {
             res.resume();
             reject(`Invalid format "${format}", note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
             return;
           }
-          let filename = options?.filename || _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1);
+          let filename = (options?.filename || _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1)).trim().replaceAll(' ', '');
 
           if (filename.length > 20) {
             filename = filename.slice(0, 20);
