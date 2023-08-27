@@ -88,7 +88,10 @@ const coralineMedia = {
   ) => {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     return new Promise<string>((resolve, reject) => {
+      const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
       const _url = new URL(media_url.endsWith('/') ? media_url.slice(0, -1) : media_url);
+      let filename = options?.filename || path.basename(_url.pathname);
+      filename = decodeURIComponent(filename).replaceAll(' ', '-');
       const fetcher = _url.protocol === 'https:' ? https : http;
       const request = fetcher
         .get(_url.href, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
@@ -116,21 +119,21 @@ const coralineMedia = {
             return;
           }
 
-          const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
           if (!allowedFormats.test(format)) {
             res.resume();
             reject(`Invalid format "${format}", note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
             return;
           }
-          let filename = (options?.filename || _url.pathname.slice(_url.pathname.lastIndexOf('/') + 1)).trim().replaceAll(' ', '');
 
           if (filename.length > 20) {
-            filename = filename.slice(0, 20);
+            filename = filename.slice(-20);
           }
 
           const filenameFormat = path.extname(filename);
-          filename = filename.replace(filenameFormat, '');
-          filename += `.${format}`;
+
+          if (!filenameFormat) {
+            filename += `.${format}`;
+          }
 
           const output = path.join(outputPath, filename);
           const fileStream = fs.createWriteStream(output);
