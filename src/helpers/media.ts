@@ -1,12 +1,12 @@
-import coraline from '../..';
+import coraline from '..';
 import coralineVideos from './videos';
 import fs from 'node:fs';
 import https from 'node:https';
 import http from 'node:http';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { buildMediaPath, buildMediaUrl } from '../../helpers';
-import { CoralineMedia } from '../../types/image';
+import { buildMediaPath, buildMediaUrl } from './init';
+import { CoralineMedia } from '../types/image';
 
 const coralineMedia = {
   videos: coralineVideos,

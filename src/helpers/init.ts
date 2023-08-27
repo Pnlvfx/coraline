@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import coraline from '.';
+import coraline from '..';
 
 const _path = process.cwd();
 export const coraline_path = path.resolve(_path, '../.coraline');
