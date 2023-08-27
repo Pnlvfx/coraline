@@ -88,7 +88,7 @@ const coralineMedia = {
   ) => {
     // eslint-disable-next-line sonarjs/cognitive-complexity
     return new Promise<string>((resolve, reject) => {
-      const _url = new URL(media_url);
+      const _url = new URL(media_url.endsWith('/') ? media_url.slice(0, -1) : media_url);
       const fetcher = _url.protocol === 'https:' ? https : http;
       const request = fetcher
         .get(_url.href, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0' } }, (res) => {
@@ -98,7 +98,7 @@ const coralineMedia = {
           });
           if (res.statusCode === 302 && res.headers.location) {
             //redirect
-            console.log('Redirection');
+            console.log('Request was redirected... Try with the new url...');
             coraline.media
               .download(res.headers.location, outputPath, options)
               .then((_) => resolve(_))
