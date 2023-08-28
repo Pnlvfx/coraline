@@ -15,7 +15,7 @@ import os from 'node:os';
 import { File } from './types/file';
 const fsPromises = fs.promises;
 
-const coraline = {
+export const coraline = {
   wait: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
   createScriptExec: (fn: () => unknown) => {
     const rl = readline.createInterface({
@@ -237,35 +237,6 @@ export default coraline;
 export { consoleColor } from './helpers/console-color';
 export { errToString } from './helpers/catch-error';
 export const TG_GROUP_LOG = Number('-914836534');
-
-export const {
-  arrayMove,
-  clearFolder,
-  colors,
-  createPermalink,
-  createScriptExec,
-  date,
-  deleteFileOrFolder,
-  generateRandomId,
-  getContentType,
-  getRandomInt,
-  getUniqueArray,
-  getUserAgent,
-  getVideoFileSizeInMb,
-  isUrl,
-  log,
-  media,
-  memoryUsage,
-  performanceEnd,
-  readJSON,
-  runAtSpecificTime,
-  saveFile,
-  shuffleArray,
-  use,
-  useStatic,
-  wait,
-  year,
-} = coraline; // REMEMBER TO ADD THE REGEX
 
 export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
   try {
