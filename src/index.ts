@@ -1,6 +1,3 @@
-export { consoleColor } from './helpers/console-color';
-export { errToString } from './helpers/catch-error';
-export const TG_GROUP_LOG = Number('-914836534');
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
@@ -15,30 +12,8 @@ import readline from 'node:readline';
 import { URL } from 'node:url';
 import { RetryOptions } from './types';
 import os from 'node:os';
-import internal from 'node:stream';
-
-type File =
-  | string
-  | NodeJS.ArrayBufferView
-  | Iterable<string | NodeJS.ArrayBufferView>
-  | AsyncIterable<string | NodeJS.ArrayBufferView>
-  | internal.Stream;
-
+import { File } from './types/file';
 const fsPromises = fs.promises;
-
-export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
-  try {
-    return await fn();
-  } catch (err) {
-    if (retries <= 0) throw err;
-    console.log('WithRetry: Function fail, try again', { err, retries });
-    await coraline.wait(retryIntervalMs);
-    return withRetry(fn, {
-      retries: retries - 1,
-      retryIntervalMs,
-    });
-  }
-};
 
 const coraline = {
   wait: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
@@ -131,7 +106,7 @@ const coraline = {
       return false;
     }
   },
-  delete: async (filename: string) => {
+  deleteFileOrFolder: async (filename: string) => {
     try {
       await fsPromises.rm(filename, { recursive: true });
       return true;
@@ -145,7 +120,7 @@ const coraline = {
     const contents = await fsPromises.readdir(folder);
     for (const content of contents) {
       const curPath = path.join(folder, content);
-      await coraline.delete(curPath);
+      await coraline.deleteFileOrFolder(curPath);
     }
   },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
@@ -258,3 +233,50 @@ const coraline = {
 };
 
 export default coraline;
+
+export { consoleColor } from './helpers/console-color';
+export { errToString } from './helpers/catch-error';
+export const TG_GROUP_LOG = Number('-914836534');
+
+export const {
+  arrayMove,
+  clearFolder,
+  colors,
+  createPermalink,
+  createScriptExec,
+  date,
+  deleteFileOrFolder,
+  generateRandomId,
+  getContentType,
+  getRandomInt,
+  getUniqueArray,
+  getUserAgent,
+  getVideoFileSizeInMb,
+  isUrl,
+  log,
+  media,
+  memoryUsage,
+  performanceEnd,
+  readJSON,
+  runAtSpecificTime,
+  saveFile,
+  shuffleArray,
+  use,
+  useStatic,
+  wait,
+  year,
+} = coraline; // REMEMBER TO ADD THE REGEX
+
+export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
+  try {
+    return await fn();
+  } catch (err) {
+    if (retries <= 0) throw err;
+    console.log('WithRetry: Function fail, try again', { err, retries });
+    await coraline.wait(retryIntervalMs);
+    return withRetry(fn, {
+      retries: retries - 1,
+      retryIntervalMs,
+    });
+  }
+};
