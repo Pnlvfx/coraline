@@ -232,35 +232,6 @@ const coraline = {
   colors: coralineColors,
 };
 
-export const {
-  arrayMove,
-  clearFolder,
-  colors,
-  createPermalink,
-  createScriptExec,
-  date,
-  deleteFileOrFolder,
-  generateRandomId,
-  getContentType,
-  getRandomInt,
-  getUniqueArray,
-  getUserAgent,
-  getVideoFileSizeInMb,
-  isUrl,
-  log,
-  media,
-  memoryUsage,
-  performanceEnd,
-  readJSON,
-  runAtSpecificTime,
-  saveFile,
-  shuffleArray,
-  use,
-  useStatic,
-  wait,
-  year,
-} = coraline; //  REMEMBER TO ADD REGEX
-
 export { consoleColor } from './helpers/console-color';
 export { errToString } from './helpers/catch-error';
 export const TG_GROUP_LOG = Number('-914836534');
