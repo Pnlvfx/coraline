@@ -227,8 +227,8 @@ const coraline = {
   colors: coralineColors,
 };
 
-export { consoleColor } from './helpers/console-color';
-export { errToString } from './helpers/catch-error';
+export { consoleColor } from './helpers/console-color.js';
+export { errToString } from './helpers/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
 
 export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
