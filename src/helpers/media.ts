@@ -1,12 +1,12 @@
-import coraline from '..';
-import coralineVideos from './videos';
+import coralineVideos from './videos.js';
 import fs from 'node:fs';
 import https from 'node:https';
 import http from 'node:http';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import { buildMediaPath, buildMediaUrl } from './init';
+import { buildMediaPath, buildMediaUrl, useStatic } from './init.js';
 import { CoralineMedia } from '../types/image';
+import coraline from '../index.js';
 
 const coralineMedia = {
   videos: coralineVideos,
@@ -18,14 +18,14 @@ const coralineMedia = {
     const split = url.split('/static/');
     const pathArr = split[1].split('/');
     const filename = pathArr.pop();
-    const base_path = coraline.useStatic(pathArr.join('/'));
+    const base_path = useStatic(pathArr.join('/'));
     return `${base_path}/${filename}`;
   },
   saveAudio: async (audio: string | Uint8Array, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
     const writeFile1 = promisify(fs.writeFile);
     await writeFile1(output, buffer, 'binary');
-    return coraline.media.getUrlFromPath(output);
+    return coralineMedia.getUrlFromPath(output);
     // the output is already in the input so doesn't make sense to return the output
   },
   isImage: (string: string) => {

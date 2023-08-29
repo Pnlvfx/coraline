@@ -1,6 +1,5 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import coraline from '..';
 
 const _path = process.cwd();
 export const coraline_path = path.resolve(_path, '../.coraline');
@@ -15,7 +14,7 @@ export const coralinemkDir = (folder: string) => {
 
 export const buildMediaPath = (public_id: string, type: 'images' | 'videos', format: string) => {
   const split = public_id.split('/'); //split 1 is folder split[2] is the id
-  const path = coraline.useStatic(`${type}/${split[0]}`);
+  const path = useStatic(`${type}/${split[0]}`);
   return `${path}/${split[1]}.${format}`;
 };
 
@@ -25,4 +24,11 @@ export const buildMediaUrl = (public_id: string, type: 'images' | 'videos', form
   const url = `${process.env.SERVER_URL}/static/${type}/${split[0].toLowerCase()}/${split[1]}.${format}`;
   const query = `?w=${w}&h=${h}`;
   return w && h ? `${url}${query}` : url;
+};
+
+export const useStatic = (document?: string) => {
+  const extra_path = document ? path.join('static', document) : 'static';
+  const isAbsolute = path.isAbsolute(extra_path);
+  const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
+  return coralinemkDir(folder);
 };

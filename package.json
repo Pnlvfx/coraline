@@ -12,9 +12,10 @@
       "require": "./dist/cjs/index.js"
     }
   },
+  "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -w --module commonjs --outDir dist/cjs & node --watch .",
+    "dev": "tsc -w --outDir dist/esm & node --watch ./dist/esm/index.js",
     "start": "node .",
     "lint": "eslint ./src",
     "build": "rimraf dist && npm run build:esm && npm run build:cjs",

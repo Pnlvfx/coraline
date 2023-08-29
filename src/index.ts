@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
-import { coraline_path, coralinemkDir, projectName } from './helpers/init';
-import regex from './helpers/regex';
-import coralineDate from './helpers/date';
+import { coraline_path, coralinemkDir, projectName, useStatic } from './helpers/init.js';
+import regex from './helpers/regex.js';
+import coralineDate from './helpers/date.js';
 import crypto from 'node:crypto';
-import coralineMedia from './helpers/media';
-import coralineColors from './helpers/colors';
+import coralineMedia from './helpers/media.js';
+import coralineColors from './helpers/colors.js';
 import { inspect } from 'node:util';
 import readline from 'node:readline';
 import { URL } from 'node:url';
@@ -67,12 +67,7 @@ const coraline = {
     const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
     return coralinemkDir(folder);
   },
-  useStatic: (document?: string) => {
-    const extra_path = document ? path.join('static', document) : 'static';
-    const isAbsolute = path.isAbsolute(extra_path);
-    const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
-    return coralinemkDir(folder);
-  },
+  useStatic,
   saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: File) => {
     try {
       await fsPromises.writeFile(filename, file);
