@@ -236,7 +236,7 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
     return await fn();
   } catch (err) {
     if (retries <= 0) throw err;
-    console.log('WithRetry: Function fail, try again', { err: errToString(err), retries });
+    console.log(`WithRetry: Function fail, try again, error: ${errToString(err)}, retries: ${retries}`);
     await coraline.wait(retryIntervalMs);
     return withRetry(fn, {
       retries: retries - 1,
