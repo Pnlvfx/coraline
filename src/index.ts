@@ -17,14 +17,15 @@ const fsPromises = fs.promises;
 
 const coraline = {
   wait: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
-  createScriptExec: (fn: () => unknown) => {
+  // eslint-disable-next-line no-unused-vars
+  createScriptExec: (fn: (input?: string) => unknown) => {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
     rl.on('line', async (input) => {
       if (input.trim() === '') {
-        await fn();
+        await fn(input);
         console.log('\u001B[34mPress Enter to run your function.\u001B[0m');
         rl.prompt();
       }
