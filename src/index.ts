@@ -13,6 +13,7 @@ import { URL } from 'node:url';
 import { RetryOptions } from './types';
 import os from 'node:os';
 import { File } from './types/file';
+import { errToString } from './helpers/catch-error.js';
 const fsPromises = fs.promises;
 
 const coraline = {
@@ -235,7 +236,7 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
     return await fn();
   } catch (err) {
     if (retries <= 0) throw err;
-    console.log('WithRetry: Function fail, try again', { err, retries });
+    console.log('WithRetry: Function fail, try again', { err: errToString(err), retries });
     await coraline.wait(retryIntervalMs);
     return withRetry(fn, {
       retries: retries - 1,
