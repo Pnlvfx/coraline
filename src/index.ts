@@ -17,7 +17,18 @@ import { errToString } from './helpers/catch-error.js';
 const fsPromises = fs.promises;
 
 const coraline = {
-  wait: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
+  // eslint-disable-next-line no-unused-vars
+  wait: (ms: number, callback?: () => Promise<void>) => {
+    return new Promise<void>((resolve, reject) =>
+      setTimeout(() => {
+        if (callback) {
+          callback().then(resolve).catch(reject);
+        } else {
+          resolve();
+        }
+      }, ms),
+    );
+  },
   // eslint-disable-next-line no-unused-vars
   createScriptExec: (fn: (input?: string) => unknown, title = 'Welcome! Press Enter to run your function.') => {
     const rl = readline.createInterface({
