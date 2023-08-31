@@ -18,19 +18,17 @@ const fsPromises = fs.promises;
 const coraline = {
   wait: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
   // eslint-disable-next-line no-unused-vars
-  createScriptExec: (fn: (input?: string) => unknown) => {
+  createScriptExec: (fn: (input?: string) => unknown, title = 'Welcome! Press Enter to run your function.') => {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
     rl.on('line', async (input) => {
-      if (input.trim() === '') {
-        await fn(input);
-        console.log('\u001B[34mPress Enter to run your function.\u001B[0m');
-        rl.prompt();
-      }
+      await fn(input);
+      console.log(`\u001B[34m${title}\u001B[0m`);
+      rl.prompt();
     });
-    console.log('\u001B[34mWelcome! Press Enter to run your function.\u001B[0m');
+    console.log(`\u001B[34m${title}\u001B[0m`);
     rl.prompt();
   },
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
