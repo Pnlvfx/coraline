@@ -10,9 +10,19 @@ import coraline from '../index.js';
 
 const coralineMedia = {
   videos: coralineVideos,
-  getUrlFromPath: (folder: string) => {
+  getUrlFromPath: (folder: string, query?: Record<string, string>) => {
     const extra_path = folder.split('/static/');
-    return `${process.env.SERVER_URL}/static/${extra_path[1]}`;
+    const extra = extra_path.at(1);
+    if (!extra) throw new Error('Invalid path!');
+    let q = '';
+    let separator = '?';
+    if (query) {
+      for (const [key, value] of Object.entries(query)) {
+        q += `${separator}${key}=${value}`;
+        separator = '&';
+      }
+    }
+    return `${process.env.SERVER_URL}/static/${extra}${q || ''}`;
   },
   getPathFromUrl: (url: string) => {
     const split = url.split('/static/');
@@ -37,12 +47,12 @@ const coralineMedia = {
   isMedia: (string: string) => {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4|mov)$/.test(string);
   },
-  useTempPath: (format: string) => {
+  temporaryFile: (extension: string) => {
     const regex = /\./;
-    format = regex.test(format) ? format : `.${format}`;
+    extension = regex.test(extension) ? extension : `.${extension}`;
     const folder = coraline.use('images/tmp');
     const id = coraline.generateRandomId(10);
-    return `${folder}/${id}${format}`;
+    return `${folder}/${id}${extension}`;
   },
   /**
    * @deprecated This method is deprecated, use download instead.
