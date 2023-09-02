@@ -57,7 +57,7 @@ const coralineMedia = {
         if (res.statusCode === 302 && res.headers.location) {
           //redirect
           media_url = res.headers.location;
-          coraline.media.getMediaFromUrl(media_url, public_id, type);
+          coralineMedia.getMediaFromUrl(media_url, public_id, type);
           return;
         }
         const format = res.headers['content-type']?.split('/')[1];
@@ -70,7 +70,7 @@ const coralineMedia = {
           const error = err as NodeJS.ErrnoException;
           if (error.code === 'ENOENT') {
             coraline.use(`/images/${public_id.split('/')[0]}`);
-            coraline.media.getMediaFromUrl(url, public_id, type);
+            coralineMedia.getMediaFromUrl(url, public_id, type);
           } else {
             reject(err);
           }
@@ -109,7 +109,7 @@ const coralineMedia = {
             if (res.statusCode === 302 && res.headers.location) {
               //redirect
               console.log('Request was redirected... Try with the new url...');
-              coraline.media
+              coralineMedia
                 .download(res.headers.location, outputPath, options)
                 .then((_) => resolve(_))
                 .catch((err) => reject(err));

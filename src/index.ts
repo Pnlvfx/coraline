@@ -104,21 +104,23 @@ const coraline = {
       return false;
     }
   },
-  deleteFileOrFolder: async (filename: string) => {
-    try {
-      await fsPromises.rm(filename, { recursive: true });
-      return true;
-    } catch (err) {
-      const error = err as NodeJS.ErrnoException;
-      if (error.code === 'ENOENT') return true;
-      throw err;
+  rm: async (files: string | string[]) => {
+    const dieFiles = typeof files === 'string' ? [files] : files;
+    for (const file of dieFiles) {
+      try {
+        await fsPromises.rm(file, { recursive: true });
+      } catch (err) {
+        const error = err as NodeJS.ErrnoException;
+        if (error.code !== 'ENOENT') throw err;
+      }
     }
+    return true;
   },
   clearFolder: async (folder: string) => {
     const contents = await fsPromises.readdir(folder);
     for (const content of contents) {
       const curPath = path.join(folder, content);
-      await coraline.deleteFileOrFolder(curPath);
+      await coraline.rm(curPath);
     }
   },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
