@@ -1,10 +1,9 @@
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
-import { coraline_path, coralinemkDir, projectName, useStatic } from './helpers/init.js';
+import { generateRandomId, projectName, use, useStatic } from './helpers/init.js';
 import regex from './helpers/regex.js';
 import coralineDate from './helpers/date.js';
-import crypto from 'node:crypto';
 import coralineMedia from './helpers/media.js';
 import coralineColors from './helpers/colors.js';
 import { inspect } from 'node:util';
@@ -70,14 +69,7 @@ const coraline = {
   createPermalink: (text: string) => {
     return text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
   },
-  use: (document: string) => {
-    const isStatic = document.match('images') || document.match('videos') ? true : false;
-    const subFolder = isStatic ? 'static' : 'gov';
-    const extra_path = path.join(subFolder, document);
-    const isAbsolute = path.isAbsolute(extra_path);
-    const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
-    return coralinemkDir(folder);
-  },
+  use,
   useStatic,
   saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: File) => {
     try {
@@ -92,7 +84,7 @@ const coraline = {
           .split('/')
           .slice(1)
           .join('/');
-        coraline.use(subfolder);
+        use(subfolder);
         await coraline.saveFile(filename, file);
       } else {
         throw err;
@@ -146,7 +138,7 @@ const coraline = {
     }
 
     const timeUntilFunction = date.getTime() - Date.now();
-    console.log(`new Timeout added at ${coraline.date.toYYMMDDHHMM(date)}`);
+    console.log(`new Timeout added at ${coralineDate.toYYMMDDHHMM(date)}`);
     setTimeout(async () => {
       await fn();
       if (repeat) {
@@ -155,9 +147,7 @@ const coraline = {
       }
     }, timeUntilFunction);
   },
-  generateRandomId: (max: number) => {
-    return crypto.randomBytes(max / 2).toString('hex');
-  },
+  generateRandomId,
   log: (message?: unknown) => {
     console.log(
       inspect(message, {

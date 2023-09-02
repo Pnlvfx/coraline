@@ -1,9 +1,9 @@
 import path from 'node:path';
-import coraline from '../index.js';
 import fs from 'node:fs';
+import { generateRandomId, use } from './init.js';
 
-const tempDir = coraline.use('tmp');
-const getPath = (prefix = '') => path.join(tempDir, prefix + coraline.generateRandomId(10));
+const tempDir = use('tmp');
+const getPath = (prefix = '') => path.join(tempDir, prefix + generateRandomId(10));
 
 export const temporaryFile = ({ name, extension }: { name?: string; extension?: string }) => {
   if (name) {
