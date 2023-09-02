@@ -256,4 +256,6 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
   }
 };
 
+export { temporaryDirectory, temporaryFile } from './helpers/temp.js';
+
 export default coraline;

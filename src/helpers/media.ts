@@ -47,13 +47,6 @@ const coralineMedia = {
   isMedia: (string: string) => {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg|mp4|mov)$/.test(string);
   },
-  temporaryFile: (extension: string) => {
-    const regex = /\./;
-    extension = regex.test(extension) ? extension : `.${extension}`;
-    const folder = coraline.use('images/tmp');
-    const id = coraline.generateRandomId(10);
-    return `${folder}/${id}${extension}`;
-  },
   /**
    * @deprecated This method is deprecated, use download instead.
    */
