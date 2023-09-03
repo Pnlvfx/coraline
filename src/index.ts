@@ -1,18 +1,18 @@
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
-import { generateRandomId, projectName, use, useStatic } from './helpers/init.js';
-import regex from './helpers/regex.js';
-import coralineDate from './helpers/date.js';
-import coralineMedia from './helpers/media.js';
-import coralineColors from './helpers/colors.js';
+import { generateRandomId, projectName, use, useStatic } from './lib/init.js';
+import regex from './lib/regex.js';
+import coralineDate from './lib/date.js';
+import coralineMedia from './lib/media.js';
+import coralineColors from './lib/colors.js';
 import { inspect } from 'node:util';
 import readline from 'node:readline';
 import { URL } from 'node:url';
 import { RetryOptions } from './types';
 import os from 'node:os';
 import { File } from './types/file';
-import { errToString } from './helpers/catch-error.js';
+import { errToString } from './lib/catch-error.js';
 const fsPromises = fs.promises;
 
 const coraline = {
@@ -22,9 +22,9 @@ const coraline = {
       setTimeout(() => {
         if (callback) {
           callback().then(resolve).catch(reject);
-        } else {
-          resolve();
+          return;
         }
+        resolve();
       }, ms),
     );
   },
@@ -58,7 +58,7 @@ const coraline = {
   getUniqueArray: <T extends Record<K, string>, K extends keyof T>(arr: T[], key: K): T[] => {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
   },
-  shuffleArray: (array: unknown[]) => {
+  shuffleArray: <T>(array: T[]) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = array[i];
@@ -67,7 +67,11 @@ const coraline = {
     }
   },
   createPermalink: (text: string) => {
-    return text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
+    const perma = text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
+    if (perma.endsWith('_')) {
+      perma.slice(-1);
+    }
+    return perma;
   },
   use,
   useStatic,
@@ -230,8 +234,8 @@ const coraline = {
   colors: coralineColors,
 };
 
-export { consoleColor } from './helpers/console-color.js';
-export { errToString } from './helpers/catch-error.js';
+export { consoleColor } from './lib/console-color.js';
+export { errToString } from './lib/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
 
 export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
@@ -248,6 +252,6 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
   }
 };
 
-export { temporaryDirectory, temporaryFile } from './helpers/tempy.js';
+export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
 export default coraline;

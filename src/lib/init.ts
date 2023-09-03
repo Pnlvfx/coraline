@@ -2,8 +2,8 @@ import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 
-const _path = process.cwd();
-const coraline_path = path.resolve(_path, '../.coraline');
+const directory = process.cwd();
+const coraline_path = path.resolve(directory, '../.coraline');
 
 const coralinemkDir = (folder: string) => {
   fs.mkdir(folder, { recursive: true }, (err) => {
@@ -12,7 +12,7 @@ const coralinemkDir = (folder: string) => {
   return folder;
 };
 
-export const projectName = _path.split('/')[_path.split('/').length - 1].replace('api-', '').replace('api_', '');
+export const projectName = directory.split('/')[directory.split('/').length - 1].replace('api-', '').replace('api_', '').trim().replaceAll(' ', '');
 
 export const generateRandomId = (max = 10) => {
   return crypto.randomBytes(max / 2).toString('hex');
@@ -41,9 +41,9 @@ export const buildMediaPath = (public_id: string, type: 'images' | 'videos', for
 };
 
 export const buildMediaUrl = (public_id: string, type: 'images' | 'videos', format: string, w?: number, h?: number) => {
-  if (!process.env.SERVER_URL) throw new Error('You need to add SERVER_URL to your env file!');
+  if (!process.env['SERVER_URL']) throw new Error('You need to add SERVER_URL to your env file!');
   const split = public_id.split('/');
-  const url = `${process.env.SERVER_URL}/static/${type}/${split[0].toLowerCase()}/${split[1]}.${format}`;
+  const url = `${process.env['SERVER_URL']}/static/${type}/${split[0].toLowerCase()}/${split[1]}.${format}`;
   const query = `?w=${w}&h=${h}`;
   return w && h ? `${url}${query}` : url;
 };
