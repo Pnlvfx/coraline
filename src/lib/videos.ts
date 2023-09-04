@@ -6,9 +6,6 @@ const splitId = (public_id: string) => {
 
 const coralineVideos = {
   splitId,
-  buildUrl: (collection: string, id: string) => {
-    return `${process.env.SERVER_URL}/videos/${collection}/${id}.mp4`;
-  },
   // saveVideo: async (public_id: string, file: string, width: number, height: number) => {
   //   const data = splitId(public_id);
   //   if (!data) throw new Error(`No data found`);
