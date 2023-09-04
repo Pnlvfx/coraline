@@ -9,9 +9,9 @@ import coralineColors from './lib/colors.js';
 import { inspect } from 'node:util';
 import readline from 'node:readline';
 import { URL } from 'node:url';
-import { RetryOptions } from './types';
+import { RetryOptions } from './types/index.js';
 import os from 'node:os';
-import { File } from './types/file';
+import { File } from './types/file.js';
 import { errToString } from './lib/catch-error.js';
 const fsPromises = fs.promises;
 
@@ -43,7 +43,8 @@ const coraline = {
     rl.prompt();
   },
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
-    const element = arr[fromIndex];
+    const element = arr.at(fromIndex);
+    if (!element) throw new Error('Invalid values provided');
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);
   },
@@ -62,7 +63,9 @@ const coraline = {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const temp = array[i];
-      array[i] = array[j];
+      const newVal = array.at(j);
+      if (!temp || !newVal) throw new Error('Something went wrong');
+      array[i] = newVal;
       array[j] = temp;
     }
   },
@@ -84,10 +87,12 @@ const coraline = {
       if (error.code === 'ENOENT') {
         const folder = path.normalize(path.join(filename.toString(), '..'));
         const subfolder = folder
-          .split(projectName + '/')[1]
-          .split('/')
+          .split(projectName + '/')
+          .at(1)
+          ?.split('/')
           .slice(1)
           .join('/');
+        if (!subfolder) throw new Error('You really mess up this time!');
         use(subfolder);
         await coraline.saveFile(filename, file);
       } else {

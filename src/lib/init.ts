@@ -12,7 +12,10 @@ const coralinemkDir = (folder: string) => {
   return folder;
 };
 
-export const projectName = directory.split('/')[directory.split('/').length - 1].replace('api-', '').replace('api_', '').trim().replaceAll(' ', '');
+const basePath = directory.split('/').at(-1);
+if (!basePath) throw new Error('Error uring coraline initialization!');
+
+export const projectName = basePath.replace('api-', '').replace('api_', '').trim().replaceAll(' ', '');
 
 export const generateRandomId = (max = 10) => {
   return crypto.randomBytes(max / 2).toString('hex');
