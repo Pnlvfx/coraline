@@ -1,10 +1,11 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { generateRandomId, use } from './init.js';
+import { generateRandomId } from './init.js';
+import os from 'node:os';
 
 type Extensions = 'mp4' | 'mp3' | 'mov' | 'png' | 'jpg' | 'jpeg' | 'txt' | 'html' | 'css' | string;
 
-const tempDir = use('tmp');
+const tempDir = fs.realpathSync(os.tmpdir());
 const getPath = (prefix = '') => path.join(tempDir, prefix + generateRandomId(10));
 
 export const temporaryFile = ({ name, extension }: { name?: string; extension?: Extensions }) => {
