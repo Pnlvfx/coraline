@@ -16,7 +16,9 @@ const coralineMedia = {
   },
   getPathFromUrl: (url: string) => {
     const _url = new URL(url);
-    const segments = _url.pathname.split('/');
+    let segments = _url.pathname.split('/static/');
+    segments.shift();
+    segments = segments.join('/').split('/');
     const filename = segments.pop();
     const base_path = useStatic(segments.join('/'));
     return `${base_path}/${filename}`;
