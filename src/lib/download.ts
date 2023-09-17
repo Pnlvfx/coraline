@@ -6,7 +6,7 @@ const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
 
 export const download = (
   media_url: string,
-  outputPath: string,
+  outputDir: string,
   options?: {
     filename: string;
     timeout?: number;
@@ -29,7 +29,7 @@ export const download = (
           });
           if (res.statusCode === 302 && res.headers.location) {
             console.log('Request was redirected... Try with the new url...');
-            download(res.headers.location, outputPath, options)
+            download(res.headers.location, outputDir, options)
               .then((_) => resolve(_))
               .catch((err) => reject(err));
             return;
@@ -61,7 +61,7 @@ export const download = (
             filename += `.${format}`;
           }
 
-          const output = path.join(outputPath, filename);
+          const output = path.join(outputDir, filename);
           const fileStream = fs.createWriteStream(output);
           // res.on('data', (chunk) => {
           //   console.log(chunk.toString());
