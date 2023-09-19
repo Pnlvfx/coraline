@@ -42,7 +42,7 @@ export const download = (
           const format = res.headers['content-type']?.split('/').at(1)?.trim();
           if (!format) {
             res.resume();
-            reject(`This URL ${media_url} does not contain any media!`);
+            reject(`The URL ${media_url} does not contain any media!`);
             return;
           }
 
@@ -69,7 +69,17 @@ export const download = (
           // });
           res.pipe(fileStream);
           fileStream.on('error', (err) => {
-            reject(`Filestream error with url ${media_url}: ${err}`);
+            const error = err as NodeJS.ErrnoException;
+            if (error.code === 'ENOENT') {
+              fs.promises
+                .mkdir(outputDir, { recursive: true })
+                .then(() => {
+                  download(media_url, outputDir, options)
+                    .then((_) => resolve(_))
+                    .catch((err) => reject(err));
+                })
+                .catch((err) => reject(err));
+            } else reject(`Filestream error with url ${media_url}: ${err}`);
           });
           fileStream.on('finish', () => {
             fileStream.close();

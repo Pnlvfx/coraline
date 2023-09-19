@@ -95,14 +95,12 @@ const coraline = {
         if (!subfolder) throw new Error('You really mess up this time!');
         use(subfolder);
         await coraline.saveFile(filename, file);
-      } else {
-        throw err;
-      }
+      } else throw err;
     }
   },
-  readJSON: async <T>(file: string) => {
-    const _find = await fsPromises.readFile(file);
-    return JSON.parse(_find.toString()) as T;
+  readJSON: async <T>(file: string): Promise<T> => {
+    const data = await fsPromises.readFile(file);
+    return JSON.parse(data.toString());
   },
   isUrl: (text: string) => {
     try {
