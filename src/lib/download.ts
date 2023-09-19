@@ -27,7 +27,8 @@ export const download = (
             res.resume();
             reject(err);
           });
-          if (res.statusCode === 302 && res.headers.location) {
+          if (res.statusCode === 302 || res.statusCode === 301) {
+            if (!res.headers.location) return reject(`Request at ${media_url} was redirected and could bo nore be accessed!`);
             console.log('Request was redirected... Try with the new url...');
             download(res.headers.location, outputDir, options)
               .then((_) => resolve(_))
@@ -35,13 +36,13 @@ export const download = (
             return;
           } else if (res.statusCode !== 200) {
             res.resume();
-            reject(`Download error: ${res.statusCode} ${res.statusMessage}`);
+            reject(`Download error for this url ${media_url}: ${res.statusCode} ${res.statusMessage}`);
             return;
           }
           const format = res.headers['content-type']?.split('/').at(1)?.trim();
           if (!format) {
             res.resume();
-            reject('This URL does not contain any media!');
+            reject(`This URL ${media_url} does not contain any media!`);
             return;
           }
 
