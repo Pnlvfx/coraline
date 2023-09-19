@@ -1,11 +1,13 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { checkPath } from './make-dir.js';
 
 const directory = process.cwd();
 const coraline_path = path.resolve(directory, '../.coraline');
 
 const coralinemkDir = (folder: string) => {
+  checkPath(folder);
   fs.mkdir(folder, { recursive: true }, (err) => {
     if (err && err.code != 'EEXIST') throw new Error(err.message);
   });
@@ -22,9 +24,7 @@ export const generateRandomId = (max = 10) => {
 };
 
 export const use = (document: string) => {
-  const isStatic = document.match('images') || document.match('videos') ? true : false;
-  const subFolder = isStatic ? 'static' : 'gov';
-  const extra_path = path.join(subFolder, document);
+  const extra_path = path.join('gov', document);
   const isAbsolute = path.isAbsolute(extra_path);
   const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
   return coralinemkDir(folder);

@@ -69,7 +69,7 @@ export const download = (
           // });
           res.pipe(fileStream);
           fileStream.on('error', (err) => {
-            reject(err);
+            reject(`Filestream error with url ${media_url}: ${err}`);
           });
           fileStream.on('finish', () => {
             fileStream.close();
