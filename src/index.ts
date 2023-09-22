@@ -232,14 +232,14 @@ const coraline = {
     }
     return userAgent;
   },
-  getGptCommand: async (arr: unknown[]) => {
+  getGptCommand: async (arr: unknown[], maxLength = 14_500) => {
     let fixturesString = '';
     for (const a of arr) {
       if (fixturesString.length < 14_000) {
         fixturesString += JSON.stringify(a);
       } else break;
     }
-    if (fixturesString.length > 15_000) throw new Error('Too long');
+    if (fixturesString.length > maxLength) throw new Error('Too long');
     const file = temporaryFile({ extension: 'json' });
     await coraline.saveFile(file, fixturesString);
     console.log('The command is here:', file);
