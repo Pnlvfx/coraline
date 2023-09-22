@@ -235,7 +235,7 @@ const coraline = {
   getGptCommand: async (arr: unknown[], maxLength = 14_500) => {
     let fixturesString = '';
     for (const a of arr) {
-      if (fixturesString.length < 14_000) {
+      if (fixturesString.length < maxLength) {
         fixturesString += JSON.stringify(a);
       } else break;
     }
