@@ -13,6 +13,7 @@ import { RetryOptions } from './types/index.js';
 import os from 'node:os';
 import { File } from './types/file.js';
 import { errToString } from './lib/catch-error.js';
+import { temporaryFile } from './index.js';
 const fsPromises = fs.promises;
 
 const coraline = {
@@ -230,6 +231,18 @@ const coraline = {
       }
     }
     return userAgent;
+  },
+  getGptCommand: async (arr: unknown[]) => {
+    let fixturesString = '';
+    for (const a of arr) {
+      if (fixturesString.length < 14_000) {
+        fixturesString += JSON.stringify(a);
+      } else break;
+    }
+    if (fixturesString.length > 15_000) throw new Error('Too long');
+    const file = temporaryFile({ extension: 'json' });
+    await coraline.saveFile(file, fixturesString);
+    console.log('The command is here:', file);
   },
   media: coralineMedia,
   date: coralineDate,
