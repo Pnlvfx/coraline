@@ -16,6 +16,10 @@ import { errToString } from './lib/catch-error.js';
 import { temporaryFile } from './index.js';
 const fsPromises = fs.promises;
 
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
+
+export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
+
 const coraline = {
   // eslint-disable-next-line no-unused-vars
   wait: (ms: number, callback?: () => Promise<void>) => {
