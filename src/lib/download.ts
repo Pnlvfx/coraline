@@ -95,9 +95,6 @@ export const download = (
       )
       .on('timeout', () => {
         request.destroy();
-        download(url.href, outputDir, options)
-          .then((_) => resolve(_))
-          .catch((err) => reject(err));
       })
       .on('error', (err) => {
         reject(err);
