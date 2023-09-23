@@ -89,7 +89,9 @@ export const download = (
       )
       .on('timeout', () => {
         request.destroy();
-        reject(`Request timed out at ${url.href}`);
+        download(url.href, outputDir, options)
+          .then((_) => resolve(_))
+          .catch((err) => reject(err));
       })
       .on('error', (err) => {
         reject(err);
