@@ -10,6 +10,7 @@ export const download = (
   options?: {
     filename: string;
     timeout?: number;
+    headers?: http.OutgoingHttpHeaders;
   },
 ) => {
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -21,7 +22,12 @@ export const download = (
     const request = fetcher
       .get(
         url.href,
-        { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0', timeout: options?.timeout || 60_000 } },
+        {
+          headers: options?.headers || {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0',
+            timeout: options?.timeout || 60_000,
+          },
+        },
         (res) => {
           res.on('error', (err) => {
             res.resume();
