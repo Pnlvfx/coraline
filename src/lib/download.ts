@@ -14,13 +14,13 @@ export const download = (
 ) => {
   // eslint-disable-next-line sonarjs/cognitive-complexity
   return new Promise<string>((resolve, reject) => {
-    const _url = new URL(media_url.endsWith('/') ? media_url.slice(0, -1) : media_url);
-    let filename = options?.filename || path.basename(_url.pathname);
+    const url = new URL(media_url.endsWith('/') ? media_url.slice(0, -1) : media_url);
+    let filename = options?.filename || path.basename(url.pathname);
     filename = decodeURIComponent(filename).replaceAll(' ', '-');
-    const fetcher = _url.protocol === 'https:' ? https : http;
+    const fetcher = url.protocol === 'https:' ? https : http;
     const request = fetcher
       .get(
-        _url.href,
+        url.href,
         { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0', timeout: options?.timeout || 60_000 } },
         (res) => {
           res.on('error', (err) => {
@@ -28,7 +28,7 @@ export const download = (
             reject(err);
           });
           if (res.statusCode === 302 || res.statusCode === 301) {
-            if (!res.headers.location) return reject(`Request at ${media_url} was redirected and could bo nore be accessed!`);
+            if (!res.headers.location) return reject(`Request at ${url.href} was redirected and could bo nore be accessed!`);
             console.log('Request was redirected... Try with the new url...');
             download(res.headers.location, outputDir, options)
               .then((_) => resolve(_))
@@ -36,13 +36,13 @@ export const download = (
             return;
           } else if (res.statusCode !== 200) {
             res.resume();
-            reject(`Download error for this url ${media_url}: ${res.statusCode} ${res.statusMessage}`);
+            reject(`Download error for this url ${url.href}: ${res.statusCode} ${res.statusMessage}`);
             return;
           }
           const format = res.headers['content-type']?.split('/').at(1)?.trim();
           if (!format) {
             res.resume();
-            reject(`The URL ${media_url} does not contain any media!`);
+            reject(`The URL ${url.href} does not contain any media!`);
             return;
           }
 
@@ -74,12 +74,12 @@ export const download = (
               fs.promises
                 .mkdir(outputDir, { recursive: true })
                 .then(() => {
-                  download(media_url, outputDir, options)
+                  download(url.href, outputDir, options)
                     .then((_) => resolve(_))
                     .catch((err) => reject(err));
                 })
                 .catch((err) => reject(err));
-            } else reject(`Filestream error with url ${media_url}: ${err}`);
+            } else reject(`Filestream error with url ${url.href}: ${err}`);
           });
           fileStream.on('finish', () => {
             fileStream.close();
@@ -89,7 +89,7 @@ export const download = (
       )
       .on('timeout', () => {
         request.destroy();
-        reject('Request timed out');
+        reject(`Request timed out at ${url.href}`);
       })
       .on('error', (err) => {
         reject(err);
