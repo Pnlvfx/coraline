@@ -18,6 +18,11 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
 
 export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+  // eslint-disable-next-line @typescript-eslint/ban-types
+} & {};
+
 const coraline = {
   wait: (ms: number, callback?: () => Promise<void>) => {
     return new Promise<void>((resolve, reject) =>
