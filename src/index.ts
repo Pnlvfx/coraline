@@ -1,17 +1,15 @@
 import fs from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
-import { generateRandomId, projectName, use, useStatic } from './lib/init.js';
+import { createScriptExec, generateRandomId, readJSON, saveFile, use, useStatic } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
 import { inspect } from 'node:util';
-import readline from 'node:readline';
 import { URL } from 'node:url';
 import { RetryOptions } from './types/index.js';
 import os from 'node:os';
-import { File } from './types/file.js';
 import { errToString } from './lib/catch-error.js';
 import { temporaryFile } from './index.js';
 import { cachedRequest } from './lib/cache.js';
@@ -35,19 +33,7 @@ const coraline = {
     );
   },
   // eslint-disable-next-line no-unused-vars
-  createScriptExec: (fn: (input?: string) => unknown, title = 'Welcome! Press Enter to run your function.') => {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    rl.on('line', async (input) => {
-      await fn(input);
-      console.log(`\u001B[34m${title}\u001B[0m`);
-      rl.prompt();
-    });
-    console.log(`\u001B[34m${title}\u001B[0m`);
-    rl.prompt();
-  },
+  createScriptExec,
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
     const element = arr.at(fromIndex);
     if (!element) throw new Error('Invalid values provided');
@@ -84,30 +70,8 @@ const coraline = {
   },
   use,
   useStatic,
-  saveFile: async (filename: fs.PathLike | fs.promises.FileHandle, file: File) => {
-    try {
-      await fsPromises.writeFile(filename, file);
-      await fsPromises.chmod(filename.toString(), '777');
-    } catch (err) {
-      const error = err as NodeJS.ErrnoException;
-      if (error.code === 'ENOENT') {
-        const folder = path.normalize(path.join(filename.toString(), '..'));
-        const subfolder = folder
-          .split(projectName + '/')
-          .at(1)
-          ?.split('/')
-          .slice(1)
-          .join('/');
-        if (!subfolder) throw new Error('You really mess up this time!');
-        use(subfolder);
-        await coraline.saveFile(filename, file);
-      } else throw err;
-    }
-  },
-  readJSON: async <T>(file: string): Promise<T> => {
-    const data = await fsPromises.readFile(file);
-    return JSON.parse(data.toString());
-  },
+  saveFile,
+  readJSON,
   isUrl: (text: string) => {
     try {
       // eslint-disable-next-line no-new
