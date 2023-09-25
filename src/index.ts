@@ -202,16 +202,15 @@ const coraline = {
     return userAgent;
   },
   getGptCommand: async (arr: unknown[], maxLength = 14_500) => {
-    let fixturesString = '';
+    let command = '';
     for (const a of arr) {
       const string = JSON.stringify(a, undefined, 4);
-      if (fixturesString.length < maxLength - string.length) {
-        fixturesString += string;
-      } else break;
+      if (command.length > maxLength - string.length) break;
+      command += string + ',';
     }
-    if (fixturesString.length > maxLength) throw new Error('Too long');
+    if (command.length > maxLength) throw new Error('Too long');
     const file = temporaryFile({ extension: 'json' });
-    await coraline.saveFile(file, fixturesString);
+    await coraline.saveFile(file, command);
     console.log('The command is here:', file);
   },
   cachedRequest,
