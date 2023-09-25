@@ -14,6 +14,7 @@ import os from 'node:os';
 import { File } from './types/file.js';
 import { errToString } from './lib/catch-error.js';
 import { temporaryFile } from './index.js';
+import { cachedRequest } from './lib/cache.js';
 const fsPromises = fs.promises;
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
@@ -249,6 +250,7 @@ const coraline = {
     await coraline.saveFile(file, fixturesString);
     console.log('The command is here:', file);
   },
+  cachedRequest,
   media: coralineMedia,
   date: coralineDate,
   regex,
