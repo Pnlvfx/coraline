@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import { promises as fs } from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
 import { createScriptExec, generateRandomId, readJSON, saveFile, use, useStatic } from './lib/init.js';
@@ -11,16 +11,14 @@ import { URL } from 'node:url';
 import { RetryOptions } from './types/index.js';
 import os from 'node:os';
 import { errToString } from './lib/catch-error.js';
-import { temporaryFile } from './index.js';
 import { cachedRequest } from './lib/cache.js';
-const fsPromises = fs.promises;
+import { getGptCommand } from './lib/gpt-command.js';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
 
 export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
 const coraline = {
-  // eslint-disable-next-line no-unused-vars
   wait: (ms: number, callback?: () => Promise<void>) => {
     return new Promise<void>((resolve, reject) =>
       setTimeout(() => {
@@ -32,7 +30,6 @@ const coraline = {
       }, ms),
     );
   },
-  // eslint-disable-next-line no-unused-vars
   createScriptExec,
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
     const element = arr.at(fromIndex);
@@ -85,7 +82,7 @@ const coraline = {
     const dieFiles = typeof files === 'string' ? [files] : files;
     for (const file of dieFiles) {
       try {
-        await fsPromises.rm(file, { recursive: true });
+        await fs.rm(file, { recursive: true });
       } catch (err) {
         const error = err as NodeJS.ErrnoException;
         if (error.code !== 'ENOENT') throw err;
@@ -94,10 +91,9 @@ const coraline = {
     return true;
   },
   clearFolder: async (folder: string) => {
-    const contents = await fsPromises.readdir(folder);
+    const contents = await fs.readdir(folder);
     for (const content of contents) {
-      const curPath = path.join(folder, content);
-      await coraline.rm(curPath);
+      await coraline.rm(path.join(folder, content));
     }
   },
   runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
@@ -105,8 +101,6 @@ const coraline = {
     date.setHours(hour);
     date.setMinutes(minute);
     date.setSeconds(0);
-
-    // If the scheduled time has already passed for today, schedule it for tomorrow or stop it
 
     if (date < new Date()) {
       if (repeat) {
@@ -201,18 +195,7 @@ const coraline = {
     }
     return userAgent;
   },
-  getGptCommand: async (arr: unknown[], maxLength = 14_500) => {
-    let command = '';
-    for (const a of arr) {
-      const string = JSON.stringify(a, undefined, 4);
-      if (command.length > maxLength - string.length) break;
-      command += string + ',';
-    }
-    if (command.length > maxLength) throw new Error('Too long');
-    const file = temporaryFile({ extension: 'json' });
-    await coraline.saveFile(file, command);
-    console.log('The command is here:', file);
-  },
+  getGptCommand,
   cachedRequest,
   media: coralineMedia,
   date: coralineDate,
