@@ -59,6 +59,7 @@ export const cachedRequest = async <T>(
     if (options?.customId) {
       c = options.customId;
     }
+    console.log('Returning data stored from disk!');
     return data;
   }
 
