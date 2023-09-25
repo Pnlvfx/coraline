@@ -38,5 +38,3 @@ export const getGptCommand = async (prompt: unknown[] | string | Record<string, 
   console.log('The generated prompt is here:', dir);
   return fileData;
 };
-
-getGptCommand(Array.from({ length: 2000 }).map(() => ({ ciao: 'ciao', hello: 'hello', bue: 'bye' })));
