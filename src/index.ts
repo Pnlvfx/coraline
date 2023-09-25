@@ -65,10 +65,6 @@ const coraline = {
     }
     return perma;
   },
-  use,
-  useStatic,
-  saveFile,
-  readJSON,
   isUrl: (text: string) => {
     try {
       // eslint-disable-next-line no-new
@@ -195,6 +191,10 @@ const coraline = {
     }
     return userAgent;
   },
+  use,
+  useStatic,
+  saveFile,
+  readJSON,
   getGptCommand,
   cachedRequest,
   media: coralineMedia,

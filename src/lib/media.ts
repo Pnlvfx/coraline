@@ -1,4 +1,3 @@
-import coralineVideos from './videos.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -6,7 +5,6 @@ import { useStatic } from './init.js';
 import { download } from './download.js';
 
 const coralineMedia = {
-  videos: coralineVideos,
   getUrlFromPath: (folder: string, query?: Record<string, string>) => {
     if (!process.env['SERVER_URL']) throw new Error('Please add SERVER_URL to your env file to use this function');
     const extra_path = folder.split('/static/').at(1);
