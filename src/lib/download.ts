@@ -2,13 +2,15 @@ import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
+import { Range } from '../index.js';
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
 
 export const download = (
   media_url: string,
   outputDir: string,
   options?: {
-    filename: string;
+    filename?: string;
+    filenameLength?: Range<0, 256>;
     timeout?: number;
     headers?: http.OutgoingHttpHeaders;
   },
@@ -19,6 +21,7 @@ export const download = (
     let filename = options?.filename || path.basename(url.pathname);
     filename = decodeURIComponent(filename).replaceAll(' ', '-');
     const fetcher = url.protocol === 'https:' ? https : http;
+    const maxLength = options?.filenameLength || 80;
     const request = fetcher
       .get(
         url.href,
@@ -46,20 +49,14 @@ export const download = (
             return;
           }
           const format = res.headers['content-type']?.split('/').at(1)?.trim();
-          if (!format) {
+          if (!format || !allowedFormats.test(format)) {
             res.resume();
-            reject(`The URL ${url.href} does not contain any media!`);
+            reject(`The URL ${url.href} does not contain any media or it has an invalid format! Format: ${format}`);
             return;
           }
 
-          if (!allowedFormats.test(format)) {
-            res.resume();
-            reject(`Invalid format "${format}", note that the page could be protected! ${res.statusCode} ${res.statusMessage}`);
-            return;
-          }
-
-          if (filename.length > 20) {
-            filename = filename.slice(-20);
+          if (filename.length > maxLength) {
+            filename = filename.slice(-maxLength);
           }
 
           const filenameFormat = path.extname(filename);
