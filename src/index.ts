@@ -112,7 +112,6 @@ const coraline = {
     }
 
     const timeUntilFunction = date.getTime() - Date.now();
-    console.log(`new Timeout added at ${coralineDate.toYYMMDDHHMM(date)}`);
     setTimeout(async () => {
       await fn();
       if (repeat) {
@@ -167,7 +166,6 @@ const coraline = {
     if (!contentLength) throw new Error('Unable to determine file size. Content-Length header missing.');
     const fileSizeInBytes = Number.parseInt(contentLength, 10);
     const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-    console.log(`File size: ${fileSizeInMB.toFixed(2)} MB`);
     return Number(fileSizeInMB.toFixed(2));
   },
   getUserAgent: () => {

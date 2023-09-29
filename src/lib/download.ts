@@ -38,7 +38,9 @@ export const download = (
           });
           if (res.statusCode === 302 || res.statusCode === 301) {
             if (!res.headers.location) return reject(`Request at ${url.href} was redirected and could bo nore be accessed!`);
-            console.log('Request was redirected... Try with the new url...');
+            if (process.env['NODE_ENV'] === 'development') {
+              console.log('Request was redirected... Try with the new url...');
+            }
             download(res.headers.location, outputDir, options)
               .then((_) => resolve(_))
               .catch((err) => reject(err));
@@ -67,9 +69,6 @@ export const download = (
 
           const output = path.join(outputDir, filename);
           const fileStream = fs.createWriteStream(output);
-          // res.on('data', (chunk) => {
-          //   console.log(chunk.toString());
-          // });
           res.pipe(fileStream);
           fileStream.on('error', (err) => {
             const error = err as NodeJS.ErrnoException;
