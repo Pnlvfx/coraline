@@ -11,14 +11,15 @@ export interface Cache {
 type CacheInfo = Record<string, { isValid: boolean }>;
 
 const caches: Partial<Record<string, Cache>> = {};
-const cacheDir = use('cache');
-const storedCacheNamePath = path.join(cacheDir, 'cache-info.json');
 const cacheInfo: Partial<CacheInfo> = {};
+let initCacheDir: string | undefined;
+let initStoredCacheNamePath: string | undefined;
 
 const getCache = async (name: string) => {
+  if (!initStoredCacheNamePath) throw new Error('Invalid cache, please report it');
   if (cacheInfo[name]) return cacheInfo[name];
   try {
-    const info = await readJSON<typeof cacheInfo>(storedCacheNamePath);
+    const info = await readJSON<typeof cacheInfo>(initStoredCacheNamePath);
     if (!info[name]) return;
     return info[name];
   } catch {
@@ -28,16 +29,17 @@ const getCache = async (name: string) => {
 
 const getStored = async (name: string) => {
   const info = await getCache(name);
-  if (!info || !info?.isValid) return;
-  const file = path.join(cacheDir, `${name}.json`);
+  if (!info || !info?.isValid || !initCacheDir) return;
+  const file = path.join(initCacheDir, `${name}.json`);
   return readJSON<Cache>(file);
 };
 
 const store = async (cache: Cache, name: string) => {
-  const file = path.join(cacheDir, `${name}.json`);
+  if (!initCacheDir || !initStoredCacheNamePath) throw new Error('Invalid cache store, please report it!');
+  const file = path.join(initCacheDir, `${name}.json`);
   await saveFile(file, JSON.stringify(cache));
   cacheInfo[name] = { isValid: true };
-  await saveFile(storedCacheNamePath, JSON.stringify(cacheInfo));
+  await saveFile(initStoredCacheNamePath, JSON.stringify(cacheInfo));
 };
 
 export const cachedRequest = async <T>(
@@ -45,6 +47,10 @@ export const cachedRequest = async <T>(
   callback: () => Promise<T>,
   options?: { customId?: string; cacheDuration?: number; store?: boolean },
 ): Promise<T> => {
+  if (!initCacheDir) {
+    initCacheDir = use('cache');
+    initStoredCacheNamePath = path.join(initCacheDir, 'cache-info.json');
+  }
   const currentTime = Date.now();
   let cache = options?.store ? await getStored(name) : caches[name];
 

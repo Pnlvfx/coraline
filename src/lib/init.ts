@@ -8,17 +8,15 @@ import readline from 'node:readline';
 const directory = process.cwd();
 const coraline_path = path.resolve(directory, '../.coraline');
 
-const coralinemkDir = (folder: string) => {
+const mkDir = (folder: string) => {
   checkPath(folder);
   fs.mkdir(folder, { recursive: true }, (err) => {
     if (err && err.code != 'EEXIST') throw new Error(err.message);
   });
-  return folder;
 };
 
 const basePath = directory.split('/').at(-1);
-if (!basePath) throw new Error('Error uring coraline initialization!');
-
+if (!basePath) throw new Error('Error uring coraline initialization: unsupported system!');
 const projectName = basePath.replace('api-', '').replace('api_', '').trim().replaceAll(' ', '');
 
 export const generateRandomId = (max = 10) => {
@@ -29,14 +27,16 @@ export const use = (document: string) => {
   const extra_path = path.join('gov', document);
   const isAbsolute = path.isAbsolute(extra_path);
   const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
-  return coralinemkDir(folder);
+  mkDir(folder);
+  return folder;
 };
 
 export const useStatic = (document?: string) => {
   const extra_path = document ? path.join('static', document) : 'static';
   const isAbsolute = path.isAbsolute(extra_path);
   const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
-  return coralinemkDir(folder);
+  mkDir(folder);
+  return folder;
 };
 
 export const readJSON = async <T>(file: string): Promise<T> => {
