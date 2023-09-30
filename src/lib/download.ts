@@ -3,7 +3,7 @@ import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
 import { Range } from '../index.js';
-const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4)$/i;
+const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mp3)$/i;
 
 export const download = (
   media_url: string,
