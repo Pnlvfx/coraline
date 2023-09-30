@@ -23,6 +23,8 @@ export type Prettify<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};
 
+const urlPrefix = ['http://', 'https://', 'ftp://'];
+
 const coraline = {
   wait: (ms: number, callback?: () => Promise<void>) => {
     return new Promise<void>((resolve, reject) =>
@@ -70,11 +72,13 @@ const coraline = {
     }
     return perma;
   },
-  isUrl: (text: string) => {
+  isUrl: (input: string) => {
     try {
-      // eslint-disable-next-line no-new
-      new URL(text);
-      return true;
+      const url = new URL(input);
+      for (const prefix of urlPrefix) {
+        if (url.href.startsWith(prefix)) return true;
+      }
+      return false;
     } catch {
       return false;
     }
