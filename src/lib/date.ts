@@ -1,5 +1,5 @@
-const formatDate = (date: string | Date) => {
-  if (typeof date === 'string') {
+const formatDate = (date: string | number | Date) => {
+  if (typeof date === 'string' || typeof date === 'number') {
     date = new Date(date);
   }
   const year = date.getFullYear();
@@ -18,7 +18,7 @@ const formatDate = (date: string | Date) => {
 };
 
 const coralineDate = {
-  toYYMMDD: (date: string | Date) => {
+  toYYMMDD: (date: string | number | Date) => {
     const time = formatDate(date);
     return `${time.year}-${time.month}-${time.day}`;
   },
@@ -32,21 +32,6 @@ const coralineDate = {
   },
   endOfDay: (date = new Date()) => {
     date.setHours(23, 59, 59, 999);
-    return date;
-  },
-  startOfUTCDay: (date = new Date()) => {
-    date.setUTCHours(0, 0, 0, 0);
-    return date;
-  },
-  endOfUTCDay: (date = new Date()) => {
-    date.setUTCHours(23, 59, 59, 999);
-    return date;
-  },
-  hourToms: (hour: number) => {
-    return hour * 60 * 60 * 1000;
-  },
-  addHours: (numOfHours: number, date = new Date()) => {
-    date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
     return date;
   },
 };
