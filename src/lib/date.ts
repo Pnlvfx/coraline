@@ -22,7 +22,7 @@ const coralineDate = {
     const time = formatDate(date);
     return `${time.year}-${time.month}-${time.day}`;
   },
-  toYYMMDDHHMM: (date: string | Date) => {
+  toYYMMDDHHMM: (date: string | number | Date) => {
     const time = formatDate(date);
     return `${time.year}-${time.month}-${time.day} ${time.hours}:${time.minutes}`;
   },
