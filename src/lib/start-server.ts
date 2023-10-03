@@ -3,8 +3,8 @@ import nodemon from 'nodemon';
 let isRunning = false;
 
 export interface ServerOptions {
-  start: () => Promise<void>;
-  close: () => Promise<void>;
+  start: () => void | Promise<void>;
+  close: () => void | Promise<void>;
 }
 
 export const startServer = async (script: string, options?: ServerOptions) => {
