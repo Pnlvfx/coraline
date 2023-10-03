@@ -124,7 +124,6 @@ const coraline = {
       }
     }, timeUntilFunction);
   },
-  generateRandomId,
   log: (message?: unknown) => {
     console.log(
       inspect(message, {
@@ -198,6 +197,7 @@ const coraline = {
     }
     return userAgent;
   },
+  generateRandomId,
   use,
   useStatic,
   saveFile,
@@ -229,5 +229,7 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
 };
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
+
+export { startServer } from './lib/start-server.js';
 
 export default coraline;
