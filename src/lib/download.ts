@@ -33,15 +33,25 @@ export const download = (
         reject(err);
       });
       if (res.statusCode === 302 || res.statusCode === 301) {
-        if (!res.headers.location) return reject(`Request at ${url.href} was redirected and could bo nore be accessed!`);
+        if (!res.headers.location) {
+          res.resume();
+          reject(`Request at ${url.href} has redirect but could not be redirected!`);
+          return;
+        }
+        if (res.headers.location === url.href) {
+          res.resume();
+          reject(`Avoid redirecting to the same url, they're detecting you as a bot!`);
+          return;
+        }
         if (process.env['NODE_ENV'] === 'development') {
-          console.log('Request was redirected... Try with the new url...');
+          console.log(`Request was redirected to ${res.headers.location}...`);
         }
         download(res.headers.location, outputDir, options)
           .then((_) => resolve(_))
           .catch((err) => reject(err));
         return;
-      } else if (res.statusCode !== 200) {
+      }
+      if (res.statusCode !== 200) {
         res.resume();
         reject(`Download error for this url ${url.href}: ${res.statusCode} ${res.statusMessage}`);
         return;
