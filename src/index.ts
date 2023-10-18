@@ -232,4 +232,6 @@ export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
 export { parseSetCookieHeader } from './lib/cookie-parser.js';
 
+export type { Cookie } from './lib/cookie-parser.js';
+
 export default coraline;
