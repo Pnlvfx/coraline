@@ -230,4 +230,6 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
+export { parseSetCookieHeader } from './lib/cookie-parser.js';
+
 export default coraline;
