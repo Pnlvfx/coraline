@@ -2,7 +2,7 @@ import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
-import { Range } from '../index.js';
+import type { Range } from '../index.js';
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 export const download = (
@@ -33,14 +33,9 @@ export const download = (
         reject(err);
       });
       if (res.statusCode === 302 || res.statusCode === 301) {
-        if (!res.headers.location) {
+        if (!res.headers.location || res.headers.location === url.href) {
           res.resume();
-          reject(`Request at ${url.href} has redirect but could not be redirected!`);
-          return;
-        }
-        if (res.headers.location === url.href) {
-          res.resume();
-          reject(`Avoid redirecting to the same url, they're detecting you as a bot!`);
+          reject(`Request at ${url.href} has invalid redirect url!`);
           return;
         }
         if (process.env['NODE_ENV'] === 'development') {
