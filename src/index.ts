@@ -16,6 +16,8 @@ import { getGptCommand } from './lib/gpt-command.js';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
 
+type Callback = () => Promise<void> | (() => void);
+
 export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
 export type Prettify<T> = {
@@ -26,6 +28,7 @@ export type Prettify<T> = {
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
 const coraline = {
+  // THE CALLBACK SHOULD BECOME A CALLBACK TYPE
   wait: (ms: number, callback?: () => Promise<void>) => {
     return new Promise<void>((resolve, reject) =>
       setTimeout(() => {
@@ -101,7 +104,7 @@ const coraline = {
       await coraline.rm(path.join(folder, content));
     }
   },
-  runAtSpecificTime: (hour: number, minute: number, fn: () => Promise<void>, repeat: boolean) => {
+  runAtSpecificTime: (hour: number, minute: number, fn: Callback, repeat: boolean) => {
     const date = new Date();
     date.setHours(hour);
     date.setMinutes(minute);
