@@ -200,6 +200,7 @@ const coraline = {
     }
     return userAgent;
   },
+  isJson: (res: Response) => res.headers.get('Content-Type')?.includes('application/json'),
   generateRandomId,
   use,
   useStatic,
