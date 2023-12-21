@@ -68,6 +68,16 @@ const coraline = {
       array[j] = temp;
     }
   },
+  findDuplicates: <T>(arr: T[]) => {
+    const duplicates: T[] = [];
+    for (const [index, item] of arr.entries()) {
+      if (arr.includes(item, index + 1) && !duplicates.includes(item)) {
+        // If the item appears again later in the array and is not already in the duplicates array
+        duplicates.push(item);
+      }
+    }
+    return duplicates;
+  },
   createPermalink: (text: string) => {
     const perma = text.trim().replaceAll(' ', '_').replaceAll(/\W/g, '').toLowerCase().replaceAll('__', '_').slice(0, 50).trimEnd();
     if (perma.endsWith('_')) {
