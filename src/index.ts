@@ -16,9 +16,9 @@ import { getGptCommand } from './lib/gpt-command.js';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
 
-export type Callback = (() => Promise<void>) | (() => void);
-
 export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
+
+export type Callback = (() => Promise<void>) | (() => void);
 
 export type Prettify<T> = {
   [K in keyof T]: T[K];
@@ -247,5 +247,7 @@ export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { parseSetCookieHeader } from './lib/cookie-parser.js';
 
 export type { Cookie } from './lib/cookie-parser.js';
+
+export type { ConsoleColors } from './lib/console-color.js';
 
 export default coraline;
