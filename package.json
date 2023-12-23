@@ -2,7 +2,7 @@
   "name": "coraline",
   "description": ".",
   "version": "2023.7.31",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "exports": {
@@ -16,7 +16,7 @@
   "license": "MIT",
   "scripts": {
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
-    "dev": "tsc -w --outDir dist/esm & node --watch ./dist/esm/index.js",
+    "dev": "tsc -w --outDir dist/esm & nodemon .",
     "start": "node .",
     "lint": "eslint ./src",
     "build": "rimraf dist && npm run lint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
