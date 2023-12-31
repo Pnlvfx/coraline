@@ -1,4 +1,17 @@
-export type ConsoleColors = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'brown';
+export type ConsoleColors =
+  | 'red'
+  | 'green'
+  | 'blue'
+  | 'yellow'
+  | 'purple'
+  | 'brown'
+  | 'cyan'
+  | 'white'
+  | 'black'
+  | 'gray'
+  | 'light-blue'
+  | 'orange'
+  | 'lila';
 
 export const consoleColor = (color: ConsoleColors, ...optionalParameters: unknown[]) => {
   let fixedColor: string | undefined;
@@ -25,6 +38,34 @@ export const consoleColor = (color: ConsoleColors, ...optionalParameters: unknow
     }
     case 'brown': {
       fixedColor = '\u001B[33;2m%s\u001B[0m';
+      break;
+    }
+    case 'cyan': {
+      fixedColor = '\u001B[36m%s\u001B[0m';
+      break;
+    }
+    case 'white': {
+      fixedColor = '\u001B[37m%s\u001B[0m';
+      break;
+    }
+    case 'black': {
+      fixedColor = '\u001B[30m%s\u001B[0m';
+      break;
+    }
+    case 'gray': {
+      fixedColor = '\u001B[90m%s\u001B[0m';
+      break;
+    }
+    case 'light-blue': {
+      fixedColor = '\u001B[94m%s\u001B[0m';
+      break;
+    }
+    case 'orange': {
+      fixedColor = '\u001B[33m%s\u001B[0m'; // Adjust the code for orange as needed
+      break;
+    }
+    case 'lila': {
+      fixedColor = '\u001B[95m%s\u001B[0m';
       break;
     }
     // No default
