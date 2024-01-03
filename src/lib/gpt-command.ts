@@ -36,5 +36,5 @@ export const getGptCommand = async (prompt: unknown[] | string | Record<string, 
     });
   }
   console.log('The generated prompt is here:', dir);
-  return fileData;
+  return { fileData, dir };
 };

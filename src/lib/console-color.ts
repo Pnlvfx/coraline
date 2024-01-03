@@ -1,17 +1,4 @@
-export type ConsoleColors =
-  | 'red'
-  | 'green'
-  | 'blue'
-  | 'yellow'
-  | 'purple'
-  | 'brown'
-  | 'cyan'
-  | 'white'
-  | 'black'
-  | 'gray'
-  | 'light-blue'
-  | 'orange'
-  | 'lila';
+export type ConsoleColors = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'brown' | 'cyan' | 'white' | 'black' | 'gray' | 'orange' | 'lila';
 
 export const consoleColor = (color: ConsoleColors, ...optionalParameters: unknown[]) => {
   let fixedColor: string | undefined;
@@ -54,10 +41,6 @@ export const consoleColor = (color: ConsoleColors, ...optionalParameters: unknow
     }
     case 'gray': {
       fixedColor = '\u001B[90m%s\u001B[0m';
-      break;
-    }
-    case 'light-blue': {
-      fixedColor = '\u001B[94m%s\u001B[0m';
       break;
     }
     case 'orange': {

@@ -158,6 +158,7 @@ const coraline = {
     const total = process.memoryUsage().heapTotal;
     const percentage = Math.round((used / total) * 10_000) / 100;
     console.log(`Heap usage: ${percentage}%`);
+    return { heapUsage: percentage };
   },
   getContentType: (url: string) => {
     return new Promise<string>((resolve, reject) => {
@@ -233,7 +234,9 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
     return await fn();
   } catch (err) {
     if (retries === 0) throw err;
-    console.log(`Function fail, try again, error: ${errToString(err)}, retries: ${retries}`);
+    if (process.env['NODE_ENV'] === 'development') {
+      console.log(`Function fail, try again, error: ${errToString(err)}, retries: ${retries}`);
+    }
     await coraline.wait(retryIntervalMs);
     return withRetry(fn, {
       retries: retries - 1,
@@ -241,6 +244,8 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
     });
   }
 };
+
+export { backOff } from './lib/exponential-backoff.js';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
