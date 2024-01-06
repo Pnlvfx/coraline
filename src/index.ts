@@ -28,12 +28,12 @@ export type Prettify<T> = {
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
 const inspectLog = (message: unknown) => {
+  if (typeof message === 'string' || typeof message === 'number') return message;
   return inspect(message, {
     // eslint-disable-next-line unicorn/no-null
     maxArrayLength: null,
     // eslint-disable-next-line unicorn/no-null
     depth: null,
-    colors: true,
   });
 };
 
