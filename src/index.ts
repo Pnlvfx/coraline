@@ -27,6 +27,16 @@ export type Prettify<T> = {
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
+const inspectLog = (message: unknown) => {
+  return inspect(message, {
+    // eslint-disable-next-line unicorn/no-null
+    maxArrayLength: null,
+    // eslint-disable-next-line unicorn/no-null
+    depth: null,
+    colors: true,
+  });
+};
+
 const coraline = {
   // THE CALLBACK SHOULD BECOME A CALLBACK TYPE
   wait: (ms: number, callback?: () => Promise<void>) => {
@@ -137,16 +147,8 @@ const coraline = {
       }
     }, timeUntilFunction);
   },
-  log: (message?: unknown) => {
-    console.log(
-      inspect(message, {
-        // eslint-disable-next-line unicorn/no-null
-        maxArrayLength: null,
-        // eslint-disable-next-line unicorn/no-null
-        depth: null,
-        colors: true,
-      }),
-    );
+  log: (message?: unknown, ...opts: unknown[]) => {
+    console.log(inspectLog(message), opts.map((t) => inspectLog(t)).join(' '));
   },
   performanceEnd: (start: number, api: string) => {
     const end = performance.now();
