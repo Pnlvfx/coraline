@@ -6,13 +6,13 @@ import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
-import { inspect } from 'node:util';
 import { URL } from 'node:url';
 import { RetryOptions } from './types/index.js';
 import os from 'node:os';
 import { errToString } from './lib/catch-error.js';
 import { cachedRequest } from './lib/cache.js';
 import { getGptCommand } from './lib/gpt-command.js';
+import { log } from './lib/log.js';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
 
@@ -26,16 +26,6 @@ export type Prettify<T> = {
 } & {};
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
-
-const inspectLog = (message: unknown) => {
-  if (typeof message === 'string' || typeof message === 'number') return message;
-  return inspect(message, {
-    // eslint-disable-next-line unicorn/no-null
-    maxArrayLength: null,
-    // eslint-disable-next-line unicorn/no-null
-    depth: null,
-  });
-};
 
 const coraline = {
   // THE CALLBACK SHOULD BECOME A CALLBACK TYPE
@@ -147,9 +137,6 @@ const coraline = {
       }
     }, timeUntilFunction);
   },
-  log: (message?: unknown, ...opts: unknown[]) => {
-    console.log(inspectLog(message), opts.map((t) => inspectLog(t)).join(' '));
-  },
   performanceEnd: (start: number, api: string) => {
     const end = performance.now();
     const time = `api: ${api} took ${end - start} milliseconds`;
@@ -221,6 +208,7 @@ const coraline = {
   readJSON,
   getGptCommand,
   cachedRequest,
+  log,
   media: coralineMedia,
   date: coralineDate,
   regex,
@@ -252,6 +240,8 @@ export { backOff } from './lib/exponential-backoff.js';
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
 export { parseSetCookieHeader } from './lib/cookie-parser.js';
+
+export { signServer } from './lib/sign.js';
 
 export type { Cookie } from './lib/cookie-parser.js';
 
