@@ -241,8 +241,6 @@ export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
 export { parseSetCookieHeader } from './lib/cookie-parser.js';
 
-export { signServer } from './lib/sign.js';
-
 export type { Cookie } from './lib/cookie-parser.js';
 
 export type { ConsoleColors } from './lib/console-color.js';
