@@ -62,10 +62,10 @@ const coralineMedia = {
     if (!contentLength) throw new Error('Unable to determine file size. Content-Length header missing.');
     const fileSizeInBytes = Number.parseInt(contentLength, 10);
     return {
-      bytes: fileSizeInBytes,
-      kilobytes: fileSizeInBytes / 1024,
-      megabytes: fileSizeInBytes / (1024 * 1024),
-      gigabytes: fileSizeInBytes / (1024 * 1024 * 1024),
+      bytes: fileSizeInBytes.toFixed(2),
+      kilobytes: (fileSizeInBytes / 1024).toFixed(2),
+      megabytes: (fileSizeInBytes / (1024 * 1024)).toFixed(2),
+      gigabytes: (fileSizeInBytes / (1024 * 1024 * 1024)).toFixed(0),
     };
   },
   download,
