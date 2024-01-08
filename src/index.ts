@@ -166,14 +166,6 @@ const coraline = {
         .end();
     });
   },
-  getVideoFileSizeInMb: async (url: string) => {
-    const response = await fetch(url, { method: 'HEAD' });
-    const contentLength = response.headers.get('content-length');
-    if (!contentLength) throw new Error('Unable to determine file size. Content-Length header missing.');
-    const fileSizeInBytes = Number.parseInt(contentLength, 10);
-    const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-    return Number(fileSizeInMB.toFixed(2));
-  },
   getUserAgent: () => {
     const system = os.platform();
     let userAgent = '';

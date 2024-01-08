@@ -56,6 +56,18 @@ const coralineMedia = {
     }
     await Promise.all(promises);
   },
+  getVideoFileSize: async (url: string) => {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentLength = response.headers.get('content-length');
+    if (!contentLength) throw new Error('Unable to determine file size. Content-Length header missing.');
+    const fileSizeInBytes = Number.parseInt(contentLength, 10);
+    return {
+      bytes: fileSizeInBytes,
+      kilobytes: fileSizeInBytes / 1024,
+      megabytes: fileSizeInBytes / (1024 * 1024),
+      gigabytes: fileSizeInBytes / (1024 * 1024 * 1024),
+    };
+  },
   download,
 };
 
