@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prefer-ternary */
 import path from 'node:path';
 import { temporaryDirectory } from './tempy.js';
-import { saveFile } from './init.js';
+import { isProduction, saveFile } from './init.js';
 
 export const getGptCommand = async (prompt: unknown[] | string | Record<string, unknown>, maxLength = 15_000) => {
   const command = typeof prompt === 'string' ? prompt : JSON.stringify(prompt);
@@ -35,6 +35,6 @@ export const getGptCommand = async (prompt: unknown[] | string | Record<string, 
       content,
     });
   }
-  console.log('The generated prompt is here:', dir);
+  if (!isProduction) console.log('The generated prompt is here:', dir);
   return { fileData, dir };
 };

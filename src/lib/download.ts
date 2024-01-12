@@ -3,6 +3,7 @@ import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
 import type { Range } from '../index.js';
+import { isProduction } from './init.js';
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 export const download = (
@@ -38,7 +39,7 @@ export const download = (
           reject(`Request at ${url.href} has invalid redirect url!`);
           return;
         }
-        if (process.env['NODE_ENV'] === 'development') {
+        if (!isProduction) {
           console.log(`Request was redirected to ${res.headers.location}...`);
         }
         download(res.headers.location, outputDir, options)

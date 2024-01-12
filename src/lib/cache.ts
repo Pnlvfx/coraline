@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { readJSON, saveFile, use } from './init.js';
+import { isProduction, readJSON, saveFile, use } from './init.js';
 
 export interface Cache {
   timestamp: number;
@@ -46,6 +46,7 @@ export const cachedRequest = async <T>(
   name: string,
   callback: () => Promise<T>,
   options?: { customId?: string; cacheDuration?: number; store?: boolean },
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<T> => {
   if (!initCacheDir) {
     initCacheDir = use('cache');
@@ -55,7 +56,7 @@ export const cachedRequest = async <T>(
   let cache = options?.store ? await getStored(name) : caches[name];
 
   if (options?.customId && options.customId !== cache?.customId) {
-    console.log('Different customId, fetching new data for', name);
+    if (!isProduction) console.log('Different customId, fetching new data for', name);
     const data = await callback();
     cache = {
       data,
@@ -75,11 +76,13 @@ export const cachedRequest = async <T>(
   const MAX = options?.cacheDuration || 20_000;
 
   if (cache && currentTime - cache.timestamp < MAX) {
-    console.log('Returned from cache, expires in:', MAX - (currentTime - cache.timestamp));
+    if (!isProduction) console.log('Returned from cache, expires in:', MAX - (currentTime - cache.timestamp));
     return cache.data as T;
   }
 
-  console.log('Cache expired fetching new data for', name);
+  if (!isProduction) {
+    console.log('Cache expired fetching new data for', name);
+  }
 
   const data = await callback();
   cache = {

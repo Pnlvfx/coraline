@@ -5,7 +5,7 @@ import https from 'node:https';
 import path from 'node:path';
 import { URL } from 'node:url';
 import os from 'node:os';
-import { createScriptExec, generateRandomId, readJSON, saveFile, use, useStatic } from './lib/init.js';
+import { createScriptExec, generateRandomId, isProduction, readJSON, saveFile, use, useStatic } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
@@ -128,11 +128,13 @@ const coraline = {
     }, timeUntilFunction);
   },
   performanceEnd: (start: number, api: string) => {
+    if (isProduction) throw new Error('Do not use coraline.performanceEnd in production as it is used only for debugging purposes.');
     const end = performance.now();
     const time = `Api: ${api} took ${end - start} milliseconds`;
     return console.log(time);
   },
   memoryUsage: () => {
+    if (isProduction) throw new Error('Do not use coraline.memoryUsage in production as it is used only for debugging purposes.');
     const used = process.memoryUsage().heapUsed;
     const total = process.memoryUsage().heapTotal;
     const percentage = Math.round((used / total) * 10_000) / 100;
@@ -206,7 +208,7 @@ export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryInterva
     return await fn();
   } catch (err) {
     if (retries === 0) throw err;
-    if (process.env['NODE_ENV'] === 'development') {
+    if (!isProduction) {
       console.log(`Function fail, try again, error: ${errToString(err)}, retries: ${retries}`);
     }
     await coraline.wait(retryIntervalMs);

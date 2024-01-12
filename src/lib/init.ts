@@ -19,6 +19,8 @@ const basePath = directory.split('/').at(-1);
 if (!basePath) throw new Error('Error uring coraline initialization: unsupported system!');
 const projectName = basePath.replace('api-', '').replace('api_', '').trim().replaceAll(' ', '');
 
+export const isProduction = process.env['NODE_ENV'] === 'production';
+
 export const generateRandomId = (max = 10) => {
   return crypto.randomBytes(max / 2).toString('hex');
 };
@@ -67,6 +69,7 @@ export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, f
 
 // eslint-disable-next-line no-unused-vars
 export const createScriptExec = (fn: (input?: string) => unknown, title = 'Welcome! Press Enter to run your function.') => {
+  if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
