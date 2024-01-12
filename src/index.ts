@@ -1,29 +1,19 @@
+import type { Callback } from './lib/types.js';
+import type { RetryOptions } from './types/index.js';
 import { promises as fs } from 'node:fs';
 import https from 'node:https';
 import path from 'node:path';
+import { URL } from 'node:url';
+import os from 'node:os';
 import { createScriptExec, generateRandomId, readJSON, saveFile, use, useStatic } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
-import { URL } from 'node:url';
-import { RetryOptions } from './types/index.js';
-import os from 'node:os';
 import { errToString } from './lib/catch-error.js';
 import { cachedRequest } from './lib/cache.js';
 import { getGptCommand } from './lib/gpt-command.js';
 import { log } from './lib/log.js';
-
-type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc['length']]>;
-
-export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
-
-export type Callback = (() => Promise<void>) | (() => void);
-
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-  // eslint-disable-next-line @typescript-eslint/ban-types
-} & {};
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
@@ -139,7 +129,7 @@ const coraline = {
   },
   performanceEnd: (start: number, api: string) => {
     const end = performance.now();
-    const time = `api: ${api} took ${end - start} milliseconds`;
+    const time = `Api: ${api} took ${end - start} milliseconds`;
     return console.log(time);
   },
   memoryUsage: () => {
@@ -236,5 +226,7 @@ export { parseSetCookieHeader } from './lib/cookie-parser.js';
 export type { Cookie } from './lib/cookie-parser.js';
 
 export type { ConsoleColors } from './lib/console-color.js';
+
+export { type Callback, type Prettify, type Range, getEntries } from './lib/types.js';
 
 export default coraline;
