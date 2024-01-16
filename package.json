@@ -31,10 +31,10 @@
     "README.md"
   ],
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.11.4",
     "@types/nodemon": "^1.19.6",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -42,7 +42,7 @@
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-unicorn": "^50.0.1",
     "nodemon": "^3.0.2",
-    "prettier": "^3.2.1",
+    "prettier": "^3.2.2",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
