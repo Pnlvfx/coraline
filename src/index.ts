@@ -1,11 +1,9 @@
 import type { Callback } from './lib/types.js';
 import type { RetryOptions } from './types/index.js';
-import { promises as fs } from 'node:fs';
 import https from 'node:https';
-import path from 'node:path';
 import { URL } from 'node:url';
 import os from 'node:os';
-import { createScriptExec, generateRandomId, isProduction, readJSON, saveFile, use, useStatic } from './lib/init.js';
+import { clearFolder, createScriptExec, generateRandomId, isProduction, readJSON, rm, saveFile, use, useStatic } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
@@ -86,24 +84,8 @@ const coraline = {
       return false;
     }
   },
-  rm: async (files: string | string[]) => {
-    const dieFiles = typeof files === 'string' ? [files] : files;
-    for (const file of dieFiles) {
-      try {
-        await fs.rm(file, { recursive: true });
-      } catch (err) {
-        const error = err as NodeJS.ErrnoException;
-        if (error.code !== 'ENOENT') throw err;
-      }
-    }
-    return true;
-  },
-  clearFolder: async (folder: string) => {
-    const contents = await fs.readdir(folder);
-    for (const content of contents) {
-      await coraline.rm(path.join(folder, content));
-    }
-  },
+  rm,
+  clearFolder,
   runAtSpecificTime: (hour: number, minute: number, fn: Callback, repeat: boolean) => {
     const date = new Date();
     date.setHours(hour);

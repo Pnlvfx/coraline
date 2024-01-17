@@ -82,3 +82,23 @@ export const createScriptExec = (fn: (input?: string) => unknown, title = 'Welco
   console.log(`\u001B[34m${title}\u001B[0m`);
   rl.prompt();
 };
+
+export const rm = async (files: string | string[]) => {
+  const dieFiles = typeof files === 'string' ? [files] : files;
+  for (const file of dieFiles) {
+    try {
+      await fs.promises.rm(file, { recursive: true });
+    } catch (err) {
+      const error = err as NodeJS.ErrnoException;
+      if (error.code !== 'ENOENT') throw err;
+    }
+  }
+  return true;
+};
+
+export const clearFolder = async (folder: string) => {
+  const contents = await fs.promises.readdir(folder);
+  for (const content of contents) {
+    await rm(path.join(folder, content));
+  }
+};

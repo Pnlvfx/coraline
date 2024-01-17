@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { isProduction, readJSON, saveFile, use } from './init.js';
+import { isProduction, readJSON, rm, saveFile, use } from './init.js';
 
 export interface Cache {
   timestamp: number;
@@ -96,4 +96,14 @@ export const cachedRequest = async <T>(
     await store(cache, name);
   }
   return data;
+};
+
+export const clearAllCache = () => {
+  if (!initCacheDir) {
+    initCacheDir = use('cache');
+  }
+  if (!initStoredCacheNamePath) {
+    initStoredCacheNamePath = path.join(initCacheDir, 'cache-info.json');
+  }
+  return rm([initCacheDir, initStoredCacheNamePath]);
 };
