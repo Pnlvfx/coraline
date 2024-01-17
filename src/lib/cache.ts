@@ -42,7 +42,7 @@ const store = async (cache: Cache, name: string) => {
   await saveFile(initStoredCacheNamePath, JSON.stringify(cacheInfo));
 };
 
-export const cachedRequest = async <T>(
+const cachedRequest = async <T>(
   name: string,
   callback: () => Promise<T>,
   options?: { customId?: string; cacheDuration?: number; store?: boolean },
@@ -98,7 +98,7 @@ export const cachedRequest = async <T>(
   return data;
 };
 
-export const clearAllCache = () => {
+const clearAllCache = () => {
   if (!initCacheDir) {
     initCacheDir = use('cache');
   }
@@ -107,3 +107,10 @@ export const clearAllCache = () => {
   }
   return rm([initCacheDir, initStoredCacheNamePath]);
 };
+
+const cache = {
+  add: cachedRequest,
+  clearAll: clearAllCache,
+};
+
+export default cache;

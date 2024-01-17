@@ -9,9 +9,9 @@ import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
 import { errToString } from './lib/catch-error.js';
-import { cachedRequest } from './lib/cache.js';
 import { getGptCommand } from './lib/gpt-command.js';
 import { log } from './lib/log.js';
+import cache from './lib/cache.js';
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
@@ -173,8 +173,8 @@ const coraline = {
   saveFile,
   readJSON,
   getGptCommand,
-  cachedRequest,
   log,
+  cache,
   media: coralineMedia,
   date: coralineDate,
   regex,
