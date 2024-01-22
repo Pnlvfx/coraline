@@ -13,5 +13,6 @@ const inspectLog = (message: unknown) => {
     maxArrayLength: null,
     // eslint-disable-next-line unicorn/no-null
     depth: null,
+    colors: true,
   });
 };
