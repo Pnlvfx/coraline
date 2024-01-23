@@ -185,6 +185,8 @@ export { consoleColor } from './lib/console-color.js';
 export { errToString } from './lib/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
 
+export { withRetry, type RetryOptions } from './lib/with-retry.js';
+
 export { backOff } from './lib/exponential-backoff.js';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
