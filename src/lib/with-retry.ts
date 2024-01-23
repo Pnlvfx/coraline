@@ -7,21 +7,30 @@ export interface RetryOptions {
   failMessage?: string;
 }
 /** Run a function in async for the the desired amount of times, if it fails the last retry, it will throw an error. */
-export const withRetry = async <T>(fn: () => Promise<T>, { retries = 10, retryIntervalMs = 1000, failMessage }: RetryOptions): Promise<T> => {
-  try {
-    return await fn();
-  } catch (err) {
-    if (retries === 0) throw err;
-    if (!isProduction) {
-      if (!failMessage) {
-        failMessage = `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`;
+export const withRetry = <T>(callback: () => Promise<T>, { retries = 10, retryIntervalMs = 1000, failMessage }: RetryOptions) => {
+  return new Promise<T>((resolve, reject) => {
+    const handle = async () => {
+      try {
+        const maybe = await callback();
+        resolve(maybe);
+      } catch (err) {
+        if (retries === 0) {
+          reject(err);
+          return;
+        }
+        if (!isProduction) {
+          if (!failMessage) {
+            failMessage = `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`;
+          }
+          console.log(failMessage);
+        }
+        await coraline.wait(retryIntervalMs);
+        withRetry(callback, {
+          retries: retries - 1,
+          retryIntervalMs,
+        });
       }
-      console.log(failMessage);
-    }
-    await coraline.wait(retryIntervalMs);
-    return withRetry(fn, {
-      retries: retries - 1,
-      retryIntervalMs,
-    });
-  }
+    };
+    handle();
+  });
 };
