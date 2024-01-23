@@ -1,5 +1,5 @@
 import { Callback, errToString } from '../index.js';
-import { isProduction, wait } from './init.js';
+import { isProduction } from './init.js';
 
 export interface RetryOptions {
   retries?: number;
@@ -25,12 +25,7 @@ export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryInterva
           }
           console.log(failMessage);
         }
-        await wait(retryIntervalMs);
-        withRetry(callback, {
-          retries: retries - 1,
-          retryIntervalMs,
-          failMessage,
-        });
+        setTimeout(handle, retryIntervalMs);
       }
     };
     handle();
