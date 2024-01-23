@@ -1,4 +1,7 @@
+import { errToString } from './catch-error.js';
 import { wait } from './init.js';
+import { temporaryFile } from './tempy.js';
+import { promises as fs } from 'node:fs';
 
 const BASE_URL = 'https://vihangayt.me/tools/chatgpt';
 const MIN_TIMEOUT = 25_000;
@@ -36,10 +39,16 @@ const vihangaYt = async (q: string, version: keyof typeof Version = '04') => {
 };
 
 const getJSON = <T>(q: string) => {
-  const startIdx = q.indexOf('{');
-  const endIdx = q.lastIndexOf('}');
-  if (startIdx === -1 || endIdx === -1) throw new Error('No JSON found!');
-  return JSON.parse(q.slice(startIdx, endIdx + 1)) as T;
+  try {
+    const startIdx = q.indexOf('{');
+    const endIdx = q.lastIndexOf('}');
+    if (startIdx === -1 || endIdx === -1) throw new Error('No JSON found!');
+    return JSON.parse(q.slice(startIdx, endIdx + 1)) as T;
+  } catch (err) {
+    const tmpFile = temporaryFile({ extension: 'json' });
+    fs.writeFile(tmpFile, q);
+    throw new Error(`Invalid JSON string received: ${errToString(err)}, check: ${tmpFile} to find the wrong request`);
+  }
 };
 
 export const chatGPT = {
