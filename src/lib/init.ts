@@ -68,16 +68,17 @@ export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, f
 };
 
 // eslint-disable-next-line no-unused-vars
-export const createScriptExec = (fn: (input?: string) => unknown, title = 'Welcome! Press Enter to run your function.', repeat = true) => {
+export const createScriptExec = <T>(fn: (input?: string) => T, title = 'Welcome! Press Enter to run your function.', repeat = true) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
     });
     rl.on('line', async (input) => {
       try {
-        await fn(input);
+        const maybe = await fn(input);
+        resolve(maybe);
       } catch (err) {
         reject(err);
       }
@@ -85,7 +86,6 @@ export const createScriptExec = (fn: (input?: string) => unknown, title = 'Welco
         console.log(`\u001B[34m${title}\u001B[0m`);
         rl.prompt();
       }
-      resolve();
     });
     console.log(`\u001B[34m${title}\u001B[0m`);
     rl.prompt();
