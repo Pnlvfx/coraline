@@ -20,7 +20,7 @@ const Version = {
 
 const triggerTimeout = () => setTimeout(() => (timeout = false), MIN_TIMEOUT);
 
-export const vihangaYt = async (q: string, version: keyof typeof Version = '04') => {
+const vihangaYt = async (q: string, version: keyof typeof Version = '04') => {
   const query = new URLSearchParams({ q });
   if (timeout) await wait(MIN_TIMEOUT);
   timeout = true;
@@ -33,4 +33,16 @@ export const vihangaYt = async (q: string, version: keyof typeof Version = '04')
   if (!data.status) throw new Error(data.data);
   if (!data.data) throw new Error('No response received from chat-gpt!');
   return data.data;
+};
+
+const getJSON = <T>(q: string) => {
+  const startIdx = q.indexOf('{');
+  const endIdx = q.lastIndexOf('}');
+  if (startIdx === -1 || endIdx === -1) throw new Error('No JSON found!');
+  return JSON.parse(q.slice(startIdx, endIdx + 1)) as T;
+};
+
+export const chatGPT = {
+  prompt: vihangaYt,
+  getJSON,
 };

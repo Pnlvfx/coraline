@@ -7,9 +7,9 @@ import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
-import { getGptCommand } from './lib/gpt-command.js';
 import { log } from './lib/log.js';
 import cache from './lib/cache.js';
+import { splitLongGptCommand } from './lib/gpt-command.js';
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
@@ -159,7 +159,7 @@ const coraline = {
   useStatic,
   saveFile,
   readJSON,
-  getGptCommand,
+  splitLongGptCommand,
   log,
   cache,
   media: coralineMedia,
@@ -172,7 +172,7 @@ export { consoleColor } from './lib/console-color.js';
 export { errToString } from './lib/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
 
-export { vihangaYt as chatGPT } from './lib/vihanga-gpt.js';
+export { chatGPT } from './lib/vihanga-gpt.js';
 
 export { withRetry, type RetryOptions } from './lib/with-retry.js';
 
