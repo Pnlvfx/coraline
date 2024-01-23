@@ -1,4 +1,4 @@
-import coraline from 'coraline';
+import { wait } from './init.js';
 
 const BASE_URL = 'https://vihangayt.me/tools/chatgpt';
 const MIN_TIMEOUT = 25_000;
@@ -22,7 +22,7 @@ const triggerTimeout = () => setTimeout(() => (timeout = false), MIN_TIMEOUT);
 
 export const vihangaYt = async (q: string, version: keyof typeof Version = '04') => {
   const query = new URLSearchParams({ q });
-  if (timeout) await coraline.wait(MIN_TIMEOUT);
+  if (timeout) await wait(MIN_TIMEOUT);
   timeout = true;
   triggerTimeout();
   const url = version === '01' ? BASE_URL : `${BASE_URL}${Version[version]}`;

@@ -111,3 +111,18 @@ export const clearFolder = async (folder: string) => {
     await rm(path.join(folder, content));
   }
 };
+
+export const wait = <T>(ms: number, callback?: () => Promise<T>) => {
+  return new Promise<void>((resolve, reject) =>
+    setTimeout(async () => {
+      try {
+        if (callback) {
+          await callback();
+        }
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    }, ms),
+  );
+};

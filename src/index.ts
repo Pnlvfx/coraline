@@ -2,7 +2,7 @@ import type { Callback } from './lib/types.js';
 import https from 'node:https';
 import { URL } from 'node:url';
 import os from 'node:os';
-import { clearFolder, createScriptExec, generateRandomId, isProduction, readJSON, rm, saveFile, use, useStatic } from './lib/init.js';
+import { clearFolder, createScriptExec, generateRandomId, isProduction, readJSON, rm, saveFile, use, useStatic, wait } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
@@ -14,20 +14,7 @@ import cache from './lib/cache.js';
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
 const coraline = {
-  wait: <T>(ms: number, callback?: () => Promise<T>) => {
-    return new Promise<void>((resolve, reject) =>
-      setTimeout(async () => {
-        try {
-          if (callback) {
-            await callback();
-          }
-          resolve();
-        } catch (err) {
-          reject(err);
-        }
-      }, ms),
-    );
-  },
+  wait,
   createScriptExec,
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
     const element = arr.at(fromIndex);
