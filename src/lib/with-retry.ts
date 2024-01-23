@@ -1,13 +1,14 @@
-import coraline, { errToString } from '../index.js';
-import { isProduction } from './init.js';
+import { Callback, errToString } from '../index.js';
+import { isProduction, wait } from './init.js';
 
 export interface RetryOptions {
   retries?: number;
   retryIntervalMs?: number;
   failMessage?: string;
 }
+
 /** Run a function in async for the the desired amount of times, if it fails the last retry, it will throw an error. */
-export const withRetry = <T>(callback: () => Promise<T>, { retries = 10, retryIntervalMs = 1000, failMessage }: RetryOptions) => {
+export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryIntervalMs = 1000, failMessage }: RetryOptions = {}) => {
   return new Promise<T>((resolve, reject) => {
     const handle = async () => {
       try {
@@ -24,13 +25,21 @@ export const withRetry = <T>(callback: () => Promise<T>, { retries = 10, retryIn
           }
           console.log(failMessage);
         }
-        await coraline.wait(retryIntervalMs);
+        await wait(retryIntervalMs);
         withRetry(callback, {
           retries: retries - 1,
           retryIntervalMs,
+          failMessage,
         });
       }
     };
     handle();
   });
 };
+
+withRetry(
+  () => {
+    throw new Error('Failed');
+  },
+  { failMessage: 'Custom message' },
+);
