@@ -1,5 +1,4 @@
 import type { Callback } from './lib/types.js';
-import type { RetryOptions } from './types/index.js';
 import https from 'node:https';
 import { URL } from 'node:url';
 import os from 'node:os';
@@ -8,7 +7,6 @@ import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
 import coralineColors from './lib/colors.js';
-import { errToString } from './lib/catch-error.js';
 import { getGptCommand } from './lib/gpt-command.js';
 import { log } from './lib/log.js';
 import cache from './lib/cache.js';
@@ -16,15 +14,17 @@ import cache from './lib/cache.js';
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
 const coraline = {
-  // THE CALLBACK SHOULD BECOME A CALLBACK TYPE
-  wait: (ms: number, callback?: () => Promise<void>) => {
+  wait: <T>(ms: number, callback?: () => Promise<T>) => {
     return new Promise<void>((resolve, reject) =>
-      setTimeout(() => {
-        if (callback) {
-          callback().then(resolve).catch(reject);
-          return;
+      setTimeout(async () => {
+        try {
+          if (callback) {
+            await callback();
+          }
+          resolve();
+        } catch (err) {
+          reject(err);
         }
-        resolve();
       }, ms),
     );
   },
@@ -86,7 +86,7 @@ const coraline = {
   },
   rm,
   clearFolder,
-  runAtSpecificTime: (hour: number, minute: number, fn: Callback, repeat: boolean) => {
+  runAtSpecificTime: (hour: number, minute: number, fn: Callback<void>, repeat: boolean) => {
     const date = new Date();
     date.setHours(hour);
     date.setMinutes(minute);
@@ -184,22 +184,6 @@ const coraline = {
 export { consoleColor } from './lib/console-color.js';
 export { errToString } from './lib/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
-
-export const withRetry = async <T>(fn: () => Promise<T>, { retries, retryIntervalMs }: RetryOptions): Promise<T> => {
-  try {
-    return await fn();
-  } catch (err) {
-    if (retries === 0) throw err;
-    if (!isProduction) {
-      console.log(`Function fail, try again, error: ${errToString(err)}, retries: ${retries}`);
-    }
-    await coraline.wait(retryIntervalMs);
-    return withRetry(fn, {
-      retries: retries - 1,
-      retryIntervalMs,
-    });
-  }
-};
 
 export { backOff } from './lib/exponential-backoff.js';
 

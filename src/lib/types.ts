@@ -3,7 +3,7 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
 /** Check if it's a valid number from range of numbers. */
 export type Range<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
-export type Callback = (() => Promise<void>) | (() => void);
+export type Callback<T> = (() => Promise<T>) | (() => T);
 
 /** Use this to prettify your types. */
 export type Prettify<T> = {
