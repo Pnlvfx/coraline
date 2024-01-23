@@ -36,10 +36,3 @@ export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryInterva
     handle();
   });
 };
-
-withRetry(
-  () => {
-    throw new Error('Failed');
-  },
-  { failMessage: 'Custom message' },
-);
