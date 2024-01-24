@@ -67,7 +67,7 @@ export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, f
   }
 };
 
-export const createScriptExec = <T>(callback: (input?: string) => T, title = 'Welcome! Press Enter to run your function.', repeat = true) => {
+export const createScriptExec = <T>(callback: (input?: string) => T, title = 'Welcome! Press Enter to run your function.', repeat = false) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
   return new Promise<T>((resolve, reject) => {
     const rl = readline.createInterface({
