@@ -75,7 +75,7 @@ export interface ScriptOptions {
 
 export const createScriptExec = <T>(
   callback: (input?: string) => T,
-  { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter }: ScriptOptions,
+  { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter }: ScriptOptions = {},
 ) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
   const rl = readline.createInterface({
