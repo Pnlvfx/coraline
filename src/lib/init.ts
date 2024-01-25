@@ -83,10 +83,13 @@ export const createScriptExec = <T>(
     output: process.stdout,
   });
   return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      rl.close();
-      reject(new Error('Script execution timed out.'));
-    }, destroyAfter);
+    let timer: NodeJS.Timeout | undefined;
+    if (destroyAfter) {
+      timer = setTimeout(() => {
+        rl.close();
+        reject(new Error('Script execution timed out.'));
+      }, destroyAfter);
+    }
 
     rl.on('line', async (input) => {
       clearTimeout(timer);
