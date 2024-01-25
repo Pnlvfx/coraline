@@ -67,14 +67,29 @@ export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, f
   }
 };
 
-export const createScriptExec = <T>(callback: (input?: string) => T, title = 'Welcome! Press Enter to run your function.', repeat = false) => {
+export interface ScriptOptions {
+  title?: string;
+  repeat?: boolean;
+  destroyAfter?: number;
+}
+
+export const createScriptExec = <T>(
+  callback: (input?: string) => T,
+  { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter }: ScriptOptions,
+) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
   return new Promise<T>((resolve, reject) => {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+    const timer = setTimeout(() => {
+      rl.close();
+      reject(new Error('Script execution timed out.'));
+    }, destroyAfter);
+
     rl.on('line', async (input) => {
+      clearTimeout(timer);
       try {
         const maybe = await callback(input);
         resolve(maybe);
