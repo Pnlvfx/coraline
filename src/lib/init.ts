@@ -38,6 +38,8 @@ export const useStatic = (document?: string) => {
   const isAbsolute = path.isAbsolute(extra_path);
   const folder = isAbsolute ? path.join(coraline_path, projectName, extra_path) : path.resolve(coraline_path, projectName, extra_path);
   mkDir(folder);
+  mkDir(path.join(folder, 'images'));
+  mkDir(path.join(folder, 'videos'));
   return folder;
 };
 
