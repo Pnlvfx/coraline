@@ -174,7 +174,7 @@ export const TG_GROUP_LOG = Number('-914836534');
 
 export { chatGPT } from './lib/vihanga-gpt.js';
 
-export { withRetry, type RetryOptions } from './lib/with-retry.js';
+export { withRetry, type RetryOptions } from './lib/retry.js';
 
 export { backOff } from './lib/exponential-backoff.js';
 

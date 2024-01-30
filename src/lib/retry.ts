@@ -4,7 +4,7 @@ import { isProduction } from './init.js';
 export interface RetryOptions {
   retries?: number;
   retryIntervalMs?: number;
-  failMessage?: string;
+  failMessage?: (err: string, retries: number) => string;
 }
 
 /** Run a function in async for the the desired amount of times, if it fails the last retry, it will throw an error. */
@@ -20,11 +20,11 @@ export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryInterva
           return;
         }
         if (!isProduction) {
-          if (!failMessage) {
-            failMessage = `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`;
-          }
-          console.log(failMessage);
+          console.log(
+            failMessage ? failMessage(errToString(err), retries) : `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`,
+          );
         }
+        retries -= 1;
         setTimeout(handle, retryIntervalMs);
       }
     };
