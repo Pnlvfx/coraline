@@ -1,9 +1,8 @@
+import type { File } from '../types/file.js';
 import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { checkPath } from './make-dir.js';
-import { File } from '../types/file.js';
-import readline from 'node:readline';
 
 const directory = process.cwd();
 const coraline_path = path.resolve(directory, '../.coraline');
@@ -67,48 +66,6 @@ export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, f
       await saveFile(filename, file);
     } else throw err;
   }
-};
-
-export interface ScriptOptions {
-  title?: string;
-  repeat?: boolean;
-  destroyAfter?: number;
-}
-
-export const createScriptExec = <T>(
-  callback: (input?: string) => T,
-  { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter }: ScriptOptions = {},
-) => {
-  if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  return new Promise<T>((resolve, reject) => {
-    let timer: NodeJS.Timeout | undefined;
-    if (destroyAfter) {
-      timer = setTimeout(() => {
-        rl.close();
-        reject(new Error('Script execution timed out.'));
-      }, destroyAfter);
-    }
-
-    rl.on('line', async (input) => {
-      clearTimeout(timer);
-      try {
-        const maybe = await callback(input);
-        resolve(maybe);
-      } catch (err) {
-        reject(err);
-      }
-      if (repeat) {
-        console.log(`\u001B[34m${title}\u001B[0m`);
-        rl.prompt();
-      } else rl.close();
-    });
-    console.log(`\u001B[34m${title}\u001B[0m`);
-    rl.prompt();
-  });
 };
 
 export const rm = async (files: string | string[]) => {

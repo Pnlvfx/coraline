@@ -1,8 +1,8 @@
 import { isProduction } from './init.js';
 
-export type ConsoleColors = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'brown' | 'cyan' | 'white' | 'black' | 'gray' | 'orange' | 'lila';
+export type ConsoleColor = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'brown' | 'cyan' | 'white' | 'black' | 'gray' | 'orange' | 'lila';
 
-export const consoleColor = (color: ConsoleColors, ...optionalParameters: unknown[]) => {
+export const consoleColor = (color: ConsoleColor, ...optionalParameters: unknown[]) => {
   if (isProduction) throw new Error('Do not use coraline.consoleColor in production as it is used only for debugging purposes.');
   let fixedColor: string | undefined;
   switch (color) {

@@ -2,7 +2,7 @@ import type { Callback } from './lib/types.js';
 import https from 'node:https';
 import { URL } from 'node:url';
 import os from 'node:os';
-import { clearFolder, createScriptExec, generateRandomId, isProduction, readJSON, rm, saveFile, use, useStatic, wait } from './lib/init.js';
+import { clearFolder, generateRandomId, isProduction, readJSON, rm, saveFile, use, useStatic, wait } from './lib/init.js';
 import regex from './lib/regex.js';
 import coralineDate from './lib/date.js';
 import coralineMedia from './lib/media.js';
@@ -10,6 +10,7 @@ import coralineColors from './lib/colors.js';
 import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
+import { createScriptExec } from './lib/script.js';
 
 const urlPrefix = ['http://', 'https://', 'ftp://'];
 
@@ -184,7 +185,7 @@ export { parseSetCookieHeader } from './lib/cookie-parser.js';
 
 export type { Cookie } from './lib/cookie-parser.js';
 
-export type { ConsoleColors } from './lib/console-color.js';
+export type { ConsoleColor } from './lib/console-color.js';
 
 export { type Callback, type Prettify, type Range, getEntries } from './lib/types.js';
 
