@@ -3,6 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { checkPath } from './make-dir.js';
+import { Callback } from './types.js';
 
 const directory = process.cwd();
 const coraline_path = path.resolve(directory, '../.coraline');
@@ -88,17 +89,23 @@ export const clearFolder = async (folder: string) => {
   }
 };
 
-export const wait = <T>(ms: number, callback?: () => Promise<T>) => {
-  return new Promise<void>((resolve, reject) =>
+export function wait<T>(ms: number, callback: Callback<T>): Promise<T>;
+export function wait(ms: number): Promise<void>;
+
+export function wait<T>(ms: number, callback?: Callback<T>) {
+  return new Promise<T | void>((resolve, reject) =>
     setTimeout(async () => {
       try {
+        let maybe;
         if (callback) {
-          await callback();
+          maybe = await callback();
+          resolve(maybe);
+        } else {
+          resolve();
         }
-        resolve();
       } catch (err) {
         reject(err);
       }
     }, ms),
   );
-};
+}
