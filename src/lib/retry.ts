@@ -20,6 +20,7 @@ export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryInterva
           return;
         }
         if (!isProduction) {
+          // eslint-disable-next-line no-console
           console.log(
             failMessage ? failMessage(errToString(err), retries) : `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`,
           );

@@ -56,7 +56,6 @@ const cachedRequest = async <T>(
   let cache = options?.store ? await getStored(name) : caches[name];
 
   if (options?.customId && options.customId !== cache?.customId) {
-    if (!isProduction) console.log('Different customId, fetching new data for', name);
     const data = await callback();
     cache = {
       data,
@@ -76,12 +75,9 @@ const cachedRequest = async <T>(
   const MAX = options?.cacheDuration || 20_000;
 
   if (cache && currentTime - cache.timestamp < MAX) {
+    // eslint-disable-next-line no-console
     if (!isProduction) console.log('Returned from cache, expires in:', MAX - (currentTime - cache.timestamp));
     return cache.data as T;
-  }
-
-  if (!isProduction) {
-    console.log('Cache expired fetching new data for', name);
   }
 
   const data = await callback();

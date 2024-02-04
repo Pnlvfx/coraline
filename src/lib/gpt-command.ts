@@ -35,6 +35,9 @@ export const splitLongGptCommand = async (prompt: unknown[] | string | Record<st
       content,
     });
   }
-  if (!isProduction) console.log('The generated prompt is here:', dir);
+  if (!isProduction) {
+    // eslint-disable-next-line no-console
+    console.log('The generated prompt is here:', dir);
+  }
   return { fileData, dir };
 };

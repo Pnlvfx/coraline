@@ -56,5 +56,6 @@ export const consoleColor = (color: ConsoleColor, ...optionalParameters: unknown
     }
     // No default
   }
-  return console.log(fixedColor, optionalParameters.map((t) => t).join(' '));
+  // eslint-disable-next-line no-console
+  console.log(fixedColor, optionalParameters.map((t) => t).join(' '));
 };

@@ -40,6 +40,7 @@ export const download = (
           return;
         }
         if (!isProduction) {
+          // eslint-disable-next-line no-console
           console.log(`Request was redirected to ${res.headers.location}...`);
         }
         download(res.headers.location, outputDir, options)

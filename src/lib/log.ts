@@ -3,6 +3,7 @@ import { isProduction } from './init.js';
 
 export const log = (message?: unknown, ...opts: unknown[]) => {
   if (isProduction) throw new Error('Do not use coraline.log in production as it is used only for debugging purposes.');
+  // eslint-disable-next-line no-console
   console.log(inspectLog(message), opts.map((t) => inspectLog(t)).join(' '));
 };
 

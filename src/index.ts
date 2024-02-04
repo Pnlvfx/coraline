@@ -101,6 +101,7 @@ const coraline = {
     if (isProduction) throw new Error('Do not use coraline.performanceEnd in production as it is used only for debugging purposes.');
     const end = performance.now();
     const time = `Api: ${api} took ${end - start} milliseconds`;
+    // eslint-disable-next-line no-console
     return console.log(time);
   },
   memoryUsage: () => {
@@ -108,6 +109,7 @@ const coraline = {
     const used = process.memoryUsage().heapUsed;
     const total = process.memoryUsage().heapTotal;
     const percentage = Math.round((used / total) * 10_000) / 100;
+    // eslint-disable-next-line no-console
     console.log(`Heap usage: ${percentage}%`);
     return { heapUsage: percentage };
   },

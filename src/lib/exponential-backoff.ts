@@ -9,6 +9,7 @@ export const backOff = <T>(fn: () => Promise<T>, maxAttempt = 5, baseDelayMs = 1
     } catch (err) {
       if (attempt >= maxAttempt) throw err;
       const delayMs = baseDelayMs * 2 ** attempt;
+      // eslint-disable-next-line no-console
       if (!isProduction) console.log(`Retry attempt ${attempt} after ${delayMs}ms`);
       await new Promise((resolve) => setTimeout(resolve, delayMs));
       attempt++;
