@@ -11,8 +11,7 @@ export type Prettify<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
 } & {};
 
-type ValueOf<T> = T[keyof T];
-type Entries<T> = [keyof T, ValueOf<T>][];
+type Entries<T> = [keyof T, T[keyof T]][];
 
 /** Use this instead of Object.entries to get typed entries. */
 export const getEntries = <T extends object>(obj: T) => {
