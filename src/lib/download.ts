@@ -1,10 +1,10 @@
+import type { Range } from '../index.js';
 import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
-import type { Range } from '../index.js';
 import { isProduction } from './init.js';
-const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
+const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg|mp3)$/i;
 
 export const download = (
   media_url: string,
@@ -18,10 +18,9 @@ export const download = (
 ) => {
   // eslint-disable-next-line sonarjs/cognitive-complexity
   return new Promise<string>((resolve, reject) => {
-    const url = new URL(media_url.endsWith('/') ? media_url.slice(0, -1) : media_url);
+    const url = new URL(media_url);
     let filename = decodeURIComponent(options?.filename || path.basename(url.pathname)).replaceAll(' ', '-');
     const fetcher = (url.protocol === 'https:' ? https : http).get;
-    const maxLength = options?.filenameLength || 80;
     const fetchOptions = {
       headers: options?.headers || {
         'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0',
@@ -59,6 +58,8 @@ export const download = (
         reject(`The URL ${url.href} does not contain any media or it has an invalid format! Format: ${format}`);
         return;
       }
+
+      const maxLength = options?.filenameLength || 80;
 
       if (filename.length > maxLength) {
         filename = filename.slice(-maxLength);

@@ -1,6 +1,5 @@
-import fs from 'node:fs';
+import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { promisify } from 'node:util';
 import { useStatic } from './init.js';
 import { download } from './download.js';
 
@@ -23,8 +22,7 @@ const coralineMedia = {
   },
   saveAudio: async (audio: string | Uint8Array, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
-    const writeFile1 = promisify(fs.writeFile);
-    await writeFile1(output, buffer, 'binary');
+    await fs.writeFile(output, buffer, 'binary');
     return coralineMedia.getUrlFromPath(output);
     // the output is already in the input so doesn't make sense to return the output
   },
@@ -48,11 +46,11 @@ const coralineMedia = {
     }
   },
   splitBySize: async (file: string, size: number) => {
-    const { buffer } = await fs.promises.readFile(file);
+    const { buffer } = await fs.readFile(file);
     const promises = [];
     for (let i = 0; i < buffer.byteLength; i += size) {
       const chunk = buffer.slice(i, i + size);
-      promises.push(fs.promises.writeFile(`${file}_part${i}.flac`, Buffer.from(chunk)));
+      promises.push(fs.writeFile(`${file}_part${i}.flac`, Buffer.from(chunk)));
     }
     await Promise.all(promises);
   },
