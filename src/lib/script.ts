@@ -9,11 +9,15 @@ export interface ScriptOptions {
   color?: ConsoleColor;
 }
 
+let isRunning = false;
+
 export const createScriptExec = <T>(
   callback: (input?: string) => T,
   { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter, color = 'blue' }: ScriptOptions = {},
 ) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
+  if (isRunning) throw new Error('Make sure to call script execution only once at a time, otherwise multiple script could start together.');
+  isRunning = true;
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -39,6 +43,7 @@ export const createScriptExec = <T>(
         consoleColor(color, title);
         rl.prompt();
       } else {
+        isRunning = false;
         rl.close();
       }
     });

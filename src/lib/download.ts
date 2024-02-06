@@ -4,7 +4,7 @@ import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
 import { isProduction } from './init.js';
-const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg|mp3)$/i;
+const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 export const download = (
   media_url: string,
