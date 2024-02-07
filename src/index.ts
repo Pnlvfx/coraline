@@ -1,4 +1,4 @@
-import type { Callback } from './lib/types.js';
+import type { Callback } from './types/shared.js';
 import https from 'node:https';
 import { URL } from 'node:url';
 import os from 'node:os';
@@ -11,8 +11,7 @@ import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
-
-const urlPrefix = ['http://', 'https://', 'ftp://'];
+import { findUnusedExports } from './lib/ts-unused-exports.js';
 
 const coraline = {
   wait,
@@ -63,11 +62,7 @@ const coraline = {
   },
   isUrl: (input: string) => {
     try {
-      const url = new URL(input);
-      for (const prefix of urlPrefix) {
-        if (url.href.startsWith(prefix)) return true;
-      }
-      return false;
+      return !!new URL(input);
     } catch {
       return false;
     }
@@ -164,6 +159,7 @@ const coraline = {
   readJSON,
   splitLongGptCommand,
   log,
+  findUnusedExports,
   cache,
   media: coralineMedia,
   date: coralineDate,
@@ -189,6 +185,6 @@ export type { Cookie } from './lib/cookie-parser.js';
 
 export type { ConsoleColor } from './lib/console-color.js';
 
-export { type Callback, type Prettify, type Range, getEntries } from './lib/types.js';
+export { type Callback, type Prettify, type Range, getEntries } from './types/shared.js';
 
 export default coraline;

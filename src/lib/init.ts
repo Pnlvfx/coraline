@@ -1,5 +1,5 @@
 import type { File } from '../types/file.js';
-import type { Callback } from './types.js';
+import type { Callback } from '../types/shared.js';
 import path from 'node:path';
 import { promises as fs, mkdir, PathLike } from 'node:fs';
 import crypto from 'node:crypto';

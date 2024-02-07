@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { isProduction, readJSON, rm, saveFile, use } from './init.js';
 
-export interface Cache {
+interface Cache {
   timestamp: number;
   data: unknown;
   isStored: boolean;

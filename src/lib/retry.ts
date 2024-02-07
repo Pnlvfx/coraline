@@ -1,4 +1,4 @@
-import type { Callback } from './types.js';
+import type { Callback } from '../types/shared.js';
 import { isProduction } from './init.js';
 import { errToString } from './catch-error.js';
 

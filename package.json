@@ -45,5 +45,8 @@
     "rimraf": "^5.0.5",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "ts-unused-exports": "^10.0.1"
   }
 }
