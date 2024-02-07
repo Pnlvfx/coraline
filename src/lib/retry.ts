@@ -1,5 +1,6 @@
-import { Callback, errToString } from '../index.js';
+import type { Callback } from './types.js';
 import { isProduction } from './init.js';
+import { errToString } from './catch-error.js';
 
 export interface RetryOptions {
   retries?: number;

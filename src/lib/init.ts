@@ -1,16 +1,16 @@
 import type { File } from '../types/file.js';
+import type { Callback } from './types.js';
 import path from 'node:path';
-import fs from 'node:fs';
+import { promises as fs, mkdir, PathLike } from 'node:fs';
 import crypto from 'node:crypto';
 import { checkPath } from './make-dir.js';
-import { Callback } from './types.js';
 
 const directory = process.cwd();
 const coraline_path = path.resolve(directory, '../.coraline');
 
 const mkDir = (folder: string) => {
   checkPath(folder);
-  fs.mkdir(folder, { recursive: true }, (err) => {
+  mkdir(folder, { recursive: true }, (err) => {
     if (err && err.code != 'EEXIST') throw new Error(err.message);
   });
 };
@@ -44,28 +44,27 @@ export const useStatic = (document?: string) => {
 };
 
 export const readJSON = async <T>(file: string): Promise<T> => {
-  const data = await fs.promises.readFile(file);
+  const data = await fs.readFile(file);
   return JSON.parse(data.toString());
 };
 
-export const saveFile = async (filename: fs.PathLike | fs.promises.FileHandle, file: File) => {
+export const saveFile = async (filename: PathLike | fs.FileHandle, file: File) => {
   try {
-    await fs.promises.writeFile(filename, file);
-    await fs.promises.chmod(filename.toString(), '777');
+    await fs.writeFile(filename, file);
+    await fs.chmod(filename.toString(), '777');
   } catch (err) {
     const error = err as NodeJS.ErrnoException;
-    if (error.code === 'ENOENT') {
-      const folder = path.normalize(path.join(filename.toString(), '..'));
-      const subfolder = folder
-        .split(projectName + '/')
-        .at(1)
-        ?.split('/')
-        .slice(1)
-        .join('/');
-      if (!subfolder) throw new Error('You really mess up this time!');
-      use(subfolder);
-      await saveFile(filename, file);
-    } else throw err;
+    if (error.code !== 'ENOENT') throw err;
+    const folder = path.normalize(path.join(filename.toString(), '..'));
+    const subfolder = folder
+      .split(projectName + '/')
+      .at(1)
+      ?.split('/')
+      .slice(1)
+      .join('/');
+    if (!subfolder) throw new Error('!');
+    use(subfolder);
+    await saveFile(filename, file);
   }
 };
 
@@ -73,17 +72,16 @@ export const rm = async (files: string | string[]) => {
   const dieFiles = typeof files === 'string' ? [files] : files;
   for (const file of dieFiles) {
     try {
-      await fs.promises.rm(file, { recursive: true });
+      await fs.rm(file, { recursive: true });
     } catch (err) {
-      const error = err as NodeJS.ErrnoException;
-      if (error.code !== 'ENOENT') throw err;
+      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
     }
   }
   return true;
 };
 
 export const clearFolder = async (folder: string) => {
-  const contents = await fs.promises.readdir(folder);
+  const contents = await fs.readdir(folder);
   for (const content of contents) {
     await rm(path.join(folder, content));
   }

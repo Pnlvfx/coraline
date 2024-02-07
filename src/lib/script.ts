@@ -26,6 +26,7 @@ export const createScriptExec = <T>(
     let timer: NodeJS.Timeout | undefined;
     if (destroyAfter) {
       timer = setTimeout(() => {
+        isRunning = false;
         rl.close();
         reject(new Error('Script execution timed out.'));
       }, destroyAfter);

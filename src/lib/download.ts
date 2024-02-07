@@ -1,4 +1,4 @@
-import type { Range } from '../index.js';
+import type { Range } from './types.js';
 import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';

@@ -1,7 +1,7 @@
+import { promises as fs } from 'node:fs';
 import { errToString } from './catch-error.js';
 import { wait } from './init.js';
 import { temporaryFile } from './tempy.js';
-import { promises as fs } from 'node:fs';
 
 const BASE_URL = 'https://vihangayt.me/tools/chatgpt';
 const MIN_TIMEOUT = 25_000;
@@ -54,4 +54,5 @@ const getJSON = <T>(q: string) => {
 export const chatGPT = {
   prompt: vihangaYt,
   getJSON,
+  Version,
 };
