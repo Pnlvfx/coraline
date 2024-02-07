@@ -11,7 +11,7 @@ import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
-import { findUnusedExports } from './lib/ts-unused-exports.js';
+import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 
 const coraline = {
   wait,
