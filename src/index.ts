@@ -167,6 +167,8 @@ const coraline = {
   colors: coralineColors,
 };
 
+export default coraline;
+
 export { consoleColor } from './lib/console-color.js';
 export { errToString } from './lib/catch-error.js';
 export const TG_GROUP_LOG = Number('-914836534');
@@ -186,5 +188,3 @@ export type { Cookie } from './lib/cookie-parser.js';
 export type { ConsoleColor } from './lib/console-color.js';
 
 export { type Callback, type Prettify, type Range, getEntries } from './types/shared.js';
-
-export default coraline;

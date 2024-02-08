@@ -9,15 +9,11 @@ export interface ScriptOptions {
   color?: ConsoleColor;
 }
 
-let isRunning = false;
-
 export const createScriptExec = <T>(
   callback: (input?: string) => T,
   { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter, color = 'blue' }: ScriptOptions = {},
 ) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
-  if (isRunning) throw new Error('Make sure to call script execution only once at a time, otherwise multiple script could start together.');
-  isRunning = true;
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -26,13 +22,13 @@ export const createScriptExec = <T>(
     let timer: NodeJS.Timeout | undefined;
     if (destroyAfter) {
       timer = setTimeout(() => {
-        isRunning = false;
         rl.close();
         reject(new Error('Script execution timed out.'));
       }, destroyAfter);
     }
 
-    rl.on('line', async (input) => {
+    const handleLine = async (input: string) => {
+      rl.removeListener('line', handleLine);
       clearTimeout(timer);
       try {
         const maybe = await callback(input);
@@ -41,13 +37,15 @@ export const createScriptExec = <T>(
         reject(err);
       }
       if (repeat) {
+        rl.on('line', handleLine);
         consoleColor(color, title);
         rl.prompt();
       } else {
-        isRunning = false;
         rl.close();
       }
-    });
+    };
+
+    rl.on('line', handleLine);
     consoleColor(color, title);
     rl.prompt();
   });
