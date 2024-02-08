@@ -18,8 +18,8 @@ export const createScriptExec = <T>(
     input: process.stdin,
     output: process.stdout,
   });
+  let timer: NodeJS.Timeout | undefined;
   return new Promise<T>((resolve, reject) => {
-    let timer: NodeJS.Timeout | undefined;
     if (destroyAfter) {
       timer = setTimeout(() => {
         rl.removeListener('line', handleLine);
@@ -30,6 +30,7 @@ export const createScriptExec = <T>(
 
     const handleLine = async (input: string) => {
       rl.removeListener('line', handleLine);
+      rl.close();
       clearTimeout(timer);
       try {
         const maybe = await callback(input);
@@ -38,11 +39,7 @@ export const createScriptExec = <T>(
         reject(err);
       }
       if (repeat) {
-        rl.on('line', handleLine);
-        consoleColor(color, title);
-        rl.prompt();
-      } else {
-        rl.close();
+        createScriptExec(callback, { title, repeat, destroyAfter, color });
       }
     };
 
