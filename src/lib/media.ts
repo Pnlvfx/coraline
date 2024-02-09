@@ -20,11 +20,9 @@ const coralineMedia = {
     const base_path = useStatic(segments.join('/'));
     return `${base_path}/${filename}`;
   },
-  saveAudio: async (audio: string | Uint8Array, output: string) => {
+  saveAudio: async (audio: string | Uint8Array | Buffer, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
     await fs.writeFile(output, buffer, 'binary');
-    return coralineMedia.getUrlFromPath(output);
-    // the output is already in the input so doesn't make sense to return the output
   },
   isImage: (string: string) => {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i.test(string);
