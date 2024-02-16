@@ -20,5 +20,5 @@ export const findUnusedExports = (ignore: string[] = []) => {
       }
     });
   });
-  return analyzed;
+  return Object.keys(analyzed).length > 0 ? analyzed : undefined;
 };
