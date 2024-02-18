@@ -6,13 +6,18 @@ export interface RetryOptions {
   maxAttempts?: number;
   retryIntervalMs?: number;
   failMessage?: (err: string, attempt: number) => string;
+  signal?: AbortController['signal'];
 }
 
 /** Run a function for the the desired amount of times, if it fails the last retry, it will throw an error. */
-export const withRetry = <T>(callback: Callback<T>, { maxAttempts, retryIntervalMs = 1000, failMessage }: RetryOptions = {}) => {
+export const withRetry = <T>(callback: Callback<T>, { maxAttempts, retryIntervalMs = 1000, failMessage, signal }: RetryOptions = {}) => {
   return new Promise<T>((resolve, reject) => {
     let attempt = 0;
     const handle = async () => {
+      if (signal?.aborted) {
+        reject('Aborted');
+        return;
+      }
       try {
         const maybe = await callback();
         resolve(maybe);

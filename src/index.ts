@@ -12,10 +12,9 @@ import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
 import { findUnusedExports } from './lib/ts-unused-exports.cjs';
+import { withRetry } from './lib/retry.js';
 
 const coraline = {
-  wait,
-  createScriptExec,
   arrayMove: (arr: [], fromIndex: number, toIndex: number) => {
     const element = arr.at(fromIndex);
     if (!element) throw new Error('Invalid values provided');
@@ -67,8 +66,6 @@ const coraline = {
       return false;
     }
   },
-  rm,
-  clearFolder,
   runAtSpecificTime: (hour: number, minute: number, fn: Callback<void>, repeat: boolean) => {
     const date = new Date();
     date.setHours(hour);
@@ -149,6 +146,11 @@ const coraline = {
     return userAgent;
   },
   isJson: (res: Response) => res.headers.get('Content-Type')?.includes('application/json'),
+  wait,
+  createScriptExec,
+  rm,
+  clearFolder,
+  withRetry,
   generateRandomId,
   use,
   useStatic,
