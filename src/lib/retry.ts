@@ -3,31 +3,34 @@ import { isProduction } from './init.js';
 import { errToString } from './catch-error.js';
 
 export interface RetryOptions {
-  retries?: number;
+  maxAttempts?: number;
   retryIntervalMs?: number;
-  failMessage?: (err: string, retries: number) => string;
+  failMessage?: (err: string, attempt: number) => string;
 }
 
-/** Run a function in async for the the desired amount of times, if it fails the last retry, it will throw an error. */
-export const withRetry = <T>(callback: Callback<T>, { retries = 10, retryIntervalMs = 1000, failMessage }: RetryOptions = {}) => {
+/** Run a function for the the desired amount of times, if it fails the last retry, it will throw an error. */
+export const withRetry = <T>(callback: Callback<T>, { maxAttempts, retryIntervalMs = 1000, failMessage }: RetryOptions = {}) => {
   return new Promise<T>((resolve, reject) => {
+    let attempt = 0;
     const handle = async () => {
       try {
         const maybe = await callback();
         resolve(maybe);
       } catch (err) {
-        if (retries === 0) {
+        if (attempt === maxAttempts) {
           reject(err);
           return;
         }
         if (!isProduction) {
           // eslint-disable-next-line no-console
           console.log(
-            failMessage ? failMessage(errToString(err), retries) : `Function fail, try again, error: ${errToString(err)}, retries: ${retries}`,
+            failMessage
+              ? failMessage(errToString(err), attempt)
+              : `Function fail, try again, error: ${errToString(err)}, attempt: ${attempt}, maxAttempts: ${maxAttempts || 'Infinity'}`,
           );
         }
-        retries -= 1;
         setTimeout(handle, retryIntervalMs);
+        attempt++;
       }
     };
     handle();

@@ -163,7 +163,6 @@ const coraline = {
   regex,
   colors: coralineColors,
 };
-
 export default coraline;
 
 export { consoleColor } from './lib/console-color.js';
