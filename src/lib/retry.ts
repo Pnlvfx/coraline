@@ -9,6 +9,11 @@ export interface RetryOptions {
   signal?: AbortController['signal'];
 }
 
+export const isAbortError = (err: unknown) => {
+  if (typeof err !== 'object' || err === null) return false;
+  return 'name' in err && err.name === 'AbortError' ? true : false;
+};
+
 /** Run a function for the the desired amount of times, if it fails the last retry, it will throw an error. */
 export const withRetry = <T>(callback: Callback<T>, { maxAttempts, retryIntervalMs = 1000, failMessage, signal }: RetryOptions = {}) => {
   return new Promise<T>((resolve, reject) => {
@@ -22,6 +27,9 @@ export const withRetry = <T>(callback: Callback<T>, { maxAttempts, retryInterval
         const maybe = await callback();
         resolve(maybe);
       } catch (err) {
+        if (isAbortError(err)) {
+          reject('Aborted');
+        }
         if (attempt === maxAttempts) {
           reject(err);
           return;
