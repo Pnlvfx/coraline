@@ -45,7 +45,7 @@ const store = async (cache: Cache, name: string) => {
 const cachedRequest = async <T>(
   name: string,
   callback: () => Promise<T>,
-  options?: { customId?: string; cacheDuration?: number; store?: boolean },
+  options?: { customId?: string; expires?: number; store?: boolean },
   // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<T> => {
   if (!initCacheDir) {
@@ -72,12 +72,16 @@ const cachedRequest = async <T>(
     return data;
   }
 
-  const MAX = options?.cacheDuration || 20_000;
-
-  if (cache && currentTime - cache.timestamp < MAX) {
-    // eslint-disable-next-line no-console
-    if (!isProduction) console.log('Returned from cache, expires in:', MAX - (currentTime - cache.timestamp));
-    return cache.data as T;
+  if (cache) {
+    if (options?.expires) {
+      if (currentTime - cache.timestamp < options.expires) {
+        // eslint-disable-next-line no-console
+        if (!isProduction) console.log('Returned from cache, expires in:', options.expires - (currentTime - cache.timestamp));
+        return cache.data as T;
+      }
+    } else {
+      return cache.data as T;
+    }
   }
 
   const data = await callback();
