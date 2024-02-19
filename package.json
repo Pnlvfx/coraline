@@ -1,7 +1,7 @@
 {
   "name": "coraline",
-  "description": "Your favourite package",
-  "version": "2023.7.31",
+  "description": "Your favourite package helper.",
+  "version": "2024.2.19",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -16,7 +16,7 @@
   "license": "MIT",
   "scripts": {
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
-    "dev": "tsc -w --outDir dist/esm & node --watch .",
+    "dev": "tsc -w & node --watch .",
     "start": "node .",
     "lint": "eslint ./src",
     "build": "rimraf dist && npm run lint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
@@ -32,7 +32,6 @@
   ],
   "devDependencies": {
     "@types/node": "^20.11.19",
-    "@types/nodemon": "^1.19.6",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
     "eslint": "^8.56.0",
