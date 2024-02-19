@@ -15,7 +15,7 @@ const caches: Partial<Record<string, Cache<unknown>>> = {};
 const getStored = async <T>(name: string) => {
   try {
     const file = path.join(cacheDir, `${name}.json`);
-    return readJSON<Cache<T>>(file);
+    return await readJSON<Cache<T>>(file);
   } catch {
     return;
   }
