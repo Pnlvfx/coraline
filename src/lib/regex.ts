@@ -1,9 +1,14 @@
 const regex = {
-  upperLowerCase: (name: string) => {
-    return new RegExp(`^${name}$`, 'i');
-  },
-  emoji: /<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu,
-  flexibleMatch: (name: string) => {
+  /** Match two strings using regex even if there are differences in upper or lower case */
+  upperLowerCase: (name: string) => new RegExp(`^${name}$`, 'i'),
+  /** Detect if a given string has emoji. */
+  detectEmoji: /<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu,
+  /** Remove any emoji from a given string. */
+  removeEmojis: (str: string) => str.replaceAll(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, ''),
+  /** */
+  removeParentheses: (str: string) => str.replaceAll(/\s*\(.*?\)\s*/g, ''),
+  /** Match a string even with some differences, but note that it might be incorrect. */
+  simpleMatch: (name: string) => {
     const regexString = [...name].map((char) => `${char}.*?`).join('.*?');
     return new RegExp(`^.*?${regexString}.*?$`, 'i');
   },
