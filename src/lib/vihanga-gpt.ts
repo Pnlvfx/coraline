@@ -39,14 +39,14 @@ const vihangaYt = async (q: string, version: keyof typeof Version = '04') => {
 };
 
 const getJSON = <T>(q: string) => {
+  const startIdx = q.indexOf('{');
+  const endIdx = q.lastIndexOf('}');
   try {
-    const startIdx = q.indexOf('{');
-    const endIdx = q.lastIndexOf('}');
     if (startIdx === -1 || endIdx === -1) throw new Error('No JSON found!');
     return JSON.parse(q.slice(startIdx, endIdx + 1)) as T;
   } catch (err) {
     const tmpFile = temporaryFile({ extension: 'json' });
-    fs.writeFile(tmpFile, q);
+    fs.writeFile(tmpFile, `Received: ${q}\n\n\n:Cleaned: ${q.slice(startIdx, endIdx + 1)}`);
     throw new Error(`Invalid JSON string received: ${errToString(err)}, check: ${tmpFile} to find the wrong request`);
   }
 };
