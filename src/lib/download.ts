@@ -24,7 +24,7 @@ const getFilename = (url: URL, format: string, options?: DownloadOptions) => {
   return filename;
 };
 
-interface DownloadOptions {
+export interface DownloadOptions {
   filename?: string;
   filenameLength?: number;
   timeout?: number;

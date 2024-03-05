@@ -185,4 +185,6 @@ export type { ConsoleColor } from './lib/console-color.js';
 
 export { type Callback, getEntries } from './types/shared.js';
 
+export type { DownloadOptions } from './lib/download.js';
+
 export { default as regex } from './lib/regex.js';
