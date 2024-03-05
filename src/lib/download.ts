@@ -7,18 +7,16 @@ import { isProduction } from './init.js';
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 const getFilename = (url: URL, format: string, options?: DownloadOptions) => {
-  let filename = decodeURIComponent(options?.filename || path.basename(url.pathname))
-    .replaceAll(' ', '-')
-    .toLowerCase()
-    .trim();
+  const name = options?.filename || path.basename(url.pathname);
+  const filenameFormat = path.extname(name);
+  let filename = decodeURIComponent(name).replaceAll(' ', '-').toLowerCase().trim();
   const maxLength = options?.filenameLength || 80;
 
   if (filename.length > maxLength) {
-    filename = filename.slice(-maxLength);
+    filename = filename.slice(0, maxLength);
   }
-  const filenameFormat = path.extname(filename);
 
-  if (!filenameFormat) {
+  if (!filenameFormat || filenameFormat !== format) {
     filename += `.${format === 'mpeg' ? 'mp3' : format}`;
   }
   return filename;
