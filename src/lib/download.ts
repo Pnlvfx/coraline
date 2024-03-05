@@ -8,7 +8,7 @@ const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 const getFilename = (url: URL, format: string, options?: DownloadOptions) => {
   const name = options?.filename || path.basename(url.pathname);
-  const filenameFormat = path.extname(name);
+  const filenameFormat = path.extname(options?.filename || url.pathname);
   let filename = decodeURIComponent(name).replaceAll(' ', '-').toLowerCase().trim();
   const maxLength = options?.filenameLength || 80;
 
