@@ -9,56 +9,68 @@ interface Cache<T> {
   customId?: string;
 }
 
-const cache = () => {
-  const caches: Partial<Record<string, Cache<unknown>>> = {};
-  const cacheDir = use('cache');
+const caches: Partial<Record<string, Cache<unknown>>> = {};
+let cacheDir: string | undefined;
 
-  const getStored = async <T>(name: string) => {
-    try {
-      const file = path.join(cacheDir, `${name}.json`);
-      return await readJSON<Cache<T>>(file);
-    } catch {
-      return;
+const getStored = async <T>(name: string) => {
+  try {
+    if (!cacheDir) {
+      cacheDir = use('cache');
     }
-  };
-
-  const store = async <T>(cache: Cache<T>, name: string) => {
     const file = path.join(cacheDir, `${name}.json`);
-    await saveFile(file, JSON.stringify(cache));
-  };
+    return await readJSON<Cache<T>>(file);
+  } catch {
+    return;
+  }
+};
 
-  return {
-    use: async <T>(name: string, callback: Callback<T>, options?: { customId?: string; expires?: number; store?: boolean }): Promise<T> => {
-      const saved = options?.store ? await getStored(name) : caches[name];
-      const currentTime = Date.now();
+const store = async <T>(cache: Cache<T>, name: string) => {
+  if (!cacheDir) {
+    cacheDir = use('cache');
+  }
+  const file = path.join(cacheDir, `${name}.json`);
+  await saveFile(file, JSON.stringify(cache));
+};
 
-      if (!saved || options?.customId !== saved.customId || (options?.expires && currentTime - saved.timestamp > options.expires)) {
-        const newCache = {
-          data: await callback(),
-          timestamp: currentTime,
-          isStored: options?.store || false,
-        };
-        caches[name] = newCache;
+const useCache = async <T>(name: string, callback: Callback<T>, options?: { customId?: string; expires?: number; store?: boolean }): Promise<T> => {
+  const saved = options?.store ? await getStored(name) : caches[name];
+  const currentTime = Date.now();
 
-        if (options?.store) {
-          await store(newCache, name);
-        }
-        return newCache.data;
-      }
+  if (!saved || options?.customId !== saved.customId || (options?.expires && currentTime - saved.timestamp > options.expires)) {
+    const newCache = {
+      data: await callback(),
+      timestamp: currentTime,
+      isStored: options?.store || false,
+    };
+    caches[name] = newCache;
 
-      return saved.data as T;
-    },
-    clear: async (name: string) => {
-      await rm(path.join(cacheDir, `${name}.json`));
-      delete caches[name];
-    },
-    clearAll: () => {
-      Object.entries(caches).map(([key]) => {
-        delete caches[key];
-      });
-      return rm(cacheDir);
-    },
-  };
+    if (options?.store) {
+      await store(newCache, name);
+    }
+    return newCache.data;
+  }
+
+  return saved.data as T;
+};
+
+const cache = {
+  use: useCache,
+  clear: async (name: string) => {
+    if (!cacheDir) {
+      cacheDir = use('cache');
+    }
+    await rm(path.join(cacheDir, `${name}.json`));
+    delete caches[name];
+  },
+  clearAll: () => {
+    if (!cacheDir) {
+      cacheDir = use('cache');
+    }
+    Object.entries(caches).map(([key]) => {
+      delete caches[key];
+    });
+    return rm(cacheDir);
+  },
 };
 
 export default cache;
