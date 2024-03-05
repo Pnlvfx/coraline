@@ -74,18 +74,15 @@ export const download = (
       const output = path.join(outputDir, filename);
       const fileStream = fs.createWriteStream(output);
       res.pipe(fileStream);
-      fileStream.on('error', (err) => {
+      fileStream.on('error', async (err) => {
         const error = err as NodeJS.ErrnoException;
         if (error.code === 'ENOENT') {
-          fs.promises
-            .mkdir(outputDir, { recursive: true })
-            .then(() => {
-              download(url.href, outputDir, options)
-                .then((_) => resolve(_))
-                .catch((err) => reject(err));
-            })
-            .catch((err) => reject(err));
-        } else reject(`Filestream error with url ${url.href}: ${err}`);
+          await fs.promises.mkdir(outputDir, { recursive: true });
+          const _ = await download(url.href, outputDir, options);
+          resolve(_);
+        } else {
+          reject(`Filestream error with url ${url.href}: ${err}`);
+        }
       });
       fileStream.on('finish', () => {
         fileStream.close();
