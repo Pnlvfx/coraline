@@ -4,17 +4,11 @@ import { isProduction } from './init.js';
 
 export interface ScriptOptions {
   title?: string;
-  repeat?: boolean;
   destroyAfter?: number;
   color?: ConsoleColor;
 }
 
-export const createScriptExec = ({
-  title = 'Welcome! Press Enter to run your function.',
-  repeat = false,
-  destroyAfter,
-  color = 'blue',
-}: ScriptOptions = {}) => {
+export const createScriptExec = ({ title = 'Welcome! Press Enter to run your function.', destroyAfter, color = 'blue' }: ScriptOptions = {}) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
   const rl = readline.createInterface({
     input: process.stdin,
@@ -38,9 +32,6 @@ export const createScriptExec = ({
         resolve(input);
       } catch (err) {
         reject(err);
-      }
-      if (repeat) {
-        createScriptExec({ title, repeat, destroyAfter, color });
       }
     };
 
