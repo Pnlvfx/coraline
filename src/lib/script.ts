@@ -9,17 +9,19 @@ export interface ScriptOptions {
   color?: ConsoleColor;
 }
 
-export const createScriptExec = <T>(
-  callback: (input?: string) => T,
-  { title = 'Welcome! Press Enter to run your function.', repeat = false, destroyAfter, color = 'blue' }: ScriptOptions = {},
-) => {
+export const createScriptExec = ({
+  title = 'Welcome! Press Enter to run your function.',
+  repeat = false,
+  destroyAfter,
+  color = 'blue',
+}: ScriptOptions = {}) => {
   if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
   let timer: NodeJS.Timeout | undefined;
-  return new Promise<T>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     if (destroyAfter) {
       timer = setTimeout(() => {
         rl.removeListener('line', handleLine);
@@ -28,18 +30,17 @@ export const createScriptExec = <T>(
       }, destroyAfter);
     }
 
-    const handleLine = async (input: string) => {
+    const handleLine = (input: string) => {
       rl.removeListener('line', handleLine);
       rl.close();
       clearTimeout(timer);
       try {
-        const maybe = await callback(input);
-        resolve(maybe);
+        resolve(input);
       } catch (err) {
         reject(err);
       }
       if (repeat) {
-        createScriptExec(callback, { title, repeat, destroyAfter, color });
+        createScriptExec({ title, repeat, destroyAfter, color });
       }
     };
 
