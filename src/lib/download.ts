@@ -76,6 +76,12 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
         fileStream.on('error', async (err) => {
+          const error = err as NodeJS.ErrnoException;
+          if (error.code === 'ENOENT') {
+            await fs.promises.mkdir(outputDir, { recursive: true });
+            run(media_url);
+            return;
+          }
           fileStream.close();
           reject(err);
         });
