@@ -1,5 +1,5 @@
 import { promises as fs } from 'node:fs';
-import { errToString } from './catch-error.js';
+import { errToString } from './error.js';
 import { wait } from './init.js';
 import { temporaryFile } from './tempy.js';
 

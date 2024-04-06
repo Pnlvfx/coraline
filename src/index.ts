@@ -166,7 +166,7 @@ const coraline = {
 export default coraline;
 
 export { consoleColor } from './lib/console-color.js';
-export { errToString } from './lib/catch-error.js';
+export { errToString } from './lib/error.js';
 export const TG_GROUP_LOG = Number('-914836534');
 
 export { chatGPT } from './lib/vihanga-gpt.js';
