@@ -77,7 +77,6 @@ export const rm = async (files: string | string[]) => {
       if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
     }
   }
-  return true;
 };
 
 export const clearFolder = async (folder: string) => {
