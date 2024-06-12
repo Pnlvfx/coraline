@@ -1,4 +1,4 @@
-import { consoleColor, type ConsoleColor } from './console-color.js';
+import { consoleColor, type ConsoleColor } from 'coraline-client';
 import readline from 'node:readline';
 import { isProduction } from './init.js';
 

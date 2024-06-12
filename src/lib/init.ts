@@ -1,5 +1,4 @@
 import type { File } from '../types/file.js';
-import type { Callback } from '../types/shared.js';
 import path from 'node:path';
 import { promises as fs, mkdir, PathLike } from 'node:fs';
 import crypto from 'node:crypto';
@@ -85,24 +84,3 @@ export const clearFolder = async (folder: string) => {
     await rm(path.join(folder, content));
   }
 };
-
-export function wait<T>(ms: number, callback: Callback<T>): Promise<T>;
-export function wait(ms: number): Promise<void>;
-
-export function wait<T>(ms: number, callback?: Callback<T>) {
-  return new Promise<T | void>((resolve, reject) =>
-    setTimeout(async () => {
-      try {
-        let maybe;
-        if (callback) {
-          maybe = await callback();
-          resolve(maybe);
-        } else {
-          resolve();
-        }
-      } catch (err) {
-        reject(err);
-      }
-    }, ms),
-  );
-}

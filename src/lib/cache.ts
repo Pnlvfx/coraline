@@ -1,6 +1,6 @@
+import type { Callback } from 'coraline-client';
 import path from 'node:path';
 import { readJSON, rm, saveFile, use } from './init.js';
-import { Callback } from '../types/shared.js';
 
 interface Cache<T> {
   timestamp: number;

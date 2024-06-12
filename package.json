@@ -46,6 +46,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "coraline-client": "github:Pnlvfx/coraline-client",
     "ts-unused-exports": "^10.1.0"
   }
 }
