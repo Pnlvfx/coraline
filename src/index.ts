@@ -9,6 +9,7 @@ import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
 import psList from './ps-list/index.js';
+import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 
 const coraline = {
   ...client,
@@ -72,6 +73,7 @@ const coraline = {
   cache,
   media: coralineMedia,
   psList,
+  findUnusedExports,
 };
 
 export default coraline;
