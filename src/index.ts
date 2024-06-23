@@ -8,7 +8,6 @@ import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
-import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import psList from './ps-list/index.js';
 
 const coraline = {
@@ -70,7 +69,6 @@ const coraline = {
   readJSON,
   splitLongGptCommand,
   log,
-  findUnusedExports,
   cache,
   media: coralineMedia,
   psList,
