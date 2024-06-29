@@ -2,7 +2,7 @@
   "name": "coraline",
   "description": "Your favourite package helper.",
   "version": "2024.2.19",
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "exports": {

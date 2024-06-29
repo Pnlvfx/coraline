@@ -1,4 +1,5 @@
 import path from 'node:path';
+import os from 'node:os';
 import { checkPath } from '../lib/make-dir.js';
 import { mkdir } from 'node:fs';
 
@@ -10,8 +11,7 @@ const mkDir = (folder: string) => {
 };
 
 export const storage = (name: string) => {
-  const coralineDir = './coraline';
-  const directory = path.join(coralineDir, name);
+  const directory = path.join(os.homedir(), '.coraline', name);
   return {
     use: (document: string) => {
       const extra_path = path.join('gov', document);
