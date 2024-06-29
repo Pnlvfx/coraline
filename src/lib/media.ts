@@ -1,9 +1,8 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { useStatic } from './init.js';
 import { download } from './download.js';
 
-const coralineMedia = {
+const media = {
   getUrlFromPath: (directory: string, query?: Record<string, string>) => {
     if (!process.env['SERVER_URL']) throw new Error('Please add SERVER_URL to your env file to use this function');
     const extra_path = directory.split('/static/').at(1);
@@ -13,12 +12,10 @@ const coralineMedia = {
   },
   getPathFromUrl: (url: string) => {
     const _url = new URL(url);
-    let segments = _url.pathname.split('/static/');
-    segments.shift();
-    segments = segments.join('/').split('/');
-    const filename = segments.pop();
-    const base_path = useStatic(segments.join('/'));
-    return `${base_path}/${filename}`;
+    const [_, ...segments] = _url.pathname.split('/static/');
+    const folder = segments.join('/').split('/');
+    const filename = folder.pop();
+    return { folder, filename };
   },
   saveAudio: async (audio: string | Uint8Array | Buffer, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
@@ -67,4 +64,4 @@ const coralineMedia = {
   download,
 };
 
-export default coralineMedia;
+export default media;

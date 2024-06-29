@@ -2,7 +2,7 @@ import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
-import { isProduction } from './init.js';
+import { isProduction } from './shared.js';
 
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 

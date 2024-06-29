@@ -1,7 +1,8 @@
 /* eslint-disable unicorn/prefer-ternary */
 import path from 'node:path';
+import { promises as fs } from 'node:fs';
 import { temporaryDirectory } from './tempy.js';
-import { isProduction, saveFile } from './init.js';
+import { isProduction } from './shared.js';
 
 export const splitLongGptCommand = async (prompt: unknown[] | string | Record<string, unknown>, maxLength = 15_000) => {
   const command = typeof prompt === 'string' ? prompt : JSON.stringify(prompt);
@@ -28,7 +29,7 @@ export const splitLongGptCommand = async (prompt: unknown[] | string | Record<st
 
     const name = `split_${String(i + 1).padStart(3, '0')}_of_${String(numParts).padStart(3, '0')}.txt`;
 
-    await saveFile(path.join(dir, name), content);
+    await fs.writeFile(path.join(dir, name), content);
 
     fileData.push({
       name,

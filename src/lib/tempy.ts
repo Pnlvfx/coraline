@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { generateRandomId } from './init.js';
+import { generateRandomId } from './shared.js';
 import os from 'node:os';
 
 type Extensions = 'mp4' | 'mp3' | 'mov' | 'png' | 'jpg' | 'jpeg' | 'txt' | 'html' | 'css' | string;

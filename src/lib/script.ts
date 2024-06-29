@@ -1,6 +1,6 @@
 import { consoleColor, type ConsoleColor } from 'coraline-client';
 import readline from 'node:readline';
-import { isProduction } from './init.js';
+import { isProduction } from './shared.js';
 
 export interface ScriptOptions {
   title?: string;

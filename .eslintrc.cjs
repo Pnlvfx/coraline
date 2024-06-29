@@ -55,6 +55,7 @@ module.exports = {
     'prefer-const': 'error',
     'no-console': 'error',
 
+    '@typescript-eslint/no-unused-vars': 'off',
     'no-unused-vars': 'off',
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/catch-error-name': 'off',

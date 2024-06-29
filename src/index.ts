@@ -2,14 +2,15 @@ import https from 'node:https';
 import { URL } from 'node:url';
 import os from 'node:os';
 import client from 'coraline-client';
-import { clearFolder, generateRandomId, readJSON, rm, saveFile, use, useStatic } from './lib/init.js';
-import coralineMedia from './lib/media.js';
+import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
+import media from './lib/media.js';
 import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import { createScriptExec } from './lib/script.js';
 import psList from './ps-list/index.js';
 import { findUnusedExports } from './lib/ts-unused-exports.cjs';
+import { storage } from './storage/storage.js';
 
 const coraline = {
   ...client,
@@ -64,16 +65,14 @@ const coraline = {
   rm,
   clearFolder,
   generateRandomId,
-  use,
-  useStatic,
-  saveFile,
   readJSON,
   splitLongGptCommand,
   log,
   cache,
-  media: coralineMedia,
   psList,
   findUnusedExports,
+  storage,
+  media,
 };
 
 export default coraline;

@@ -1,5 +1,5 @@
 import { inspect } from 'node:util';
-import { isProduction } from './init.js';
+import { isProduction } from './shared.js';
 
 export const log = (message?: unknown, ...opts: unknown[]) => {
   if (isProduction) throw new Error('Do not use coraline.log in production as it is used only for debugging purposes.');
