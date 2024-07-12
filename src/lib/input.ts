@@ -49,9 +49,10 @@ const input = {
     });
   },
   abort: () => {
-    if (!rl) throw new Error('Calling input.abort without readline');
-    isAborted = true;
-    rl.close();
+    if (rl) {
+      isAborted = true;
+      rl.close();
+    }
   },
 };
 
