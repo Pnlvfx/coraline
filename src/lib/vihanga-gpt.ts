@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import { temporaryFile } from './tempy.js';
-import { errToString, wait } from 'coraline-client';
+import { errToString } from 'coraline-client';
+import { wait } from './wait.js';
 
 const BASE_URL = 'https://vihangayt.me/tools/chatgpt';
 const MIN_TIMEOUT = 25_000;

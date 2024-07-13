@@ -11,9 +11,12 @@ import input from './lib/input.js';
 import psList from './ps-list/index.js';
 import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import { storage } from './storage/storage.js';
+import { wait } from './lib/wait.js';
 
 const coraline = {
   ...client,
+  //override the coraline-client wait function in favor of the new node timers
+  wait,
   isUrl: (input: string) => {
     try {
       return !!new URL(input);
@@ -88,7 +91,6 @@ export {
   parseSetCookieHeader,
   regex,
   withRetry,
-  wait,
 } from 'coraline-client';
 
 export const TG_GROUP_LOG = Number('-914836534');
