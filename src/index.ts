@@ -101,4 +101,6 @@ export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 
 export { getEntries } from './lib/entries.js';
 
+export { execAsync } from './lib/exec-async.js';
+
 export type { DownloadOptions } from './lib/download.js';
