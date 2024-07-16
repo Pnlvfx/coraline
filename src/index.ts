@@ -12,6 +12,7 @@ import psList from './ps-list/index.js';
 import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';
+import { benchmark } from './lib/benchmark.js';
 
 const coraline = {
   ...client,
@@ -75,6 +76,7 @@ const coraline = {
   psList,
   findUnusedExports,
   storage,
+  benchmark,
   media,
 };
 
