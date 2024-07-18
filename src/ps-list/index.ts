@@ -102,7 +102,6 @@ const ERROR_MESSAGE_PARSING_FAILED = 'ps output parsing failed';
 
 const psOutputRegex = /^[\t ]*(?<pid>\d+)[\t ]+(?<ppid>\d+)[\t ]+(?<uid>[\d-]+)[\t ]+(?<cpu>\d+\.\d+)[\t ]+(?<memory>\d+\.\d+)[\t ]+(?<comm>.*)?/;
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const nonWindowsCall = async (options: Options = {}): Promise<ProcessDescriptor[]> => {
   const flags = options.all === false ? 'wwxo' : 'awwxo';
 
