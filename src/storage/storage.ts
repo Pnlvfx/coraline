@@ -26,7 +26,12 @@ export const storage = (name: string) => {
 
 const mkDir = async (folder: string) => {
   checkPath(folder);
-  await fs.mkdir(folder);
+  try {
+    await fs.mkdir(folder);
+  } catch (err) {
+    if (err && typeof err === 'object' && 'code' in err && err.code == 'EEXIST') return;
+    throw err;
+  }
 };
 
 export type Storage = ReturnType<typeof storage>;
