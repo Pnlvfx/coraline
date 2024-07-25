@@ -107,3 +107,5 @@ export { getEntries } from './lib/entries.js';
 export { execAsync } from './lib/exec-async.js';
 
 export type { DownloadOptions } from './lib/download.js';
+
+export type { Storage } from './storage/storage.js';
