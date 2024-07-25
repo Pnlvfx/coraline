@@ -8,7 +8,7 @@ export const generateRandomId = (max = 10) => crypto.randomBytes(max / 2).toStri
 
 export const readJSON = async <T>(file: string): Promise<T> => {
   const data = await fs.readFile(file, { encoding: 'utf8' });
-  return JSON.parse(data);
+  return JSON.parse(data) as T;
 };
 
 export const rm = async (files: string | string[]) => {

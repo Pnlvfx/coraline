@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-dynamic-delete */
 import type { Callback } from 'coraline-client';
 import type { CoralineStorage } from '../storage/storage.js';
 import { promises as fs } from 'node:fs';
@@ -38,7 +39,7 @@ const cache = (storage: CoralineStorage) => {
         const newCache = {
           data: await callback(),
           timestamp: currentTime,
-          isStored: options?.store || false,
+          isStored: options?.store ?? false,
         };
         caches[name] = newCache;
 
@@ -55,9 +56,9 @@ const cache = (storage: CoralineStorage) => {
       delete caches[name];
     },
     clearAll: () => {
-      Object.entries(caches).map(([key]) => {
+      for (const [key] of Object.entries(caches)) {
         delete caches[key];
-      });
+      }
       return rm(cacheDir);
     },
   };

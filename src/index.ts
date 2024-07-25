@@ -30,11 +30,13 @@ const coraline = {
       https
         .request(url, { method: 'HEAD' }, (res) => {
           if (res.statusCode !== 200) {
-            return reject(new Error(`Failed to retrieve video: ${res.statusCode} ${res.statusMessage}`));
+            reject(new Error(`Failed to retrieve video: ${res.statusCode?.toString() ?? ''} ${res.statusMessage?.toString() ?? ''}`));
+            return;
           }
           const contentType = res.headers['content-type'];
           if (!contentType) {
-            return reject('This url does not have a content-type value!');
+            reject(new Error('This url does not have a content-type value!'));
+            return;
           }
           resolve(contentType);
         })
@@ -55,7 +57,8 @@ const coraline = {
         break;
       }
       case 'win32': {
-        const winVersion = os.release().split('.')[0];
+        const winVersion = os.release().split('.').at(0);
+        if (!winVersion) throw new Error('Something went wrong while getting user agent.');
         userAgent = `Mozilla/5.0 (Windows NT ${winVersion}; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36`;
         break;
       }
@@ -96,8 +99,6 @@ export {
 } from 'coraline-client';
 
 export const TG_GROUP_LOG = Number('-914836534');
-
-export { chatGPT } from './lib/vihanga-gpt.js';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 

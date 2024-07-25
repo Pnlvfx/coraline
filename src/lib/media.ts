@@ -45,7 +45,7 @@ const media = {
     const promises = [];
     for (let i = 0; i < buffer.byteLength; i += size) {
       const chunk = buffer.slice(i, i + size);
-      promises.push(fs.writeFile(`${file}_part${i}.flac`, Buffer.from(chunk)));
+      promises.push(fs.writeFile(`${file}_part${i.toString()}.flac`, Buffer.from(chunk)));
     }
     await Promise.all(promises);
   },

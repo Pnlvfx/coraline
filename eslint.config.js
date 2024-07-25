@@ -1,32 +1,30 @@
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import sonarjs from 'eslint-plugin-sonarjs';
+import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['dist'],
+    ignores: ['dist', 'tools'],
   },
   eslint.configs.recommended,
   eslintPluginUnicorn.configs['flat/recommended'],
-  eslintConfigPrettier,
   sonarjs.configs.recommended,
-  eslintPluginPrettierRecommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+      globals: globals.builtin,
+    },
+  },
   {
     rules: {
-      'prettier/prettier': [
-        1,
-        {
-          trailingComma: 'all',
-          singleQuote: true,
-          semi: true,
-          printWidth: 150,
-          tabWidth: 2,
-        },
-      ],
       'no-var': 'error',
       semi: 'error',
       indent: ['error', 2, { SwitchCase: 1 }],
@@ -56,5 +54,9 @@ export default tseslint.config(
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/catch-error-name': 'off',
     },
+  },
+  {
+    files: ['**/*.js'],
+    ...tseslint.configs.disableTypeChecked,
   },
 );

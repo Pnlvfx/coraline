@@ -2,6 +2,10 @@
   "name": "coraline",
   "description": "Your favourite package helper.",
   "version": "2024.2.19",
+  "author": {
+    "email": "simonegauli@gmail.com",
+    "name": "Simone Gauli"
+  },
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -36,8 +40,6 @@
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.14.11",
     "eslint": "^9.7.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-sonarjs": "^1.0.3",
     "eslint-plugin-unicorn": "^54.0.0",
     "prettier": "^3.3.3",

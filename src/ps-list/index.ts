@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable unicorn/prefer-module */
 import type { ProcessDescriptor, ProcessDescriptorInternal } from './types/index.js';
 import process from 'node:process';
@@ -9,10 +12,8 @@ interface Options {
   all?: boolean;
 }
 
-interface EmptyObject {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type EmptyObject = Record<string, any>;
 
 const TEN_MEGABYTES = 1000 * 1000 * 10;
 const execFile = promisify(childProcess.execFile);
@@ -138,7 +139,7 @@ const nonWindowsCall = async (options: Options = {}): Promise<ProcessDescriptor[
     return psLines
       .map((line) => {
         const match = psOutputRegex.exec(line);
-        if (!match || !match.groups) throw new Error(ERROR_MESSAGE_PARSING_FAILED);
+        if (!match?.groups) throw new Error(ERROR_MESSAGE_PARSING_FAILED);
         const { pid, ppid, uid, cpu, memory, comm } = match.groups;
         const response: Partial<ProcessDescriptorInternal> = {};
         if (pid) {

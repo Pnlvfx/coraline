@@ -14,17 +14,17 @@ export const splitLongGptCommand = async (prompt: unknown[] | string | Record<st
     const end = Math.min((i + 1) * maxLength, command.length);
     let content = '';
     if (i === numParts - 1) {
-      content = `[START PART ${i + 1}/${numParts}]\n${command.slice(start, end)}\n[END PART ${
+      content = `[START PART ${(i + 1).toString()}/${numParts.toString()}]\n${command.slice(start, end)}\n[END PART ${(
         i + 1
-      }/${numParts}]\nALL PARTS SENT. Now you can continue processing the request.`;
+      ).toString()}/${numParts.toString()}]\nALL PARTS SENT. Now you can continue processing the request.`;
     } else {
-      content = `Do not answer yet. This is just another part of the text I want to send you. Just receive and acknowledge as "Part ${
+      content = `Do not answer yet. This is just another part of the text I want to send you. Just receive and acknowledge as "Part ${(
         i + 1
-      }/${numParts} received" and wait for the next part.\n[START PART ${i + 1}/${numParts}]\n${command.slice(start, end)}\n[END PART ${
+      ).toString()}/${numParts.toString()} received" and wait for the next part.\n[START PART ${(i + 1).toString()}/${numParts.toString()}]\n${command.slice(start, end)}\n[END PART ${(
         i + 1
-      }/${numParts}]\nRemember not answering yet. Just acknowledge you received this part with the message "Part ${
+      ).toString()}/${numParts.toString()}]\nRemember not answering yet. Just acknowledge you received this part with the message "Part ${(
         i + 1
-      }/${numParts} received" and wait for the next part.`;
+      ).toString()}/${numParts.toString()} received" and wait for the next part.`;
     }
 
     const name = `split_${String(i + 1).padStart(3, '0')}_of_${String(numParts).padStart(3, '0')}.txt`;

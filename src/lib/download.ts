@@ -7,10 +7,10 @@ import { isProduction } from './shared.js';
 const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
 
 const getFilename = (url: URL, format: string, options?: DownloadOptions) => {
-  const name = options?.filename || path.basename(url.pathname);
-  const filenameFormat = path.extname(options?.filename || url.pathname);
+  const name = options?.filename ?? path.basename(url.pathname);
+  const filenameFormat = path.extname(options?.filename ?? url.pathname);
   let filename = decodeURIComponent(name).replaceAll(' ', '-').toLowerCase().trim();
-  const maxLength = options?.filenameLength || 80;
+  const maxLength = options?.filenameLength ?? 80;
 
   if (filename.length > maxLength) {
     filename = filename.slice(0, maxLength);
@@ -31,9 +31,9 @@ export interface DownloadOptions {
 
 export const download = (media_url: string, outputDir: string, options?: DownloadOptions) => {
   const fetchOptions = {
-    headers: options?.headers || {
+    headers: options?.headers ?? {
       'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0',
-      timeout: options?.timeout || 60_000,
+      timeout: options?.timeout ?? 60_000,
     },
   };
   return new Promise<string>((resolve, reject) => {
@@ -48,7 +48,7 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         if (res.statusCode === 302 || res.statusCode === 301) {
           if (!res.headers.location || res.headers.location === url.href) {
             res.resume();
-            reject(`Request at ${url.href} has invalid redirect url!`);
+            reject(new Error(`Request at ${url.href} has invalid redirect url!`));
             return;
           }
           if (!isProduction) {
@@ -60,13 +60,13 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         }
         if (res.statusCode !== 200) {
           res.resume();
-          reject(`Download error for this url ${url.href}: ${res.statusCode} ${res.statusMessage}`);
+          reject(new Error(`Download error for this url ${url.href}: ${res.statusCode?.toString() ?? ''} ${res.statusMessage?.toString() ?? ''}`));
           return;
         }
         const format = res.headers['content-type']?.split('/').at(1)?.trim();
         if (!format || !allowedFormats.test(format)) {
           res.resume();
-          reject(`The URL ${url.href} does not contain any media or it has an invalid format! Format: ${format}`);
+          reject(new Error(`The URL ${url.href} does not contain any media or it has an invalid format! Format: ${format ?? 'MISSING'}`));
           return;
         }
 
@@ -75,6 +75,7 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         const output = path.join(outputDir, filename);
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         fileStream.on('error', async (err) => {
           const error = err as NodeJS.ErrnoException;
           if (error.code === 'ENOENT') {
