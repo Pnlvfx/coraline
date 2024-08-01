@@ -5,7 +5,7 @@ import { checkPath } from '../lib/make-dir.js';
 
 export const storage = async (name: string) => {
   const directory = path.join(os.homedir(), '.coraline', name);
-  await mkDir(directory);
+  await mkDir(directory, true);
   return {
     use: async (document: string) => {
       const isAbsolute = path.isAbsolute(document);
@@ -25,10 +25,10 @@ export const storage = async (name: string) => {
   };
 };
 
-const mkDir = async (folder: string) => {
+const mkDir = async (folder: string, recursive?: boolean) => {
   checkPath(folder);
   try {
-    await fs.mkdir(folder);
+    await fs.mkdir(folder, { recursive });
   } catch (err) {
     if (err && typeof err === 'object' && 'code' in err && err.code == 'EEXIST') return;
     throw err;
