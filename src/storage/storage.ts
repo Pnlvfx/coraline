@@ -3,8 +3,9 @@ import os from 'node:os';
 import { promises as fs } from 'node:fs';
 import { checkPath } from '../lib/make-dir.js';
 
-export const storage = (name: string) => {
+export const storage = async (name: string) => {
   const directory = path.join(os.homedir(), '.coraline', name);
+  await mkDir(directory);
   return {
     use: async (document: string) => {
       const isAbsolute = path.isAbsolute(document);
@@ -34,4 +35,4 @@ const mkDir = async (folder: string) => {
   }
 };
 
-export type Storage = ReturnType<typeof storage>;
+export type Storage = Awaited<ReturnType<typeof storage>>;
