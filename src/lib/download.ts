@@ -14,7 +14,6 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
   const fetchOptions = {
     headers: {
       'User-Agent': getUserAgent(),
-      timeout: 60_000,
       ...options?.headers,
     },
   };
