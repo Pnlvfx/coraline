@@ -2,6 +2,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { promises as fs } from 'node:fs';
 import { checkPath } from '../lib/make-dir.js';
+import { clearFolder } from '../lib/shared.js';
 
 export const storage = async (name: string) => {
   const directory = path.join(os.homedir(), '.coraline', name);
@@ -22,6 +23,7 @@ export const storage = async (name: string) => {
       await mkDir(path.join(folder, 'videos'));
       return folder;
     },
+    clearAll: () => clearFolder(directory),
   };
 };
 
