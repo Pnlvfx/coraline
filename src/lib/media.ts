@@ -1,6 +1,5 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { download } from './download.js';
 
 const media = {
   getUrlFromPath: (directory: string, query?: Record<string, string>) => {
@@ -61,7 +60,6 @@ const media = {
       gigabytes: Number((fileSizeInBytes / (1024 * 1024 * 1024)).toFixed(0)),
     };
   },
-  download,
 };
 
 export default media;

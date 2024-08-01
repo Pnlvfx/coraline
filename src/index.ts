@@ -13,6 +13,7 @@ import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';
 import { benchmark } from './lib/benchmark.js';
 import { getUserAgent } from './lib/user-agent.js';
+import { download } from './lib/download.js';
 
 const coraline = {
   ...client,
@@ -56,6 +57,7 @@ const coraline = {
   findUnusedExports,
   storage,
   benchmark,
+  download,
   media,
 };
 

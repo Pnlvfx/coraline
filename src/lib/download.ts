@@ -9,6 +9,7 @@ export interface DownloadOptions {
   headers?: http.OutgoingHttpHeaders;
 }
 
+/** Download any file from a given url. */
 export const download = (media_url: string, outputDir: string, options?: DownloadOptions) => {
   const fetchOptions = {
     headers: {
