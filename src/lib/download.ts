@@ -3,37 +3,18 @@ import https from 'node:https';
 import http from 'node:http';
 import fs from 'node:fs';
 import { isProduction } from './shared.js';
-
-const allowedFormats = /(jpg|jpeg|png|webp|avif|gif|svg|mov|mp4|mpeg)$/i;
-
-const getFilename = (url: URL, format: string, options?: DownloadOptions) => {
-  const name = options?.filename ?? path.basename(url.pathname);
-  const filenameFormat = path.extname(options?.filename ?? url.pathname);
-  let filename = decodeURIComponent(name).replaceAll(' ', '-').toLowerCase().trim();
-  const maxLength = options?.filenameLength ?? 80;
-
-  if (filename.length > maxLength) {
-    filename = filename.slice(0, maxLength);
-  }
-
-  if (!filenameFormat || filenameFormat !== format) {
-    filename += `.${format === 'mpeg' ? 'mp3' : format}`;
-  }
-  return filename;
-};
+import { getUserAgent } from './user-agent.js';
 
 export interface DownloadOptions {
-  filename?: string;
-  filenameLength?: number;
-  timeout?: number;
   headers?: http.OutgoingHttpHeaders;
 }
 
 export const download = (media_url: string, outputDir: string, options?: DownloadOptions) => {
   const fetchOptions = {
-    headers: options?.headers ?? {
-      'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0',
-      timeout: options?.timeout ?? 60_000,
+    headers: {
+      'User-Agent': getUserAgent(),
+      timeout: 60_000,
+      ...options?.headers,
     },
   };
   return new Promise<string>((resolve, reject) => {
@@ -63,26 +44,30 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
           reject(new Error(`Download error for this url ${url.href}: ${res.statusCode?.toString() ?? ''} ${res.statusMessage?.toString() ?? ''}`));
           return;
         }
-        const format = res.headers['content-type']?.split('/').at(1)?.trim();
-        if (!format || !allowedFormats.test(format)) {
+        const ext = res.headers['content-type']?.split('/').at(1)?.trim();
+        if (!ext) {
           res.resume();
-          reject(new Error(`The URL ${url.href} does not contain any media or it has an invalid format! Format: ${format ?? 'MISSING'}`));
+          reject(new Error(`Unable to get file type from ${url.href}!`));
           return;
         }
 
-        const filename = getFilename(url, format, options);
+        const filename = url.pathname.split('/').pop();
+        if (!filename) {
+          reject(new Error('Unable to get filename from url.'));
+          return;
+        }
+
+        if (!filename.endsWith(ext)) {
+          reject(new Error('This is just to check if it happens, you can check what cause it and just add the ext at the end.'));
+          return;
+          // filename = `${filename}.${ext}`;
+        }
 
         const output = path.join(outputDir, filename);
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        fileStream.on('error', async (err) => {
-          const error = err as NodeJS.ErrnoException;
-          if (error.code === 'ENOENT') {
-            await fs.promises.mkdir(outputDir, { recursive: true });
-            run(media_url);
-            return;
-          }
+
+        fileStream.on('error', (err) => {
           fileStream.close();
           reject(err);
         });
@@ -94,9 +79,7 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         .on('timeout', () => {
           req.destroy();
         })
-        .on('error', (err) => {
-          reject(err);
-        });
+        .on('error', reject);
     };
     run(media_url);
   });

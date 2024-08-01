@@ -1,6 +1,5 @@
 import https from 'node:https';
 import { URL } from 'node:url';
-import os from 'node:os';
 import client from 'coraline-client';
 import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
 import media from './lib/media.js';
@@ -13,10 +12,10 @@ import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';
 import { benchmark } from './lib/benchmark.js';
+import { getUserAgent } from './lib/user-agent.js';
 
 const coraline = {
   ...client,
-  //override the coraline-client wait function in favor of the new node timers
   wait,
   isUrl: (input: string) => {
     try {
@@ -44,30 +43,7 @@ const coraline = {
         .end();
     });
   },
-  getUserAgent: () => {
-    const system = os.platform();
-    let userAgent = '';
-    switch (system) {
-      case 'darwin': {
-        userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:122.0) Gecko/20100101 Firefox/122.0`;
-        break;
-      }
-      case 'linux': {
-        userAgent = `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0`;
-        break;
-      }
-      case 'win32': {
-        const winVersion = os.release().split('.').at(0);
-        if (!winVersion) throw new Error('Something went wrong while getting user agent.');
-        userAgent = `Mozilla/5.0 (Windows NT ${winVersion}; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36`;
-        break;
-      }
-      default: {
-        userAgent = `Mozilla/5.0 (compatible; Node.js/${process.version}; ${process.platform} ${process.arch})`;
-      }
-    }
-    return userAgent;
-  },
+  getUserAgent,
   input,
   rm,
   clearFolder,
