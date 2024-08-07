@@ -74,13 +74,12 @@ export {
   parseSetCookieHeader,
   regex,
   withRetry,
+  getEntries,
 } from 'coraline-client';
 
 export const TG_GROUP_LOG = Number('-914836534');
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
-
-export { getEntries } from './lib/entries.js';
 
 export { execAsync } from './lib/exec-async.js';
 
