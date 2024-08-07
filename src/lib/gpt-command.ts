@@ -8,7 +8,7 @@ export const splitLongGptCommand = async (prompt: unknown[] | string | Record<st
   const command = typeof prompt === 'string' ? prompt : JSON.stringify(prompt);
   const numParts = Math.ceil(command.length / maxLength);
   const fileData = [];
-  const dir = temporaryDirectory();
+  const dir = await temporaryDirectory();
   for (let i = 0; i < numParts; i++) {
     const start = i * maxLength;
     const end = Math.min((i + 1) * maxLength, command.length);
