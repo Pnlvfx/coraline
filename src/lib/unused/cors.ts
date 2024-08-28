@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-commented-code */
 import { networkInterfaces } from 'node:os';
 
 export const getLocalIPv4 = () => {

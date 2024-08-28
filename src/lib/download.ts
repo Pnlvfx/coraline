@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-nested-functions */
 import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
@@ -60,7 +61,6 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
         if (!filename.endsWith(ext)) {
           reject(new Error('This is just to check if it happens, you can check what cause it and just add the ext at the end.'));
           return;
-          // filename = `${filename}.${ext}`;
         }
 
         const output = path.join(outputDir, filename);
@@ -71,6 +71,7 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
           fileStream.close();
           reject(err);
         });
+
         fileStream.on('finish', () => {
           fileStream.close();
           resolve(output);

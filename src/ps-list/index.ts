@@ -68,9 +68,8 @@ const nonWindowsMultipleCalls = async (options: Options = {}): Promise<ProcessDe
     ['comm', 'args', 'ppid', 'uid', '%cpu', '%mem'].map(async (cmd) => {
       const { stdout } = await execFile('ps', [flags, `pid,${cmd}`], { maxBuffer: TEN_MEGABYTES });
 
-      for (let line of stdout.trim().split('\n').slice(1)) {
-        line = line.trim();
-        const [pid] = line.split(' ', 1);
+      for (const line of stdout.trim().split('\n').slice(1)) {
+        const [pid] = line.trim().split(' ', 1);
         if (pid) {
           const value = line.slice(pid.length + 1).trim();
 
@@ -101,6 +100,7 @@ const nonWindowsMultipleCalls = async (options: Options = {}): Promise<ProcessDe
 
 const ERROR_MESSAGE_PARSING_FAILED = 'ps output parsing failed';
 
+// eslint-disable-next-line sonarjs/regex-complexity, sonarjs/empty-string-repetition
 const psOutputRegex = /^[\t ]*(?<pid>\d+)[\t ]+(?<ppid>\d+)[\t ]+(?<uid>[\d-]+)[\t ]+(?<cpu>\d+\.\d+)[\t ]+(?<memory>\d+\.\d+)[\t ]+(?<comm>.*)?/;
 
 const nonWindowsCall = async (options: Options = {}): Promise<ProcessDescriptor[]> => {
