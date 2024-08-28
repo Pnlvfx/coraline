@@ -1,5 +1,4 @@
 import https from 'node:https';
-import { URL } from 'node:url';
 import client from 'coraline-client';
 import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
 import media from './lib/media.js';
@@ -18,13 +17,6 @@ import { download } from './lib/download.js';
 const coraline = {
   ...client,
   wait,
-  isUrl: (input: string) => {
-    try {
-      return !!new URL(input);
-    } catch {
-      return false;
-    }
-  },
   getContentType: (url: string) => {
     return new Promise<string>((resolve, reject) => {
       https
