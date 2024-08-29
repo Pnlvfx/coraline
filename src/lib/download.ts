@@ -57,7 +57,7 @@ export const download = async (media_url: string, outputDir: string, options?: D
         res.on('end', async () => {
           let filename = url.pathname.split('/').pop();
           if (!filename) {
-            reject(new Error('Unable to get the filename from url.'));
+            reject(new Error(`Unable to get the filename from this url: ${url.pathname}.`));
             return;
           }
           const fileBuffer = Buffer.concat(buffers);
