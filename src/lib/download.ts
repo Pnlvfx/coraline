@@ -1,8 +1,7 @@
 /* eslint-disable sonarjs/no-nested-functions */
-import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
-import { promises as fs } from 'node:fs';
+import fs from 'node:fs';
 import { isProduction } from './shared.js';
 import { getUserAgent } from './user-agent.js';
 
@@ -11,8 +10,7 @@ export interface DownloadOptions {
 }
 
 /** Download any file from a given url. */
-export const download = async (media_url: string, outputDir: string, options?: DownloadOptions) => {
-  const FileType = await import('file-type');
+export const download = (url: string, output: string, options?: DownloadOptions) => {
   const fetchOptions = {
     headers: {
       'User-Agent': getUserAgent(),
@@ -47,29 +45,16 @@ export const download = async (media_url: string, outputDir: string, options?: D
           return;
         }
 
-        const buffers: Buffer[] = [];
+        const fileStream = fs.createWriteStream(output);
+        res.pipe(fileStream);
 
-        res.on('data', (chunk: Buffer) => {
-          buffers.push(chunk);
+        fileStream.on('error', (err) => {
+          fileStream.close();
+          reject(err);
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        res.on('end', async () => {
-          let filename = url.pathname.split('/').pop();
-          if (!filename) {
-            reject(new Error(`Unable to get the filename from this url: ${url.pathname}.`));
-            return;
-          }
-          const fileBuffer = Buffer.concat(buffers);
-          const fileType = await FileType.fileTypeFromBuffer(fileBuffer);
-          if (!fileType) throw new Error('Unable to determine file type.');
-
-          if (!filename.endsWith(fileType.ext)) {
-            filename += `.${fileType.ext}`;
-          }
-
-          const output = path.join(outputDir, filename);
-          await fs.writeFile(output, fileBuffer);
+        fileStream.on('finish', () => {
+          fileStream.close();
           resolve(output);
         });
       })
@@ -78,6 +63,6 @@ export const download = async (media_url: string, outputDir: string, options?: D
         })
         .on('error', reject);
     };
-    run(media_url);
+    run(url);
   });
 };
