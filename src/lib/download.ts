@@ -54,12 +54,12 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
 
         const filename = url.pathname.split('/').pop();
         if (!filename) {
-          reject(new Error('Unable to get filename from url.'));
+          reject(new Error('Unable to get the filename from url.'));
           return;
         }
 
         if (!filename.endsWith(ext)) {
-          reject(new Error('This is just to check if it happens, you can check what cause it and just add the ext at the end.'));
+          reject(new Error(`The url extension and the file extension doesn't match.\nFilename: ${filename}\nExtension:${ext}`));
           return;
         }
 
