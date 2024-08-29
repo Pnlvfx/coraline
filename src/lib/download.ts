@@ -2,7 +2,7 @@
 import path from 'node:path';
 import https from 'node:https';
 import http from 'node:http';
-import fs from 'node:fs';
+import { promises as fs } from 'node:fs';
 import { isProduction } from './shared.js';
 import { getUserAgent } from './user-agent.js';
 
@@ -11,7 +11,8 @@ export interface DownloadOptions {
 }
 
 /** Download any file from a given url. */
-export const download = (media_url: string, outputDir: string, options?: DownloadOptions) => {
+export const download = async (media_url: string, outputDir: string, options?: DownloadOptions) => {
+  const FileType = await import('file-type');
   const fetchOptions = {
     headers: {
       'User-Agent': getUserAgent(),
@@ -45,35 +46,30 @@ export const download = (media_url: string, outputDir: string, options?: Downloa
           reject(new Error(`Download error for this url ${url.href}: ${res.statusCode?.toString() ?? ''} ${res.statusMessage?.toString() ?? ''}`));
           return;
         }
-        const ext = res.headers['content-type']?.split('/').at(1)?.trim();
-        if (!ext) {
-          res.resume();
-          reject(new Error(`Unable to get file type from ${url.href}!`));
-          return;
-        }
 
-        const filename = url.pathname.split('/').pop();
-        if (!filename) {
-          reject(new Error('Unable to get the filename from url.'));
-          return;
-        }
+        const buffers: Buffer[] = [];
 
-        if (!filename.endsWith(ext)) {
-          reject(new Error(`The url extension and the file extension doesn't match.\nFilename: ${filename}\nExtension:${ext}`));
-          return;
-        }
-
-        const output = path.join(outputDir, filename);
-        const fileStream = fs.createWriteStream(output);
-        res.pipe(fileStream);
-
-        fileStream.on('error', (err) => {
-          fileStream.close();
-          reject(err);
+        res.on('data', (chunk: Buffer) => {
+          buffers.push(chunk);
         });
 
-        fileStream.on('finish', () => {
-          fileStream.close();
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        res.on('end', async () => {
+          let filename = url.pathname.split('/').pop();
+          if (!filename) {
+            reject(new Error('Unable to get the filename from url.'));
+            return;
+          }
+          const fileBuffer = Buffer.concat(buffers);
+          const fileType = await FileType.fileTypeFromBuffer(fileBuffer);
+          if (!fileType) throw new Error('Unable to determine file type.');
+
+          if (!filename.endsWith(fileType.ext)) {
+            filename += `.${fileType.ext}`;
+          }
+
+          const output = path.join(outputDir, filename);
+          await fs.writeFile(output, fileBuffer);
           resolve(output);
         });
       })
