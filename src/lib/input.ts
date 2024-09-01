@@ -1,6 +1,5 @@
 import { consoleColor, type ConsoleColor } from 'coraline-client';
 import readline from 'node:readline';
-import { isProduction } from './shared.js';
 
 export interface InputOptions {
   title?: string;
@@ -13,7 +12,6 @@ let isAborted = false;
 
 const input = {
   create: ({ title = 'Welcome! Press Enter to run your function.', color = 'blue' }: InputOptions = {}) => {
-    if (isProduction) throw new Error('Do not use coraline.createScriptExec in production as it is used only for debugging purposes.');
     if (isRunning) throw new Error('A script is already running. Please run one script at a time.');
     isRunning = true;
 
