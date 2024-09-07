@@ -67,6 +67,7 @@ export {
   regex,
   withRetry,
   getEntries,
+  getKeys,
 } from 'coraline-client';
 
 export const TG_GROUP_LOG = Number('-914836534');
