@@ -1,7 +1,10 @@
 import coraline from '../src/coraline';
 
-const unused = await coraline.findUnusedExports({ ignoreFiles: ['coraline.ts'], ignoreVars: ['InputOptions', 'UnusedExports', 'UnusedOptions'] });
+const unused = await coraline.findUnusedExports({
+  ignoreFiles: ['coraline.ts'],
+  ignoreVars: ['InputOptions', 'UnusedExports', 'UnusedOptions', 'Analysis'],
+});
 
 if (unused) {
-  console.log(unused);
+  throw new Error(`The following exports are unused, add them on the ignore or remove the exports to continue.\n${JSON.stringify(unused)}`);
 }

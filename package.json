@@ -18,15 +18,15 @@
   "license": "MIT",
   "scripts": {
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
+    "unused": "tsx ./tools/unused.ts",
     "dev": "tsc -w & node --watch .",
     "start": "node .",
     "lint": "eslint",
-    "build": "rimraf dist && eslint && tsc && npm run build:cjs && npm run generate:package.json",
+    "build": "rimraf dist && npm run unused && eslint && tsc && npm run build:cjs && npm run generate:package.json",
     "build:cjs": "tsc --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test && npm run lint",
-    "unused": "tsx ./tools/unused.ts"
+    "prepublishOnly": "npm run test && npm run lint"
   },
   "files": [
     "dist",
