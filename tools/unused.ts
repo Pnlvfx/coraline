@@ -2,7 +2,7 @@ import coraline from '../src/coraline';
 
 const unused = await coraline.findUnusedExports({
   ignoreFiles: ['coraline.ts'],
-  ignoreVars: ['InputOptions', 'UnusedExports', 'UnusedOptions', 'Analysis'],
+  ignoreVars: ['InputOptions', 'UnusedOptions', 'Analysis'],
 });
 
 if (unused) {

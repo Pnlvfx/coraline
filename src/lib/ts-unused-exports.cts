@@ -1,24 +1,17 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-nested-template-literals */
 import path from 'node:path';
+import analyzeTsConfig from 'ts-unused-exports';
 
-export interface Analysis {
-  exportName: 'string';
-  location: undefined;
+interface LocationInFile {
+  line: number;
+  character: number;
 }
 
-export type UnusedExports = Record<string, Analysis[]>;
-
-const getModule = async () => {
-  try {
-    const analyzeTsConfig = await import('ts-unused-exports');
-    return analyzeTsConfig.default as unknown as (config: string) => UnusedExports;
-  } catch {
-    throw new Error(
-      'To use findUnusedExports you need to have ts-unused-exports installed.\nPlease run "npm install -D ts-unused-exports" to install it.',
-    );
-  }
-};
+export interface Analysis {
+  exportName: string;
+  location: LocationInFile;
+}
 
 export interface UnusedOptions {
   ignoreVars?: string[];
@@ -26,11 +19,10 @@ export interface UnusedOptions {
 }
 
 /** Find all the unused variables in your code. */
-export const findUnusedExports = async ({ ignoreFiles, ignoreVars }: UnusedOptions = {}) => {
+export const findUnusedExports = ({ ignoreFiles, ignoreVars }: UnusedOptions = {}) => {
   if (process.env['NODE_ENV'] === 'production') {
     throw new Error('Do not use findUnusedExports in production as it will slow down your app performance.');
   }
-  const analyzeTsConfig = await getModule();
   const analyzed = analyzeTsConfig(path.resolve('.', 'tsconfig.json'));
   const response: Record<string, Analysis[]> = {};
   for (const [key, value] of Object.entries(analyzed)) {
