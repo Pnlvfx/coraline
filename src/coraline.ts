@@ -6,7 +6,7 @@ import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import input from './lib/input.js';
-import psList from './ps-list/index.js';
+import psList from './ps-list/ps-list.js';
 import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';

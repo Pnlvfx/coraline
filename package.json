@@ -6,13 +6,13 @@
     "email": "simonegauli@gmail.com",
     "name": "Simone Gauli"
   },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "main": "./dist/cjs/coraline.js",
+  "module": "./dist/esm/coraline.js",
+  "types": "./dist/esm/coraline.d.ts",
   "exports": {
-    "types": "./dist/esm/index.d.ts",
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js"
+    "types": "./dist/esm/coraline.d.ts",
+    "import": "./dist/esm/coraline.js",
+    "require": "./dist/cjs/coraline.js"
   },
   "type": "module",
   "license": "MIT",
@@ -25,7 +25,8 @@
     "build:cjs": "tsc --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test && npm run lint"
+    "prepublishOnly": "npm run test && npm run lint",
+    "unused": "tsx ./tools/unused.ts"
   },
   "files": [
     "dist",
@@ -33,18 +34,18 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#ea0e42406329d9109925c436f0e2df6769bf4307",
-    "ts-unused-exports": "^10.1.0"
+    "coraline-client": "github:Pnlvfx/coraline-client#ea0e42406329d9109925c436f0e2df6769bf4307"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.5.5",
     "eslint": "^9.10.0",
     "eslint-plugin-sonarjs": "^2.0.2",
     "eslint-plugin-unicorn": "^55.0.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
+    "ts-unused-exports": "^10.1.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.5.0"

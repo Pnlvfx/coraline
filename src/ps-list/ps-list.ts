@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable unicorn/prefer-module */
-import type { ProcessDescriptor, ProcessDescriptorInternal } from './types/index.js';
+import type { ProcessDescriptor, ProcessDescriptorInternal } from './types/ps-list.js';
 import process from 'node:process';
 import { promisify } from 'node:util';
 import path from 'node:path';

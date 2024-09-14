@@ -1,14 +1,3 @@
-export interface Options {
-  /**
-	Include other users' processes as well as your own.
-
-	On Windows this has no effect and will always be the users' own processes.
-
-	@default true
-	*/
-  readonly all?: boolean;
-}
-
 export interface ProcessDescriptor {
   readonly pid: number;
   readonly name: string;
