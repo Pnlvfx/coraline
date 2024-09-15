@@ -60,12 +60,9 @@ export {
   type ConsoleColor,
   type Cookie,
   type RetryOptions,
-  backOff,
   consoleColor,
   errToString,
-  parseSetCookieHeader,
   regex,
-  withRetry,
   getEntries,
   getKeys,
 } from 'coraline-client';
