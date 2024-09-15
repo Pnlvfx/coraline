@@ -16,6 +16,9 @@
   },
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
     "unused": "tsx ./tools/unused.ts",
@@ -34,7 +37,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#50e8c4b8f946ab00593946a034b8e2ffd310c4e8",
+    "coraline-client": "github:Pnlvfx/coraline-client#ad5e007b6ab7233ae7ef91f0ca321e847ae1ea23",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
