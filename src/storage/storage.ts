@@ -4,9 +4,13 @@ import { promises as fs } from 'node:fs';
 import { checkPath } from '../lib/make-dir.js';
 import { clearFolder } from '../lib/shared.js';
 
+let used = false;
+
 export const storage = async (name: string) => {
+  if (used) throw new Error('Do not call coraline.storage more than once.');
   const directory = path.join(os.homedir(), '.coraline', name);
   await mkDir(directory, true);
+  used = true;
   return {
     use: async (document: string) => {
       const isAbsolute = path.isAbsolute(document);
