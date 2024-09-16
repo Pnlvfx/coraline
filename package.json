@@ -37,7 +37,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#7da65cd03a94bc6a4399c40e7390d1836b7a8e14",
+    "coraline-client": "github:Pnlvfx/coraline-client#61bf95ef4e81dd5fb3ff7bf58aa1f565e36e4a7e",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
@@ -51,6 +51,6 @@
     "rimraf": "^6.0.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.5.0"
+    "typescript-eslint": "^8.6.0"
   }
 }
