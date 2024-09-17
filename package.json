@@ -6,34 +6,34 @@
     "email": "simonegauli@gmail.com",
     "name": "Simone Gauli"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pnlvfx/coraline.git"
+  },
+  "license": "MIT",
+  "type": "module",
   "main": "./dist/cjs/coraline.js",
   "module": "./dist/esm/coraline.js",
   "types": "./dist/esm/coraline.d.ts",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "exports": {
     "types": "./dist/esm/coraline.d.ts",
     "import": "./dist/esm/coraline.js",
     "require": "./dist/cjs/coraline.js"
   },
-  "type": "module",
-  "license": "MIT",
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Pnlvfx/coraline.git"
-  },
   "scripts": {
+    "tsc": "tsc --noEmit true",
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
     "unused": "tsx ./tools/unused.ts",
-    "dev": "tsc -w & node --watch .",
-    "start": "node .",
     "lint": "eslint",
-    "build": "rimraf dist && npm run unused && eslint && tsc && npm run build:cjs && npm run generate:package.json",
-    "build:cjs": "tsc --module CommonJS --moduleResolution Node --outDir dist/cjs",
+    "build": "rimraf dist && npm run unused && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
+    "build:esm": "tsc -p tsconfig.build.json",
+    "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test && npm run lint"
+    "prepublishOnly": "npm run test && eslint"
   },
   "files": [
     "dist",
@@ -41,7 +41,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#5a148e1f76b9665e51c26fe0188804c39ad1360b",
+    "coraline-client": "github:Pnlvfx/coraline-client#d9f8cb72557975f3e4548388f7f239565fa7e1ee",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
