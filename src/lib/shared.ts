@@ -7,8 +7,8 @@ export const isProduction = process.env['NODE_ENV'] === 'production';
 export const generateRandomId = (max = 10) => crypto.randomBytes(max / 2).toString('hex');
 
 export const readJSON = async <T>(file: string): Promise<T> => {
-  const data = await fs.readFile(file, { encoding: 'utf8' });
-  return JSON.parse(data) as T;
+  const data = await fs.readFile(file);
+  return JSON.parse(data.toString()) as T;
 };
 
 export const rm = async (files: string | string[]) => {

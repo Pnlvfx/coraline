@@ -36,17 +36,17 @@ const cache = async (storage: Storage) => {
       const currentTime = Date.now();
 
       if (!saved || options?.customId !== saved.customId || (options?.expires && currentTime - saved.timestamp > options.expires)) {
-        const newCache = {
+        const cacheNew = {
           data: await callback(),
           timestamp: currentTime,
           isStored: options?.store ?? false,
         };
-        caches[name] = newCache;
+        caches[name] = cacheNew;
 
         if (options?.store) {
-          await store(newCache, name);
+          await store(cacheNew, name);
         }
-        return newCache.data;
+        return cacheNew.data;
       }
 
       return saved.data as T;
