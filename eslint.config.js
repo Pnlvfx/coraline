@@ -1,33 +1,35 @@
+// @ts-check
+
 import eslint from '@eslint/js';
+import globals from 'globals';
+import sonarjs from 'eslint-plugin-sonarjs';
 import tseslint from 'typescript-eslint';
 import unicorn from 'eslint-plugin-unicorn';
-import sonarjs from 'eslint-plugin-sonarjs';
-import globals from 'globals';
 
 export default tseslint.config(
   {
     ignores: ['dist', 'tools'],
   },
   eslint.configs.recommended,
-  unicorn.configs['flat/recommended'],
+  unicorn.configs['flat/all'],
   sonarjs.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   {
     languageOptions: {
+      globals: globals.builtin,
       parserOptions: {
-        project: true,
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
-      globals: globals.builtin,
     },
   },
   {
     rules: {
+      indent: ['error', 2, { SwitchCase: 1 }],
       'no-var': 'error',
       semi: 'error',
-      indent: ['error', 2, { SwitchCase: 1 }],
       'no-multi-spaces': 'error',
       'no-empty-function': 'error',
       'no-floating-decimal': 'error',
@@ -58,6 +60,7 @@ export default tseslint.config(
 
       // enable back when sonar fix it
       'sonarjs/sonar-no-fallthrough': 'off',
+      'sonarjs/pluginRules-of-hooks': 'off',
     },
   },
   {
