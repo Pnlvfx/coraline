@@ -12,9 +12,6 @@
   },
   "license": "MIT",
   "type": "module",
-  "main": "./dist/cjs/coraline.js",
-  "module": "./dist/esm/coraline.js",
-  "types": "./dist/esm/coraline.d.ts",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -41,7 +38,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#d9f8cb72557975f3e4548388f7f239565fa7e1ee",
+    "coraline-client": "github:Pnlvfx/coraline-client#c28085ddae3a3383ac02c1066ef6a71f913d7b18",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
