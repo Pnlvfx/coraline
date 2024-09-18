@@ -4,24 +4,26 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { isProduction } from './shared.js';
 import { getUserAgent } from './user-agent.js';
+import path from 'node:path';
+import mime from 'mime-types';
 
 export interface DownloadOptions {
   headers?: http.OutgoingHttpHeaders;
+  directory?: string;
+  filename?: string;
 }
 
-/** Download any file from a given url. */
-export const download = (url: string, output: string, options?: DownloadOptions) => {
-  const fetchOptions = {
-    headers: {
-      'User-Agent': getUserAgent(),
-      ...options?.headers,
-    },
-  };
+const defaultHeaders = {
+  'user-agent': getUserAgent(),
+};
+
+/** Download a file from a url. */
+export const download = (url: string, { headers = defaultHeaders, directory = '.', filename }: DownloadOptions = {}) => {
   return new Promise<string>((resolve, reject) => {
     const run = (urlStr: string) => {
       const url = new URL(urlStr);
       const fetcher = (url.protocol === 'https:' ? https : http).get;
-      const req = fetcher(url.href, fetchOptions, (res) => {
+      const req = fetcher(url.href, { headers }, (res) => {
         res.on('error', (err) => {
           res.resume();
           reject(err);
@@ -45,6 +47,12 @@ export const download = (url: string, output: string, options?: DownloadOptions)
           return;
         }
 
+        if (!filename) {
+          filename = getFilename(url.origin + url.pathname, res.headers);
+        }
+
+        const output = path.join(directory, filename);
+
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
 
@@ -65,4 +73,37 @@ export const download = (url: string, output: string, options?: DownloadOptions)
     };
     run(url);
   });
+};
+
+const getFilename = (url: string, headers: http.IncomingHttpHeaders) => {
+  const filenameFromContentDisposition = getFileNameFromContentDisposition(headers['content-disposition']);
+  if (filenameFromContentDisposition) return filenameFromContentDisposition;
+  if (path.extname(url)) return path.basename(url);
+  const filenameFromContentType = getFileNameFromContentType(url, headers['content-type']);
+  if (filenameFromContentType) return filenameFromContentType;
+  throw new Error(
+    "Unable to provide a filename for this url. Please provide a filename yourself or feel free to report an issue, and we'll try to address it.",
+  );
+};
+
+const filenameRegex = /filename[^\n;=]*=((["']).*?\2|[^\n;]*)/;
+
+const getFileNameFromContentDisposition = (contentDisposition?: string) => {
+  if (!contentDisposition?.includes('filename=')) return;
+  const match = filenameRegex.exec(contentDisposition)?.at(1);
+  return match?.replace(/["']/g, '');
+};
+
+const getFileNameFromContentType = (url: string, contentType?: string) => {
+  if (!contentType) return;
+  const extension = mime.extension(contentType);
+  if (!extension) return;
+  const withoutExt = removeExtension(path.basename(url));
+  return `${withoutExt}.${extension}`;
+};
+
+const removeExtension = (str: string) => {
+  const arr = str.split('.');
+  if (arr.length === 1) return str;
+  return arr.slice(0, -1).join('.');
 };

@@ -57,7 +57,10 @@ export default tseslint.config(
       'sonarjs/sonar-no-unused-vars': 'off',
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/catch-error-name': 'off',
+
+      // duplicates of tseslint
       'sonarjs/no-misused-promises': 'off',
+      'sonarjs/sonar-prefer-optional-chain': 'off',
 
       // enable back when sonar fix it
       'sonarjs/sonar-no-fallthrough': 'off',

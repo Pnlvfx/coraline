@@ -1,5 +1,5 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-nested-template-literals */
+/* eslint-disable sonarjs/cognitive-complexity */
 import path from 'node:path';
 import analyzeTsConfig from 'ts-unused-exports';
 
@@ -48,7 +48,7 @@ export const findUnusedExports = ({ ignoreFiles, ignoreVars }: UnusedOptions = {
   if (ignoreFiles && ignoreFiles.length > 0) {
     throw new Error(
       `The following ignore entries are no longer needed: 
-      ${ignoreFiles.length > 0 ? `Files: ${ignoreFiles.join(', ')}` : ''}`,
+      ${ignoreFiles.length > 0 ? `Files: ${ignoreFiles.join(',\n')}` : ''}`,
     );
   }
 

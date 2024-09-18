@@ -27,7 +27,7 @@
     "tsc": "tsc --noEmit true",
     "generate:package.json": "tsx ./tools/generate-commonjs-package-json.ts dist/cjs/package.json",
     "unused": "tsx ./tools/unused.ts",
-    "test": "jest --coverage",
+    "test": "rimraf coverage && jest --coverage",
     "lint": "eslint",
     "build": "rimraf dist && npm run unused && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
     "build:esm": "tsc -p tsconfig.build.json",
@@ -42,12 +42,14 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#bb20c76d5cd4a2db20e88832eda9222e5b11e317",
+    "coraline-client": "github:Pnlvfx/coraline-client#c8bc564aa552ae4a71e3bb18ea842aac150c46d4",
+    "mime-types": "^2.1.35",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
     "@types/eslint__js": "^8.42.3",
+    "@types/mime-types": "^2.1.4",
     "@types/node": "^22.5.5",
     "eslint": "^9.10.0",
     "eslint-plugin-sonarjs": "^2.0.2",
