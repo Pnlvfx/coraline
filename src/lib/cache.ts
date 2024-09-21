@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 import type { Callback } from 'coraline-client';
 import type { Storage } from '../storage/storage.js';
-import { promises as fs } from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { readJSON, rm } from './shared.js';
 

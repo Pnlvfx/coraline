@@ -1,6 +1,6 @@
 import path from 'node:path';
 import os from 'node:os';
-import { promises as fs } from 'node:fs';
+import fs from 'node:fs/promises';
 import { checkPath } from '../lib/make-dir.js';
 import { clearFolder } from '../lib/shared.js';
 

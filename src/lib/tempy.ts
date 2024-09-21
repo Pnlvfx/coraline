@@ -1,9 +1,23 @@
 import path from 'node:path';
-import { promises as fs } from 'node:fs';
+import fs from 'node:fs/promises';
 import os from 'node:os';
 import { generateRandomId } from './shared.js';
 
 let tempDir: string | undefined;
+
+interface TempDirNameParams {
+  name: string;
+  // eslint-disable-next-line sonarjs/no-redundant-optional
+  extension?: undefined;
+}
+
+interface TempDirExtParams {
+  // eslint-disable-next-line sonarjs/no-redundant-optional
+  name?: undefined;
+  extension: string;
+}
+
+export type TempDirParams = TempDirNameParams | TempDirExtParams;
 
 const getTempDir = async () => {
   if (!tempDir) {
@@ -12,11 +26,10 @@ const getTempDir = async () => {
   return tempDir;
 };
 
-const getPath = async (prefix = '') => path.join(await getTempDir(), prefix + generateRandomId(10));
+const getPath = async (prefix = '') => path.join(await getTempDir(), prefix + generateRandomId());
 
-export const temporaryFile = async ({ name, extension }: { name?: string; extension?: string }) => {
+export const temporaryFile = async ({ name, extension }: TempDirParams) => {
   if (name) {
-    if (extension) throw new Error('The `name` and `extension` options are mutually exclusive');
     return path.join(await temporaryDirectory(), name);
   }
   return (await getPath()) + (extension ? '.' + extension.replace(/^\./, '') : '');

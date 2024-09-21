@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/prefer-ternary */
 import path from 'node:path';
-import { promises as fs } from 'node:fs';
+import fs from 'node:fs/promises';
 import { temporaryDirectory } from './tempy.js';
 import { isProduction } from './shared.js';
 

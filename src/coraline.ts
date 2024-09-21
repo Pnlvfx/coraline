@@ -68,6 +68,7 @@ export {
 } from 'coraline-client';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
+export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';
 
 export { execAsync } from './lib/exec-async.js';
 
