@@ -17,7 +17,22 @@ import { download } from './lib/download.js';
 const coraline = {
   ...client,
   wait,
-  getContentType: (url: string) => {
+  getUserAgent,
+  rm,
+  clearFolder,
+  generateRandomId,
+  readJSON,
+  splitLongGptCommand,
+  log,
+  cache,
+  psList,
+  findUnusedExports,
+  storage,
+  benchmark,
+  download,
+  input,
+  media,
+  getContentTypeFromUrl: (url: string) => {
     return new Promise<string>((resolve, reject) => {
       https
         .request(url, { method: 'HEAD' }, (res) => {
@@ -36,21 +51,6 @@ const coraline = {
         .end();
     });
   },
-  getUserAgent,
-  input,
-  rm,
-  clearFolder,
-  generateRandomId,
-  readJSON,
-  splitLongGptCommand,
-  log,
-  cache,
-  psList,
-  findUnusedExports,
-  storage,
-  benchmark,
-  download,
-  media,
 };
 
 export default coraline;
