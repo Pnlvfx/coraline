@@ -42,18 +42,18 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#c8bc564aa552ae4a71e3bb18ea842aac150c46d4",
+    "coraline-client": "github:Pnlvfx/coraline-client#d43fbb363276fc0b3cc421133e35d27ff13919eb",
     "mime-types": "^2.1.35",
     "ts-unused-exports": "^10.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.11.1",
+    "@eslint/js": "^9.12.0",
     "@types/eslint__js": "^8.42.3",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^22.6.1",
-    "eslint": "^9.11.1",
-    "eslint-plugin-sonarjs": "^2.0.2",
-    "eslint-plugin-unicorn": "^55.0.0",
+    "@types/node": "^22.7.4",
+    "eslint": "^9.12.0",
+    "eslint-plugin-sonarjs": "^2.0.3",
+    "eslint-plugin-unicorn": "^56.0.0",
     "jest": "^29.7.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
@@ -61,6 +61,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.7.0"
+    "typescript-eslint": "^8.8.0"
   }
 }
