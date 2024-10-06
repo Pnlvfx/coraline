@@ -20,9 +20,11 @@ export const storage = async (name: string) => {
     useStatic: async () => {
       const folder = path.join(cwd, 'static');
       await mkDir(folder);
-      await mkDir(path.join(folder, 'images'));
-      await mkDir(path.join(folder, 'videos'));
-      return folder;
+      const imagePath = path.join(folder, 'images');
+      await mkDir(imagePath);
+      const videoPath = path.join(folder, 'videos');
+      await mkDir(videoPath);
+      return { staticPath: folder, imagePath, videoPath };
     },
     clearAll: () => clearFolder(cwd),
   };
