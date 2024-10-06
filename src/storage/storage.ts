@@ -1,33 +1,30 @@
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
-import { checkPath } from '../lib/make-dir.js';
 import { clearFolder } from '../lib/shared.js';
 
 let used = false;
 
 export const storage = async (name: string) => {
-  if (used) throw new Error('Do not call coraline.storage more than once.');
-  const directory = path.join(os.homedir(), '.coraline', name);
-  await mkDir(directory, true);
+  if (used) throw new Error('Do not use coraline.storage more than once.');
+  const cwd = path.join(os.homedir(), '.coraline', name);
+  await mkDir(cwd, true);
   used = true;
   return {
-    use: async (document: string) => {
-      const isAbsolute = path.isAbsolute(document);
-      const folder = isAbsolute ? path.join(directory, document) : path.resolve(directory, document);
+    use: async (directory: string) => {
+      const isAbsolute = path.isAbsolute(directory);
+      const folder = isAbsolute ? path.join(cwd, directory) : path.resolve(cwd, directory);
       await mkDir(folder);
       return folder;
     },
-    useStatic: async (document?: string) => {
-      const extra_path = document ? path.join('static', document) : 'static';
-      const isAbsolute = path.isAbsolute(extra_path);
-      const folder = isAbsolute ? path.join(directory, extra_path) : path.resolve(directory, extra_path);
+    useStatic: async () => {
+      const folder = path.join(cwd, 'static');
       await mkDir(folder);
       await mkDir(path.join(folder, 'images'));
       await mkDir(path.join(folder, 'videos'));
       return folder;
     },
-    clearAll: () => clearFolder(directory),
+    clearAll: () => clearFolder(cwd),
   };
 };
 
@@ -38,6 +35,16 @@ const mkDir = async (folder: string, recursive?: boolean) => {
   } catch (err) {
     if (err && typeof err === 'object' && 'code' in err && err.code == 'EEXIST') return;
     throw err;
+  }
+};
+
+const checkPath = (pth: string) => {
+  if (process.platform === 'win32') {
+    const pathHasInvalidWinCharacters = /["*:<>?|]/.test(pth.replace(path.parse(pth).root, ''));
+
+    if (pathHasInvalidWinCharacters) {
+      throw new Error(`Path contains invalid characters: ${pth}`);
+    }
   }
 };
 
