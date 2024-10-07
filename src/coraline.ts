@@ -51,6 +51,15 @@ const coraline = {
         .end();
     });
   },
+  isUrl: (str: string) => {
+    try {
+      // eslint-disable-next-line no-new
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  },
 };
 
 export default coraline;
