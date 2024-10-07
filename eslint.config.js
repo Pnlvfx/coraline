@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-// @ts-check
 
 import eslint from '@eslint/js';
 import globals from 'globals';
