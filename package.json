@@ -33,7 +33,7 @@
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
-    "prepare": "husky",
+    "prepare": "husky && npm run build",
     "prepublishOnly": "npm run test && eslint"
   },
   "files": [
