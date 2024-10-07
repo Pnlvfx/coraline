@@ -53,9 +53,7 @@ const coraline = {
   },
   isUrl: (str: string) => {
     try {
-      // eslint-disable-next-line no-new
-      new URL(str);
-      return true;
+      return !!new URL(str);
     } catch {
       return false;
     }
