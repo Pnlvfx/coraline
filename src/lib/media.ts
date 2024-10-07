@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const media = {
   getUrlFromPath: (directory: string, query?: Record<string, string>) => {
@@ -11,9 +12,11 @@ const media = {
   getPathFromUrl: (url: string) => {
     const _url = new URL(url);
     const [_, ...segments] = _url.pathname.split('/static/');
-    const folder = segments.join('/').split('/');
-    const filename = folder.pop();
-    return { folder, filename };
+    const filename = segments.pop();
+    if (!filename) throw new Error(`Error while getting path from this url:${url}`);
+    const folder = segments.join('/');
+    const fullPath = path.join(folder, filename);
+    return { folder, filename, fullPath };
   },
   saveAudio: async (audio: string | Uint8Array | Buffer, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
