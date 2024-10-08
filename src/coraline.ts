@@ -51,13 +51,6 @@ const coraline = {
         .end();
     });
   },
-  isUrl: (str: string) => {
-    try {
-      return !!new URL(str);
-    } catch {
-      return false;
-    }
-  },
 };
 
 export default coraline;
