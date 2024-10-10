@@ -5,7 +5,7 @@ const media = {
   getUrlFromPath: (directory: string, query?: Record<string, string>) => {
     if (!process.env['SERVER_URL']) throw new Error('Please add SERVER_URL to your env file to use this function');
     const extra_path = directory.split('/static/').at(1);
-    if (!extra_path) throw new Error(`Invalid path provided: ${directory}!`);
+    if (!extra_path) throw new Error(`Invalid path provided: ${directory} should contain a static path!`);
     const queryString = new URLSearchParams(query).toString();
     return `${process.env['SERVER_URL']}/static/${extra_path}${queryString ? '?' + queryString : ''}`;
   },
