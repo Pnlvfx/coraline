@@ -7,7 +7,6 @@ import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import input from './lib/input.js';
 import psList from './ps-list/ps-list.js';
-import { findUnusedExports } from './lib/ts-unused-exports.cjs';
 import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';
 import { benchmark } from './lib/benchmark.js';
@@ -26,7 +25,6 @@ const coraline = {
   log,
   cache,
   psList,
-  findUnusedExports,
   storage,
   benchmark,
   download,
@@ -55,7 +53,17 @@ const coraline = {
 
 export default coraline;
 
-export { type Callback, type ConsoleColor, type Cookie, consoleColor, errToString, regex, getEntries, getKeys } from 'coraline-client';
+export {
+  type Callback,
+  type ConsoleColor,
+  type Cookie,
+  consoleColor,
+  errToString,
+  regex,
+  getEntries,
+  getKeys,
+  findUnusedExports,
+} from 'coraline-client';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';

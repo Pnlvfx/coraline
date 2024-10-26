@@ -29,7 +29,7 @@
     "unused": "tsx ./tools/unused.ts",
     "test": "rimraf coverage && jest --coverage",
     "lint": "eslint",
-    "build": "rimraf dist && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
+    "build": "rimraf dist && npm run unused && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
@@ -42,9 +42,8 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#300d9196ab03ac5d2026ace0a711095b8c5e4eba",
-    "mime-types": "^2.1.35",
-    "ts-unused-exports": "^10.1.0"
+    "coraline-client": "github:Pnlvfx/coraline-client#416c4ca92201a392897a35e808f10afc3c865f75",
+    "mime-types": "^2.1.35"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
