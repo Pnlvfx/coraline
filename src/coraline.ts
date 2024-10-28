@@ -53,22 +53,14 @@ const coraline = {
 
 export default coraline;
 
-export {
-  type Callback,
-  type ConsoleColor,
-  type Cookie,
-  consoleColor,
-  errToString,
-  regex,
-  getEntries,
-  getKeys,
-  findUnusedExports,
-} from 'coraline-client';
+export { type Callback, type ConsoleColor, type Cookie, consoleColor, errToString, regex, getEntries, getKeys } from 'coraline-client';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';
 
 export { execAsync } from './lib/exec-async.js';
+
+export { findUnusedExports } from './lib/ts-unused-exports.js';
 
 export type { DownloadOptions } from './lib/download.js';
 
