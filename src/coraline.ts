@@ -1,7 +1,7 @@
 import https from 'node:https';
+import fs from 'node:fs/promises';
 import client from 'coraline-client';
 import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
-import media from './lib/media.js';
 import { log } from './lib/log.js';
 import cache from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
@@ -29,7 +29,6 @@ const coraline = {
   benchmark,
   download,
   input,
-  media,
   getContentTypeFromUrl: (url: string) => {
     return new Promise<string>((resolve, reject) => {
       https
@@ -48,6 +47,22 @@ const coraline = {
         .on('error', reject)
         .end();
     });
+  },
+  saveAudio: async (audio: string | Uint8Array | Buffer, output: string) => {
+    const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
+    await fs.writeFile(output, buffer, 'binary');
+  },
+  getVideoFileSize: async (url: string) => {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentLength = response.headers.get('content-length');
+    if (!contentLength) throw new Error('Unable to determine file size. Content-Length header missing.');
+    const fileSizeInBytes = Number.parseInt(contentLength, 10);
+    return {
+      bytes: Number(fileSizeInBytes.toFixed(2)),
+      kilobytes: Number((fileSizeInBytes / 1024).toFixed(2)),
+      megabytes: Number((fileSizeInBytes / (1024 * 1024)).toFixed(2)),
+      gigabytes: Number((fileSizeInBytes / (1024 * 1024 * 1024)).toFixed(0)),
+    };
   },
 };
 

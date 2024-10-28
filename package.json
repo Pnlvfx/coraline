@@ -29,6 +29,7 @@
     "unused": "tsx ./tools/unused.ts",
     "test": "rimraf coverage && jest --coverage",
     "lint": "eslint",
+    "dev": "tsc -p tsconfig.build.json -w & node --watch ./dist/esm/coraline.js",
     "build": "rimraf dist && npm run unused && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
