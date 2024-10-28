@@ -47,12 +47,12 @@
     "ts-unused-exports": "github:Pnlvfx/ts-unused-exports"
   },
   "devDependencies": {
-    "@eslint/js": "^9.12.0",
+    "@eslint/js": "^9.13.0",
     "@types/eslint__js": "^8.42.3",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^22.7.5",
-    "eslint": "^9.12.0",
-    "eslint-plugin-sonarjs": "^2.0.3",
+    "@types/node": "^22.8.1",
+    "eslint": "^9.13.0",
+    "eslint-plugin-sonarjs": "^2.0.4",
     "eslint-plugin-unicorn": "^56.0.0",
     "husky": "^9.1.6",
     "jest": "^29.7.0",
@@ -60,8 +60,8 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.1",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.8.1"
+    "typescript-eslint": "^8.11.0"
   }
 }
