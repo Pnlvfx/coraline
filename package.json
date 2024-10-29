@@ -30,7 +30,7 @@
     "test": "rimraf coverage && jest --coverage",
     "lint": "eslint",
     "dev": "tsc -p tsconfig.build.json -w & node --watch ./dist/esm/coraline.js",
-    "build": "rimraf dist && npm run unused && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
+    "build": "rimraf dist && eslint && npm run build:esm && npm run build:cjs && npm run generate:package.json",
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
@@ -43,15 +43,14 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#ac262d52cd7ce13458977e5cd33e8ea012040ba5",
-    "mime-types": "^2.1.35",
-    "ts-unused-exports": "github:Pnlvfx/ts-unused-exports"
+    "coraline-client": "github:Pnlvfx/coraline-client#f8bb2e4c5ae76e009bab73b01668153e11ee85dc",
+    "mime-types": "^2.1.35"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/eslint__js": "^8.42.3",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.2",
     "eslint": "^9.13.0",
     "eslint-plugin-sonarjs": "^2.0.4",
     "eslint-plugin-unicorn": "^56.0.0",
@@ -61,8 +60,9 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "ts-unused-exports": "github:Pnlvfx/ts-unused-exports",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.12.0"
+    "typescript-eslint": "^8.12.1"
   }
 }
