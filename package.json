@@ -44,7 +44,8 @@
   ],
   "dependencies": {
     "coraline-client": "github:Pnlvfx/coraline-client#f8bb2e4c5ae76e009bab73b01668153e11ee85dc",
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "ts-unused-exports": "github:Pnlvfx/ts-unused-exports"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
@@ -60,7 +61,6 @@
     "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "ts-unused-exports": "github:Pnlvfx/ts-unused-exports",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.12.1"
