@@ -68,7 +68,18 @@ const coraline = {
 
 export default coraline;
 
-export { type Callback, type ConsoleColor, type Cookie, consoleColor, errToString, regex, getEntries, getKeys, withRetry } from 'coraline-client';
+export {
+  consoleColor,
+  errToString,
+  regex,
+  getEntries,
+  getKeys,
+  withRetry,
+  type Callback,
+  type ConsoleColor,
+  type Cookie,
+  type OneOf,
+} from 'coraline-client';
 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';
