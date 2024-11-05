@@ -10,6 +10,7 @@ import mime from 'mime-types';
 export interface DownloadOptions {
   headers?: http.OutgoingHttpHeaders;
   directory?: string;
+  /** Using filename can lead to issues as you have to provide the correct file extension. Use this only when you know it.   */
   filename?: string;
 }
 
@@ -17,7 +18,7 @@ const defaultHeaders = {
   'user-agent': getUserAgent(),
 };
 
-/** Download a file from a given url. Note: If you pass the filename, make sure to pass the correct file extension as it will not be checked. */
+/** Download a file from a given url. */
 export const download = (url: string, { headers = defaultHeaders, directory = '.', filename }: DownloadOptions = {}) => {
   return new Promise<string>((resolve, reject) => {
     const run = (urlStr: string) => {
