@@ -17,7 +17,7 @@ const defaultHeaders = {
   'user-agent': getUserAgent(),
 };
 
-/** Download a file from a url. */
+/** Download a file from a given url. Note: If you pass the filename, make sure to pass the correct file extension as it will not be checked. */
 export const download = (url: string, { headers = defaultHeaders, directory = '.', filename }: DownloadOptions = {}) => {
   return new Promise<string>((resolve, reject) => {
     const run = (urlStr: string) => {
@@ -52,7 +52,6 @@ export const download = (url: string, { headers = defaultHeaders, directory = '.
         }
 
         const output = path.join(directory, filename);
-
         const fileStream = fs.createWriteStream(output);
         res.pipe(fileStream);
 
