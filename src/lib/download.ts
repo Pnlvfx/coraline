@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-redundant-optional */
 /* eslint-disable sonarjs/no-nested-functions */
 import https from 'node:https';
 import http from 'node:http';
@@ -7,12 +8,23 @@ import { getUserAgent } from './user-agent.js';
 import path from 'node:path';
 import mime from 'mime-types';
 
-export interface DownloadOptions {
-  headers?: http.OutgoingHttpHeaders;
-  directory?: string;
+interface FilenameOption {
   /** Using filename can lead to issues as you have to provide the correct file extension. Use this only when you know it.   */
   filename?: string;
+  directory?: undefined;
 }
+
+interface DirOption {
+  /** Using filename can lead to issues as you have to provide the correct file extension. Use this only when you know it.   */
+  filename?: undefined;
+  directory: string;
+}
+
+export type SafeDirOption = FilenameOption | DirOption;
+
+export type DownloadOptions = SafeDirOption & {
+  headers?: http.OutgoingHttpHeaders;
+};
 
 const defaultHeaders = {
   'user-agent': getUserAgent(),
