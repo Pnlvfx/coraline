@@ -6,12 +6,12 @@ const imageUrlNoExt = 'https://res.cloudinary.com/bbabystyle/image/upload/v17243
 
 describe('The coraline download from url', () => {
   it('Should download a png image from a url with extension', async () => {
-    const output = await coraline.download(imageUrl, { directory: '.', filename: 'ciao.webp' });
+    const output = await coraline.download(imageUrl, { directory: '.test' });
     coraline.log(output);
   });
 
   it('Should download a png image from a url without extension', async () => {
-    const output = await coraline.download(imageUrlNoExt, { directory: '.', filename: 'ciao' });
+    const output = await coraline.download(imageUrlNoExt, { directory: '.test' });
     coraline.log(output);
   });
 });

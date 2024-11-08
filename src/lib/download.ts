@@ -1,6 +1,7 @@
 /* eslint-disable sonarjs/no-redundant-optional */
 /* eslint-disable sonarjs/no-nested-functions */
 import https from 'node:https';
+import os from 'node:os';
 import http from 'node:http';
 import fs from 'node:fs';
 import { isProduction } from './shared.js';
@@ -31,7 +32,10 @@ const defaultHeaders = {
 };
 
 /** Download a file from a given url. */
-export const download = (url: string, { headers = defaultHeaders, directory = '.', filename }: DownloadOptions = {}) => {
+export const download = (
+  url: string,
+  { headers = defaultHeaders, directory = path.join(os.homedir(), 'Downloads'), filename }: DownloadOptions = {},
+) => {
   return new Promise<string>((resolve, reject) => {
     const run = (urlStr: string) => {
       const url = new URL(urlStr);
