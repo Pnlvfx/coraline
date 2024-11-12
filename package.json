@@ -34,7 +34,7 @@
     "build:esm": "tsc -p tsconfig.build.json",
     "build:cjs": "tsc -p tsconfig.build.json --module CommonJS --moduleResolution Node --outDir dist/cjs",
     "prepack": "npm run build",
-    "prepare": "husky && npm run build",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run test && eslint"
   },
   "files": [
@@ -43,7 +43,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#97a76657e20f50d0890094e03abfbd3b0dff2021",
+    "coraline-client": "github:Pnlvfx/coraline-client#4cdd0ffbd9e6d876e324f2c48f0260599492dc94",
     "mime-types": "^2.1.35",
     "ts-unused-exports": "github:Pnlvfx/ts-unused-exports"
   },
@@ -63,6 +63,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.13.0"
+    "typescript-eslint": "^8.14.0"
   }
 }
