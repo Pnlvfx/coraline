@@ -2,11 +2,11 @@ import https from 'node:https';
 import fs from 'node:fs/promises';
 import client from 'coraline-client';
 import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
-import { log } from './lib/log.js';
-import cache from './lib/cache.js';
+import { log, logToFile } from './lib/log.js';
+import { cache } from './lib/cache.js';
 import { splitLongGptCommand } from './lib/gpt-command.js';
 import input from './lib/input.js';
-import psList from './ps-list/ps-list.js';
+import { psList } from './ps-list/ps-list.js';
 import { storage } from './storage/storage.js';
 import { wait } from './lib/wait.js';
 import { benchmark } from './lib/benchmark.js';
@@ -23,6 +23,7 @@ const coraline = {
   readJSON,
   splitLongGptCommand,
   log,
+  logToFile,
   cache,
   psList,
   storage,
@@ -73,7 +74,7 @@ export { consoleColor, errToString, regex, getEntries, getKeys, withRetry, type 
 export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';
 
-export { execAsync } from './lib/exec-async.js';
+export { execAsync } from './lib/promisify.js';
 
 export { findUnusedExports } from './lib/ts-unused-exports.js';
 

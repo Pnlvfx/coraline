@@ -12,7 +12,7 @@ interface Cache<T> {
   customId?: string;
 }
 
-const cache = async (storage: Storage) => {
+export const cache = async (storage: Storage) => {
   const cacheDir = await storage.use('cache');
   const caches: Partial<Record<string, Cache<unknown>>> = {};
 
@@ -63,5 +63,3 @@ const cache = async (storage: Storage) => {
     },
   };
 };
-
-export default cache;

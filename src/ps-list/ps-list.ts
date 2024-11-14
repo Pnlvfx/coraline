@@ -1,22 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable unicorn/prefer-module */
 import type { ProcessDescriptor, ProcessDescriptorInternal } from './types/ps-list.js';
+import { execFileAsync } from '../lib/promisify.js';
 import process from 'node:process';
-import { promisify } from 'node:util';
 import path from 'node:path';
-import childProcess from 'node:child_process';
+import { getEntries } from 'coraline-client';
 
 interface Options {
   all?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type EmptyObject = Record<string, any>;
-
 const TEN_MEGABYTES = 1000 * 1000 * 10;
-const execFile = promisify(childProcess.execFile);
 
 const windows = async (): Promise<ProcessDescriptor[]> => {
   let binary;
@@ -33,9 +25,10 @@ const windows = async (): Promise<ProcessDescriptor[]> => {
       throw new Error(`Unsupported architecture: ${process.arch}`);
     }
   }
-
+  /** @TODO implement a uniform way that work for both esm and cjs. */
+  // eslint-disable-next-line unicorn/prefer-module
   const binaryPath = path.join(__dirname, 'vendor', binary);
-  const { stdout } = await execFile(binaryPath, {
+  const { stdout } = await execFileAsync(binaryPath, {
     maxBuffer: TEN_MEGABYTES,
     windowsHide: true,
   });
@@ -59,14 +52,23 @@ const windows = async (): Promise<ProcessDescriptor[]> => {
       };
     });
 };
+/** This types are true only after the filter happens. */
+interface Nested {
+  comm: string;
+  args: string;
+  ppid: string;
+  uid: string;
+  '%cpu': string;
+  '%mem': string;
+}
 
 const nonWindowsMultipleCalls = async (options: Options = {}): Promise<ProcessDescriptor[]> => {
   const flags = (options.all === false ? '' : 'a') + 'wwxo';
-  const returnValue: EmptyObject = {};
+  const returnValue: Record<string, Partial<Nested>> = {};
 
   await Promise.all(
-    ['comm', 'args', 'ppid', 'uid', '%cpu', '%mem'].map(async (cmd) => {
-      const { stdout } = await execFile('ps', [flags, `pid,${cmd}`], { maxBuffer: TEN_MEGABYTES });
+    (['comm', 'args', 'ppid', 'uid', '%cpu', '%mem'] as const).map(async (cmd) => {
+      const { stdout } = await execFileAsync('ps', [flags, `pid,${cmd}`], { maxBuffer: TEN_MEGABYTES });
 
       for (const line of stdout.trim().split('\n').slice(1)) {
         const [pid] = line.trim().split(' ', 1);
@@ -83,18 +85,16 @@ const nonWindowsMultipleCalls = async (options: Options = {}): Promise<ProcessDe
     }),
   );
 
-  // Filter out inconsistencies as there might be race
-  // issues due to differences in `ps` between the spawns
-  return Object.entries(returnValue)
+  return getEntries(returnValue)
     .filter(([, value]) => value.comm && value.args && value.ppid && value.uid && value['%cpu'] && value['%mem'])
     .map(([key, value]) => ({
       pid: Number.parseInt(key, 10),
-      name: path.basename(value.comm),
+      name: path.basename((value as Nested).comm),
       cmd: value.args,
-      ppid: Number.parseInt(value.ppid, 10),
-      uid: Number.parseInt(value.uid, 10),
-      cpu: Number.parseFloat(value['%cpu']),
-      memory: Number.parseFloat(value['%mem']),
+      ppid: Number.parseInt((value as Nested).ppid, 10),
+      uid: Number.parseInt((value as Nested).uid, 10),
+      cpu: Number.parseFloat((value as Nested)['%cpu']),
+      memory: Number.parseFloat((value as Nested)['%mem']),
     }));
 };
 
@@ -107,8 +107,8 @@ const nonWindowsCall = async (options: Options = {}): Promise<ProcessDescriptor[
   const flags = options.all === false ? 'wwxo' : 'awwxo';
 
   const psPromises = [
-    execFile('ps', [flags, 'pid,ppid,uid,%cpu,%mem,comm'], { maxBuffer: TEN_MEGABYTES }),
-    execFile('ps', [flags, 'pid,args'], { maxBuffer: TEN_MEGABYTES }),
+    execFileAsync('ps', [flags, 'pid,ppid,uid,%cpu,%mem,comm'], { maxBuffer: TEN_MEGABYTES }),
+    execFileAsync('ps', [flags, 'pid,args'], { maxBuffer: TEN_MEGABYTES }),
   ];
 
   const promises = await Promise.all(psPromises);
@@ -121,7 +121,7 @@ const nonWindowsCall = async (options: Options = {}): Promise<ProcessDescriptor[
     psLines.shift();
   }
 
-  const processCmds: EmptyObject = {};
+  const processCmds: Record<string, string> = {};
 
   if (psArgsLines) {
     psArgsLines.shift();
@@ -176,6 +176,4 @@ const nonWindows = async (options = {}) => {
   }
 };
 
-const psList = process.platform === 'win32' ? windows : nonWindows;
-
-export default psList;
+export const psList = process.platform === 'win32' ? windows : nonWindows;
