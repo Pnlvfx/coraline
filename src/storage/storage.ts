@@ -32,6 +32,7 @@ export const storage = async (name: string) => {
   await mkDir(cwd, true);
   used = true;
   return {
+    cwd,
     use: async (internalPath: string) => {
       const directory = path.join(cwd, internalPath);
       await mkDir(directory);
