@@ -18,7 +18,7 @@ const defaultHeaders = {
 
 /** Download a file from a given url. */
 export const download = (url: string, { headers = defaultHeaders, directory = path.join(os.homedir(), 'Downloads') }: DownloadOptions = {}) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const handle = async (urlStr: string) => {
       try {
         const res = await fetch(urlStr, { headers });
