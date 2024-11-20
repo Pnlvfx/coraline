@@ -7,12 +7,10 @@ let tempDir: string | undefined;
 
 interface TempDirNameParams {
   name: string;
-  // eslint-disable-next-line sonarjs/no-redundant-optional
   extension?: undefined;
 }
 
 interface TempDirExtParams {
-  // eslint-disable-next-line sonarjs/no-redundant-optional
   name?: undefined;
   extension: string;
 }

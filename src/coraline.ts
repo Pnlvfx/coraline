@@ -1,4 +1,3 @@
-import https from 'node:https';
 import fs from 'node:fs/promises';
 import client from 'coraline-client';
 import { clearFolder, generateRandomId, readJSON, rm } from './lib/shared.js';
@@ -30,24 +29,12 @@ const coraline = {
   benchmark,
   download,
   input,
-  getContentTypeFromUrl: (url: string) => {
-    return new Promise<string>((resolve, reject) => {
-      https
-        .request(url, { method: 'HEAD' }, (res) => {
-          if (res.statusCode !== 200) {
-            reject(new Error(`Failed to retrieve video: ${res.statusCode?.toString() ?? ''} ${res.statusMessage?.toString() ?? ''}`));
-            return;
-          }
-          const contentType = res.headers['content-type'];
-          if (!contentType) {
-            reject(new Error('This url does not have a content-type value!'));
-            return;
-          }
-          resolve(contentType);
-        })
-        .on('error', reject)
-        .end();
-    });
+  getContentTypeFromUrl: async (url: string) => {
+    const res = await fetch(url, { method: 'HEAD' });
+    if (!res.ok) throw new Error(`Failed to retrieve content-type header: ${res.status.toString()}: ${res.statusText}`);
+    const contentType = res.headers.get('content-type');
+    if (!contentType) throw new Error('This url does not have a content-type value!');
+    return contentType;
   },
   saveAudio: async (audio: string | Uint8Array | Buffer, output: string) => {
     const buffer = typeof audio === 'string' ? Buffer.from(audio, 'base64') : audio;
@@ -74,5 +61,5 @@ export { temporaryDirectory, temporaryFile } from './lib/tempy.js';
 export { temporaryDirectorySync, temporaryFileSync } from './lib/tempy-sync.js';
 export { execAsync } from './lib/promisify.js';
 export { findUnusedExports } from './lib/ts-unused-exports.js';
-export type { DownloadOptions, SafeDirOption } from './lib/download.js';
+export type { DownloadOptions } from './lib/download.js';
 export type { Cache } from './lib/cache.js';

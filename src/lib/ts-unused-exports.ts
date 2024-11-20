@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/no-nested-template-literals */
-/* eslint-disable sonarjs/cognitive-complexity */
 import path from 'node:path';
 import { analyzeTsConfig, type Analysis } from 'ts-unused-exports';
 
