@@ -61,5 +61,3 @@ const checkPath = (pth: string) => {
     }
   }
 };
-
-export type Storage = Awaited<ReturnType<typeof storage>>;

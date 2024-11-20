@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 import type { Callback } from 'coraline-client';
-import type { Storage } from '../storage/storage.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { readJSON, rm } from './shared.js';
@@ -12,8 +11,7 @@ interface CacheData<T> {
   customId?: string;
 }
 
-export const cache = async (storage: Storage) => {
-  const cacheDir = await storage.use('cache');
+export const cache = async (cacheDir: string) => {
   const caches: Partial<Record<string, CacheData<unknown>>> = {};
 
   const getStored = async <T>(name: string) => {
