@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { readJSON, rm } from './shared.js';
 
-interface Cache<T> {
+interface CacheData<T> {
   timestamp: number;
   data: T;
   isStored: boolean;
@@ -14,18 +14,18 @@ interface Cache<T> {
 
 export const cache = async (storage: Storage) => {
   const cacheDir = await storage.use('cache');
-  const caches: Partial<Record<string, Cache<unknown>>> = {};
+  const caches: Partial<Record<string, CacheData<unknown>>> = {};
 
   const getStored = async <T>(name: string) => {
     try {
       const file = path.join(cacheDir, `${name}.json`);
-      return await readJSON<Cache<T>>(file);
+      return await readJSON<CacheData<T>>(file);
     } catch {
       return;
     }
   };
 
-  const store = async <T>(cache: Cache<T>, name: string) => {
+  const store = async <T>(cache: CacheData<T>, name: string) => {
     const file = path.join(cacheDir, `${name}.json`);
     await fs.writeFile(file, JSON.stringify(cache));
   };
@@ -63,3 +63,5 @@ export const cache = async (storage: Storage) => {
     },
   };
 };
+
+export type Cache = Awaited<ReturnType<typeof cache>>;
