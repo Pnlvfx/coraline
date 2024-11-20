@@ -11,7 +11,7 @@ interface CacheData<T> {
   customId?: string;
 }
 
-export const cache = async (cacheDir: string) => {
+export const cache = (cacheDir: string) => {
   const caches: Partial<Record<string, CacheData<unknown>>> = {};
 
   const getStored = async <T>(name: string) => {
