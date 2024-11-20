@@ -38,20 +38,20 @@ export const download = (url: string, { headers = defaultHeaders, directory = pa
             void handle(location);
             break;
           }
-          case 200: {
-            if (!res.body) {
-              reject(new Error(`Request at ${url} has no content to download.`));
-              return;
-            }
-            const filename = getFilename(urlStr, res.headers);
-            const output = path.join(directory, filename);
-            const fileStream = fs.createWriteStream(output);
-            await pipeline(res.body, fileStream);
-            resolve(filename);
-            break;
-          }
           default: {
-            reject(new Error(`Download error for this url ${urlStr}: ${res.status.toString()} ${res.statusText.toString()}`));
+            if (res.ok) {
+              if (!res.body) {
+                reject(new Error(`Request at ${url} has no content to download.`));
+                return;
+              }
+              const filename = getFilename(urlStr, res.headers);
+              const output = path.join(directory, filename);
+              const fileStream = fs.createWriteStream(output);
+              await pipeline(res.body, fileStream);
+              resolve(filename);
+            } else {
+              reject(new Error(`Download error for this url ${urlStr}: ${res.status.toString()} ${res.statusText.toString()}`));
+            }
           }
         }
       } catch (err) {
