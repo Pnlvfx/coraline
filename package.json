@@ -43,7 +43,7 @@
     "README.md"
   ],
   "dependencies": {
-    "coraline-client": "github:Pnlvfx/coraline-client#4cdd0ffbd9e6d876e324f2c48f0260599492dc94",
+    "coraline-client": "github:Pnlvfx/coraline-client#f0fbb9da63de9fab761d7839a8abe10b7c1c7941",
     "mime-types": "^2.1.35",
     "ts-unused-exports": "github:Pnlvfx/ts-unused-exports"
   },
