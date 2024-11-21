@@ -48,7 +48,7 @@ export const download = (url: string, { headers = defaultHeaders, directory = pa
               const output = path.join(directory, filename);
               const fileStream = fs.createWriteStream(output);
               await pipeline(res.body, fileStream);
-              resolve(filename);
+              resolve(output);
             } else {
               reject(new Error(`Download error for this url ${urlStr}: ${res.status.toString()} ${res.statusText.toString()}`));
             }
