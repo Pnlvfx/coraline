@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/empty-string-repetition */
+/* eslint-disable sonarjs/regex-complexity */
 import type { ProcessDescriptor, ProcessDescriptorInternal } from './types/ps-list.js';
 import { execFileAsync } from '../lib/promisify.js';
 import process from 'node:process';

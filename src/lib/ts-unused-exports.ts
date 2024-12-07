@@ -5,18 +5,40 @@ interface UnusedOptions {
   tsConfigPath?: string;
   ignoreVars?: string[];
   ignoreFiles?: string[];
+  ignoreFolders?: string[];
 }
 
 /** Find all the unused variables in your code. */
-export const findUnusedExports = ({ ignoreFiles, ignoreVars, tsConfigPath = path.resolve('.', 'tsconfig.json') }: UnusedOptions = {}) => {
+export const findUnusedExports = ({
+  ignoreFiles,
+  ignoreVars,
+  ignoreFolders,
+  tsConfigPath = path.resolve('.', 'tsconfig.json'),
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+}: UnusedOptions = {}) => {
   const analyzed = analyzeTsConfig(tsConfigPath);
   const response: Analysis = {};
-  for (const [key, value] of Object.entries(analyzed)) {
-    const filename = path.basename(key);
+  const unusedFolders = new Set(ignoreFolders);
+  for (const [filePath, value] of Object.entries(analyzed)) {
+    const filename = path.basename(filePath);
+    const folderPath = path.dirname(filePath);
+
+    // Skip files in ignored folders
+    const isIgnoredFolder = ignoreFolders?.some((ignoredFolder) => {
+      if (folderPath.startsWith(path.resolve(ignoredFolder))) {
+        unusedFolders.delete(ignoredFolder); // Mark folder as used
+        return true;
+      }
+      return false;
+    });
+
+    if (isIgnoredFolder) continue;
+
     if (ignoreFiles?.includes(filename)) {
       ignoreFiles.splice(ignoreFiles.indexOf(filename), 1);
       continue;
     }
+
     const filteredExports = [];
     for (const v of value) {
       if (ignoreVars?.includes(v.exportName)) {
@@ -27,22 +49,20 @@ export const findUnusedExports = ({ ignoreFiles, ignoreVars, tsConfigPath = path
     }
 
     if (filteredExports.length > 0) {
-      response[key] = filteredExports;
+      response[filePath] = filteredExports;
     }
   }
 
   if (ignoreFiles && ignoreFiles.length > 0) {
-    throw new Error(
-      `The following ignore entries are no longer needed: 
-      ${ignoreFiles.length > 0 ? `Files: ${ignoreFiles.join(',\n')}` : ''}`,
-    );
+    throw new Error(`The following ignore entries are no longer needed: Files: ${ignoreFiles.join(',\n')}`);
   }
 
   if (ignoreVars && ignoreVars.length > 0) {
-    throw new Error(
-      `The following ignore entries are no longer needed: 
-      ${ignoreVars.length > 0 ? `Variables: ${ignoreVars.join(', ')}` : ''}`,
-    );
+    throw new Error(`The following ignore entries are no longer needed: Variables: ${ignoreVars.join(', ')}`);
+  }
+
+  if (unusedFolders.size > 0) {
+    throw new Error(`The following ignore entries are no longer needed: Variables: ${[...unusedFolders].join(', ')}`);
   }
 
   return Object.keys(response).length > 0 ? response : undefined;
